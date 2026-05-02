@@ -161,6 +161,7 @@ function renderCourse(courseKey) {
   setText("streamText", course.streamText);
   setText("assignmentText", course.assignment);
   setText("teacherName", course.teacher);
+  setText("teacherInitialPeople", course.initial);
   setText("teacherBio", course.bio);
   setText("trialPanelTitle", `Book a trial for ${course.title}`);
 

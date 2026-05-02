@@ -4,15 +4,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>SpeakSure Classroom Preview</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <div class="app-shell">
       <header class="topbar">
         <button class="icon-button" type="button" aria-label="Open menu">
-          <span></span>
-          <span></span>
-          <span></span>
+          <span class="material-symbols-outlined">menu</span>
         </button>
         <a class="brand" href="#dashboard" data-route="dashboard" aria-label="SpeakSure home">
           <span class="brand-mark">S</span>
@@ -22,9 +24,18 @@
           </span>
         </a>
         <nav class="nav-links" aria-label="Preview navigation">
-          <a href="#dashboard" data-route="dashboard">Classes</a>
-          <a href="#classroom" data-route="classroom">Stream</a>
-          <a href="#trial" data-route="trial">Trial</a>
+          <a href="#dashboard" data-route="dashboard">
+            <span class="material-symbols-outlined">dashboard</span>
+            Classes
+          </a>
+          <a href="#classroom" data-route="classroom">
+            <span class="material-symbols-outlined">forum</span>
+            Stream
+          </a>
+          <a href="#trial" data-route="trial">
+            <span class="material-symbols-outlined">event_available</span>
+            Trial
+          </a>
         </nav>
         <a class="profile-pill" href="#trial" data-route="trial">
           <span>Trial</span>
@@ -43,7 +54,7 @@
                 and book a trial.
               </p>
               <div class="mini-card">
-                <span class="dot blue"></span>
+                <span class="material-symbols-outlined mini-icon">event</span>
                 <div>
                   <strong>Today</strong>
                   <p>2 trial slots open after 19:00 China time.</p>
@@ -80,11 +91,18 @@
                   data-course="business"
                 >
                   <div class="card-banner blue">
+                    <button class="card-menu" type="button" aria-label="Class options">
+                      <span class="material-symbols-outlined">more_vert</span>
+                    </button>
                     <h3>Business English</h3>
                     <span>商务英语</span>
                     <small>Maya Chen</small>
                   </div>
                   <div class="card-body">
+                    <div class="teacher-row">
+                      <span class="material-symbols-outlined">campaign</span>
+                      <strong>Next: meeting practice</strong>
+                    </div>
                     <p>Meetings, email, client updates, and workplace speaking practice.</p>
                     <div class="card-meta">
                       <span>Intermediate</span>
@@ -100,11 +118,18 @@
                   data-course="fluency"
                 >
                   <div class="card-banner green">
+                    <button class="card-menu" type="button" aria-label="Class options">
+                      <span class="material-symbols-outlined">more_vert</span>
+                    </button>
                     <h3>Spoken English Fluency</h3>
                     <span>英语口语流利度</span>
                     <small>Daniel Brooks</small>
                   </div>
                   <div class="card-body">
+                    <div class="teacher-row">
+                      <span class="material-symbols-outlined">record_voice_over</span>
+                      <strong>Next: daily conversation</strong>
+                    </div>
                     <p>Daily conversation, pronunciation, confidence, and natural replies.</p>
                     <div class="card-meta">
                       <span>Beginner+</span>
@@ -120,11 +145,18 @@
                   data-course="ielts"
                 >
                   <div class="card-banner amber">
+                    <button class="card-menu" type="button" aria-label="Class options">
+                      <span class="material-symbols-outlined">more_vert</span>
+                    </button>
                     <h3>IELTS Speaking Prep</h3>
                     <span>雅思口语备考</span>
                     <small>Sophia Miller</small>
                   </div>
                   <div class="card-body">
+                    <div class="teacher-row">
+                      <span class="material-symbols-outlined">assignment</span>
+                      <strong>Next: cue-card structure</strong>
+                    </div>
                     <p>Part 1, Part 2 cue cards, Part 3 answers, timing, and feedback.</p>
                     <div class="card-meta">
                       <span>Band 5.5+</span>
@@ -140,11 +172,18 @@
                   data-course="interview"
                 >
                   <div class="card-banner red">
+                    <button class="card-menu" type="button" aria-label="Class options">
+                      <span class="material-symbols-outlined">more_vert</span>
+                    </button>
                     <h3>Interview English</h3>
                     <span>英语面试</span>
                     <small>Ethan Park</small>
                   </div>
                   <div class="card-body">
+                    <div class="teacher-row">
+                      <span class="material-symbols-outlined">work</span>
+                      <strong>Next: self-introduction</strong>
+                    </div>
                     <p>Self-introduction, experience answers, and mock interview practice.</p>
                     <div class="card-meta">
                       <span>Intermediate</span>
@@ -160,11 +199,18 @@
                   data-course="travel"
                 >
                   <div class="card-banner purple">
+                    <button class="card-menu" type="button" aria-label="Class options">
+                      <span class="material-symbols-outlined">more_vert</span>
+                    </button>
                     <h3>Travel & Daily English</h3>
                     <span>旅行与日常英语</span>
                     <small>Olivia Wang</small>
                   </div>
                   <div class="card-body">
+                    <div class="teacher-row">
+                      <span class="material-symbols-outlined">flight_takeoff</span>
+                      <strong>Next: airport English</strong>
+                    </div>
                     <p>Restaurants, hotels, airports, shopping, and asking for help.</p>
                     <div class="card-meta">
                       <span>Beginner</span>
@@ -180,11 +226,18 @@
                   data-course="presentation"
                 >
                   <div class="card-banner teal">
+                    <button class="card-menu" type="button" aria-label="Class options">
+                      <span class="material-symbols-outlined">more_vert</span>
+                    </button>
                     <h3>Presentation English</h3>
                     <span>英文演讲与汇报</span>
                     <small>Grace Lin</small>
                   </div>
                   <div class="card-body">
+                    <div class="teacher-row">
+                      <span class="material-symbols-outlined">co_present</span>
+                      <strong>Next: slide narration</strong>
+                    </div>
                     <p>Openings, transitions, slide narration, and confident delivery.</p>
                     <div class="card-meta">
                       <span>Upper Intermediate</span>
@@ -209,7 +262,7 @@
           <div class="tabs" role="tablist" aria-label="Class sections">
             <button class="tab active" type="button" data-tab="stream">Stream</button>
             <button class="tab" type="button" data-tab="classwork">Classwork</button>
-            <button class="tab" type="button" data-tab="teacher">Teacher</button>
+            <button class="tab" type="button" data-tab="people">People</button>
             <button class="tab" type="button" data-tab="trial-panel">Trial Class</button>
           </div>
 
@@ -218,6 +271,10 @@
               <aside class="upcoming-card">
                 <h2>Upcoming</h2>
                 <p id="courseSchedule">Tue / Thu, 20:00 China time</p>
+                <div class="upcoming-item">
+                  <span class="material-symbols-outlined">pending_actions</span>
+                  <span>Voice task due this week</span>
+                </div>
                 <a href="#trial" data-route="trial">Book trial / 预约试听</a>
               </aside>
               <div class="stream-list">
@@ -232,7 +289,7 @@
                   </div>
                 </article>
                 <article class="post-card material-card">
-                  <span class="material-icon">A</span>
+                  <span class="material-icon material-symbols-outlined">assignment</span>
                   <div>
                     <strong>Speaking assignment</strong>
                     <p id="assignmentText">
@@ -252,13 +309,19 @@
             </article>
           </section>
 
-          <section class="tab-panel" id="teacher">
+          <section class="tab-panel" id="people">
             <article class="panel">
-              <h2 id="teacherName">Maya Chen</h2>
-              <p id="teacherBio">
-                Maya helps adult learners in China speak more naturally in work situations.
-                Her lessons focus on useful phrases, realistic role play, and clear feedback.
-              </p>
+              <h2>People / 成员</h2>
+              <div class="person-row">
+                <span class="avatar" id="teacherInitialPeople">M</span>
+                <div>
+                  <strong id="teacherName">Maya Chen</strong>
+                  <p id="teacherBio">
+                    Maya helps adult learners in China speak more naturally in work situations.
+                    Her lessons focus on useful phrases, realistic role play, and clear feedback.
+                  </p>
+                </div>
+              </div>
               <ul class="check-list" id="outcomeList"></ul>
             </article>
           </section>
