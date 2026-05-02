@@ -137,6 +137,9 @@ const screens = Array.from(document.querySelectorAll(".screen"));
 const navLinks = Array.from(document.querySelectorAll("[data-route]"));
 const tabs = Array.from(document.querySelectorAll(".tab"));
 const tabPanels = Array.from(document.querySelectorAll(".tab-panel"));
+const menuButton = document.querySelector(".icon-button");
+const drawer = document.querySelector(".drawer");
+const trialForm = document.querySelector(".trial-form");
 let activeCourse = "business";
 
 function setText(id, value) {
@@ -228,11 +231,27 @@ navLinks.forEach((link) => {
     const route = link.dataset.route;
     history.pushState(null, "", `#${route}`);
     showRoute(route);
+    drawer?.classList.remove("is-open");
+    drawer?.setAttribute("aria-hidden", "true");
   });
 });
 
 tabs.forEach((tab) => {
   tab.addEventListener("click", () => showTab(tab.dataset.tab));
+});
+
+menuButton?.addEventListener("click", () => {
+  const isOpen = drawer?.classList.toggle("is-open");
+  drawer?.setAttribute("aria-hidden", isOpen ? "false" : "true");
+});
+
+trialForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  trialForm.classList.add("is-submitted");
+});
+
+trialForm?.querySelector(".primary-btn")?.addEventListener("click", () => {
+  trialForm.requestSubmit();
 });
 
 window.addEventListener("popstate", () => {

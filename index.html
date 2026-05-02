@@ -4,13 +4,42 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>SpeakSure Classroom Preview</title>
-    <link rel="stylesheet" href="./styles.css?v=20260503-0038" />
+    <link rel="stylesheet" href="./styles.css?v=20260503-0210" />
   </head>
   <body>
+    <svg class="svg-sprite" aria-hidden="true">
+      <symbol id="icon-menu" viewBox="0 0 24 24">
+        <path d="M4 7h16M4 12h16M4 17h16" />
+      </symbol>
+      <symbol id="icon-grid" viewBox="0 0 24 24">
+        <path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" />
+      </symbol>
+      <symbol id="icon-stream" viewBox="0 0 24 24">
+        <path d="M5 8h14M5 12h10M5 16h14" />
+      </symbol>
+      <symbol id="icon-calendar" viewBox="0 0 24 24">
+        <path d="M7 3v4M17 3v4M4 8h16M5 5h14v15H5z" />
+      </symbol>
+      <symbol id="icon-more" viewBox="0 0 24 24">
+        <circle cx="12" cy="5" r="1.7" />
+        <circle cx="12" cy="12" r="1.7" />
+        <circle cx="12" cy="19" r="1.7" />
+      </symbol>
+      <symbol id="icon-assignment" viewBox="0 0 24 24">
+        <path d="M8 5h8M8 11h8M8 15h5M6 3h12v18H6z" />
+      </symbol>
+      <symbol id="icon-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 7v5l4 2" />
+      </symbol>
+      <symbol id="icon-check" viewBox="0 0 24 24">
+        <path d="M5 12.5l4.5 4.5L19 7" />
+      </symbol>
+    </svg>
     <div class="app-shell">
       <header class="topbar">
         <button class="icon-button" type="button" aria-label="Open menu">
-          <span class="mi mi-menu">menu</span>
+          <svg class="icon"><use href="#icon-menu"></use></svg>
         </button>
         <a class="brand" href="#dashboard" data-route="dashboard" aria-label="SpeakSure home">
           <span class="brand-mark">S</span>
@@ -21,15 +50,15 @@
         </a>
         <nav class="nav-links" aria-label="Preview navigation">
           <a href="#dashboard" data-route="dashboard">
-            <span class="mi mi-dashboard">dashboard</span>
+            <svg class="icon"><use href="#icon-grid"></use></svg>
             Classes
           </a>
           <a href="#classroom" data-route="classroom">
-            <span class="mi mi-forum">forum</span>
+            <svg class="icon"><use href="#icon-stream"></use></svg>
             Stream
           </a>
           <a href="#trial" data-route="trial">
-            <span class="mi mi-event">event_available</span>
+            <svg class="icon"><use href="#icon-calendar"></use></svg>
             Trial
           </a>
         </nav>
@@ -43,14 +72,16 @@
         <section class="screen active" id="dashboard" aria-labelledby="dashboard-title">
           <div class="dashboard-layout">
             <aside class="side-panel">
-              <p class="eyebrow">SpeakSure / 口语课堂</p>
-              <h1 id="dashboard-title">English classrooms</h1>
-              <p>
-                Live English courses for adult Chinese students. Pick a class, check the stream,
-                and book a trial.
-              </p>
+              <div class="intro-copy">
+                <p class="eyebrow">SpeakSure / 口语课堂</p>
+                <h1 id="dashboard-title">English classrooms</h1>
+                <p>
+                  Live English courses for adult Chinese students. Pick a class, check the stream,
+                  and book a trial.
+                </p>
+              </div>
               <div class="mini-card">
-                <span class="mi mi-event mini-icon">event</span>
+                <svg class="icon mini-icon"><use href="#icon-calendar"></use></svg>
                 <div>
                   <strong>Today</strong>
                   <p>2 trial slots open after 19:00 China time.</p>
@@ -87,16 +118,13 @@
                   data-course="business"
                 >
                   <div class="card-banner course-blue">
-                    <button class="card-menu" type="button" aria-label="Class options">
-                      <span class="mi mi-more">more_vert</span>
-                    </button>
+                    <span class="card-menu" aria-hidden="true"><svg class="icon"><use href="#icon-more"></use></svg></span>
                     <h3>Business English</h3>
                     <span>商务英语</span>
                     <small>Maya Chen</small>
                   </div>
                   <div class="card-body">
                     <div class="teacher-row">
-                      <span class="mi mi-megaphone">campaign</span>
                       <strong>Next: meeting practice</strong>
                     </div>
                     <p>Meetings, email, client updates, and workplace speaking practice.</p>
@@ -114,16 +142,13 @@
                   data-course="fluency"
                 >
                   <div class="card-banner course-green">
-                    <button class="card-menu" type="button" aria-label="Class options">
-                      <span class="mi mi-more">more_vert</span>
-                    </button>
+                    <span class="card-menu" aria-hidden="true"><svg class="icon"><use href="#icon-more"></use></svg></span>
                     <h3>Spoken English Fluency</h3>
                     <span>英语口语流利度</span>
                     <small>Daniel Brooks</small>
                   </div>
                   <div class="card-body">
                     <div class="teacher-row">
-                      <span class="mi mi-voice">record_voice_over</span>
                       <strong>Next: daily conversation</strong>
                     </div>
                     <p>Daily conversation, pronunciation, confidence, and natural replies.</p>
@@ -141,16 +166,13 @@
                   data-course="ielts"
                 >
                   <div class="card-banner course-amber">
-                    <button class="card-menu" type="button" aria-label="Class options">
-                      <span class="mi mi-more">more_vert</span>
-                    </button>
+                    <span class="card-menu" aria-hidden="true"><svg class="icon"><use href="#icon-more"></use></svg></span>
                     <h3>IELTS Speaking Prep</h3>
                     <span>雅思口语备考</span>
                     <small>Sophia Miller</small>
                   </div>
                   <div class="card-body">
                     <div class="teacher-row">
-                      <span class="mi mi-doc">assignment</span>
                       <strong>Next: cue-card structure</strong>
                     </div>
                     <p>Part 1, Part 2 cue cards, Part 3 answers, timing, and feedback.</p>
@@ -168,16 +190,13 @@
                   data-course="interview"
                 >
                   <div class="card-banner course-red">
-                    <button class="card-menu" type="button" aria-label="Class options">
-                      <span class="mi mi-more">more_vert</span>
-                    </button>
+                    <span class="card-menu" aria-hidden="true"><svg class="icon"><use href="#icon-more"></use></svg></span>
                     <h3>Interview English</h3>
                     <span>英语面试</span>
                     <small>Ethan Park</small>
                   </div>
                   <div class="card-body">
                     <div class="teacher-row">
-                      <span class="mi mi-briefcase">work</span>
                       <strong>Next: self-introduction</strong>
                     </div>
                     <p>Self-introduction, experience answers, and mock interview practice.</p>
@@ -195,16 +214,13 @@
                   data-course="travel"
                 >
                   <div class="card-banner course-purple">
-                    <button class="card-menu" type="button" aria-label="Class options">
-                      <span class="mi mi-more">more_vert</span>
-                    </button>
+                    <span class="card-menu" aria-hidden="true"><svg class="icon"><use href="#icon-more"></use></svg></span>
                     <h3>Travel & Daily English</h3>
                     <span>旅行与日常英语</span>
                     <small>Olivia Wang</small>
                   </div>
                   <div class="card-body">
                     <div class="teacher-row">
-                      <span class="mi mi-plane">flight_takeoff</span>
                       <strong>Next: airport English</strong>
                     </div>
                     <p>Restaurants, hotels, airports, shopping, and asking for help.</p>
@@ -222,16 +238,13 @@
                   data-course="presentation"
                 >
                   <div class="card-banner course-teal">
-                    <button class="card-menu" type="button" aria-label="Class options">
-                      <span class="mi mi-more">more_vert</span>
-                    </button>
+                    <span class="card-menu" aria-hidden="true"><svg class="icon"><use href="#icon-more"></use></svg></span>
                     <h3>Presentation English</h3>
                     <span>英文演讲与汇报</span>
                     <small>Grace Lin</small>
                   </div>
                   <div class="card-body">
                     <div class="teacher-row">
-                      <span class="mi mi-screen">co_present</span>
                       <strong>Next: slide narration</strong>
                     </div>
                     <p>Openings, transitions, slide narration, and confident delivery.</p>
@@ -268,7 +281,7 @@
                 <h2>Upcoming</h2>
                 <p id="courseSchedule">Tue / Thu, 20:00 China time</p>
                 <div class="upcoming-item">
-                  <span class="mi mi-clock">pending_actions</span>
+                  <svg class="icon"><use href="#icon-clock"></use></svg>
                   <span>Voice task due this week</span>
                 </div>
                 <a href="#trial" data-route="trial">Book trial / 预约试听</a>
@@ -285,7 +298,7 @@
                   </div>
                 </article>
                 <article class="post-card material-card">
-                  <span class="material-icon mi mi-doc">assignment</span>
+                  <span class="material-icon"><svg class="icon"><use href="#icon-assignment"></use></svg></span>
                   <div>
                     <strong>Speaking assignment</strong>
                     <p id="assignmentText">
@@ -380,11 +393,19 @@
               Submit trial request
               <span>提交试听申请</span>
             </button>
+            <div class="form-success" role="status" aria-live="polite">
+              Trial request saved for preview. SpeakSure will confirm by WeChat.
+            </div>
           </form>
         </section>
       </main>
+      <aside class="drawer" aria-label="Classroom menu" aria-hidden="true">
+        <a href="#dashboard" data-route="dashboard"><svg class="icon"><use href="#icon-grid"></use></svg> Classes</a>
+        <a href="#classroom" data-route="classroom"><svg class="icon"><use href="#icon-stream"></use></svg> Stream</a>
+        <a href="#trial" data-route="trial"><svg class="icon"><use href="#icon-calendar"></use></svg> Trial Class</a>
+      </aside>
     </div>
 
-    <script src="./script.js?v=20260503-0038"></script>
+    <script src="./script.js?v=20260503-0210"></script>
   </body>
 </html>
