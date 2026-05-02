@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SpeakSure Classroom Preview</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#dashboard" data-route="dashboard" aria-label="SpeakSure home">
+          <span class="brand-mark">S</span>
+          <span>
+            <strong>SpeakSure</strong>
+            <small>English Classroom</small>
+          </span>
+        </a>
+        <nav class="nav-links" aria-label="Preview navigation">
+          <a href="#dashboard" data-route="dashboard">Classes</a>
+          <a href="#classroom" data-route="classroom">Classwork</a>
+          <a href="#trial" data-route="trial">Trial Class</a>
+        </nav>
+        <a class="top-action" href="#trial" data-route="trial">
+          Book Trial
+          <span>预约试听</span>
+        </a>
+      </header>
+
+      <main>
+        <section class="screen active" id="dashboard" aria-labelledby="dashboard-title">
+          <section class="hero">
+            <div>
+              <p class="kicker">Adult English for China / 成人英语学习</p>
+              <h1 id="dashboard-title">Your SpeakSure classroom is ready.</h1>
+              <p>
+                Choose a class, preview the learning stream, check classwork, and book a live
+                trial with a teacher.
+              </p>
+            </div>
+            <a class="primary-btn" href="#trial" data-route="trial">
+              Book Trial Class
+              <span>预约试听课</span>
+            </a>
+          </section>
+
+          <section class="stats" aria-label="Classroom preview stats">
+            <article>
+              <strong>6</strong>
+              <span>Active Classes</span>
+            </article>
+            <article>
+              <strong>12</strong>
+              <span>Live Teachers</span>
+            </article>
+            <article>
+              <strong>32</strong>
+              <span>Trial Slots</span>
+            </article>
+            <article>
+              <strong>4.9</strong>
+              <span>Learner Rating</span>
+            </article>
+          </section>
+
+          <div class="section-head">
+            <div>
+              <p class="kicker">Classes / 课程</p>
+              <h2>Pick your English classroom</h2>
+            </div>
+            <span>Showing 6 preview classes</span>
+          </div>
+
+          <section class="class-grid" aria-label="SpeakSure class cards">
+            <a class="class-card" href="#classroom" data-route="classroom">
+              <div class="card-banner blue">
+                <h3>Business English</h3>
+                <span>商务英语</span>
+              </div>
+              <div class="card-body">
+                <p>Speak clearly in meetings, write sharper messages, and handle workplace conversations.</p>
+                <dl>
+                  <div>
+                    <dt>Teacher</dt>
+                    <dd>Maya Chen</dd>
+                  </div>
+                  <div>
+                    <dt>Level</dt>
+                    <dd>Intermediate</dd>
+                  </div>
+                  <div>
+                    <dt>Schedule</dt>
+                    <dd>Tue / Thu, 20:00 CST</dd>
+                  </div>
+                </dl>
+              </div>
+            </a>
+
+            <a class="class-card" href="#classroom" data-route="classroom">
+              <div class="card-banner green">
+                <h3>Spoken English Fluency</h3>
+                <span>英语口语流利度</span>
+              </div>
+              <div class="card-body">
+                <p>Build everyday speaking confidence through guided conversation and pronunciation.</p>
+                <dl>
+                  <div>
+                    <dt>Teacher</dt>
+                    <dd>Daniel Brooks</dd>
+                  </div>
+                  <div>
+                    <dt>Level</dt>
+                    <dd>Beginner to Intermediate</dd>
+                  </div>
+                  <div>
+                    <dt>Schedule</dt>
+                    <dd>Mon / Wed, 19:30 CST</dd>
+                  </div>
+                </dl>
+              </div>
+            </a>
+
+            <a class="class-card" href="#classroom" data-route="classroom">
+              <div class="card-banner yellow">
+                <h3>IELTS Speaking Prep</h3>
+                <span>雅思口语备考</span>
+              </div>
+              <div class="card-body">
+                <p>Practice Part 1, 2, and 3 answers with timing, vocabulary, and teacher feedback.</p>
+                <dl>
+                  <div>
+                    <dt>Teacher</dt>
+                    <dd>Sophia Miller</dd>
+                  </div>
+                  <div>
+                    <dt>Level</dt>
+                    <dd>Band 5.5+</dd>
+                  </div>
+                  <div>
+                    <dt>Schedule</dt>
+                    <dd>Sat / Sun, 10:00 CST</dd>
+                  </div>
+                </dl>
+              </div>
+            </a>
+
+            <a class="class-card" href="#classroom" data-route="classroom">
+              <div class="card-banner red">
+                <h3>Interview English</h3>
+                <span>英语面试</span>
+              </div>
+              <div class="card-body">
+                <p>Prepare for international job and school interviews with answer frameworks.</p>
+                <dl>
+                  <div>
+                    <dt>Teacher</dt>
+                    <dd>Ethan Park</dd>
+                  </div>
+                  <div>
+                    <dt>Level</dt>
+                    <dd>Intermediate</dd>
+                  </div>
+                  <div>
+                    <dt>Schedule</dt>
+                    <dd>Fri, 20:30 CST</dd>
+                  </div>
+                </dl>
+              </div>
+            </a>
+
+            <a class="class-card" href="#classroom" data-route="classroom">
+              <div class="card-banner purple">
+                <h3>Travel & Daily English</h3>
+                <span>旅行与日常英语</span>
+              </div>
+              <div class="card-body">
+                <p>Learn practical English for restaurants, hotels, transport, shopping, and travel.</p>
+                <dl>
+                  <div>
+                    <dt>Teacher</dt>
+                    <dd>Olivia Wang</dd>
+                  </div>
+                  <div>
+                    <dt>Level</dt>
+                    <dd>Beginner</dd>
+                  </div>
+                  <div>
+                    <dt>Schedule</dt>
+                    <dd>Tue, 18:30 CST</dd>
+                  </div>
+                </dl>
+              </div>
+            </a>
+
+            <a class="class-card" href="#classroom" data-route="classroom">
+              <div class="card-banner cyan">
+                <h3>Presentation English</h3>
+                <span>英文演讲与汇报</span>
+              </div>
+              <div class="card-body">
+                <p>Create clear English presentations for work, school, and pitches.</p>
+                <dl>
+                  <div>
+                    <dt>Teacher</dt>
+                    <dd>Grace Lin</dd>
+                  </div>
+                  <div>
+                    <dt>Level</dt>
+                    <dd>Upper Intermediate</dd>
+                  </div>
+                  <div>
+                    <dt>Schedule</dt>
+                    <dd>Wed, 21:00 CST</dd>
+                  </div>
+                </dl>
+              </div>
+            </a>
+          </section>
+        </section>
+
+        <section class="screen" id="classroom" aria-labelledby="classroom-title">
+          <section class="class-hero">
+            <div>
+              <p class="kicker">Classroom / 课堂</p>
+              <h1 id="classroom-title">Business English</h1>
+              <p>商务英语</p>
+            </div>
+            <a class="primary-btn" href="#trial" data-route="trial">
+              Join Trial
+              <span>加入试听</span>
+            </a>
+          </section>
+
+          <div class="tabs" role="tablist" aria-label="Class sections">
+            <button class="tab active" type="button" data-tab="stream">Stream</button>
+            <button class="tab" type="button" data-tab="classwork">Classwork</button>
+            <button class="tab" type="button" data-tab="teacher">Teacher</button>
+            <button class="tab" type="button" data-tab="trial-panel">Trial Class</button>
+          </div>
+
+          <section class="tab-panel active" id="stream">
+            <div class="two-col">
+              <article class="panel announcement">
+                <p class="kicker">Announcement</p>
+                <h2>Next live class: Client update meeting practice</h2>
+                <p>
+                  This week, learners practice how to open a meeting, explain progress,
+                  ask for clarification, and close with next steps.
+                </p>
+                <div class="post-card">
+                  <span class="avatar">M</span>
+                  <div>
+                    <strong>Maya posted new practice notes</strong>
+                    <p>Meeting phrases, polite interruption patterns, and a 2-minute speaking task.</p>
+                  </div>
+                </div>
+              </article>
+              <aside class="panel">
+                <h3>Class Info</h3>
+                <p><strong>Teacher:</strong> Maya Chen</p>
+                <p><strong>Level:</strong> Intermediate</p>
+                <p><strong>Schedule:</strong> Tue / Thu, 20:00 CST</p>
+                <p><strong>Duration:</strong> 8 weeks</p>
+              </aside>
+            </div>
+          </section>
+
+          <section class="tab-panel" id="classwork">
+            <article class="panel">
+              <h2>Classwork / 课堂任务</h2>
+              <div class="task-list">
+                <div class="task">
+                  <span>1</span>
+                  <div>
+                    <h3>Meeting phrases</h3>
+                    <p>Learn practical language for opening, agreeing, clarifying, and closing.</p>
+                  </div>
+                </div>
+                <div class="task">
+                  <span>2</span>
+                  <div>
+                    <h3>Email correction lab</h3>
+                    <p>Rewrite short workplace messages with teacher correction and style notes.</p>
+                  </div>
+                </div>
+                <div class="task">
+                  <span>3</span>
+                  <div>
+                    <h3>Weekly speaking review</h3>
+                    <p>Record a short update and get feedback on fluency, grammar, and confidence.</p>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </section>
+
+          <section class="tab-panel" id="teacher">
+            <article class="panel">
+              <h2>Maya Chen</h2>
+              <p>
+                Maya helps adult learners in China speak more naturally in work situations.
+                Her lessons focus on useful phrases, realistic role play, and clear feedback.
+              </p>
+              <ul class="check-list">
+                <li>Run simple meetings in English</li>
+                <li>Explain project updates with confidence</li>
+                <li>Write polite workplace messages</li>
+              </ul>
+            </article>
+          </section>
+
+          <section class="tab-panel" id="trial-panel">
+            <article class="panel">
+              <p class="kicker">Trial Class / 预约试听课</p>
+              <h2>Book a trial for Business English</h2>
+              <p>Share your schedule and English goal, then the SpeakSure team will confirm a live trial slot.</p>
+              <a class="primary-btn inline" href="#trial" data-route="trial">
+                Open Trial Form
+                <span>打开试听表单</span>
+              </a>
+            </article>
+          </section>
+        </section>
+
+        <section class="screen trial-screen" id="trial" aria-labelledby="trial-title">
+          <form class="panel trial-form">
+            <p class="kicker">Book Trial / 预约试听课</p>
+            <h1 id="trial-title">Tell us your English goal</h1>
+            <p>
+              Share your WeChat contact, current level, and preferred time. A SpeakSure advisor
+              will help match you with the right trial class.
+            </p>
+            <div class="form-grid">
+              <label>
+                <span>Name / 姓名</span>
+                <input type="text" placeholder="Your name" />
+              </label>
+              <label>
+                <span>WeChat ID / 微信号</span>
+                <input type="text" placeholder="WeChat contact" />
+              </label>
+              <label>
+                <span>Current level / 当前水平</span>
+                <select>
+                  <option>Beginner</option>
+                  <option>Intermediate</option>
+                  <option>Advanced</option>
+                </select>
+              </label>
+              <label>
+                <span>Preferred time / 方便上课时间</span>
+                <input type="text" placeholder="Evening, weekend, etc." />
+              </label>
+              <label class="wide">
+                <span>English goal / 学习目标</span>
+                <textarea rows="4" placeholder="Business, interview, IELTS, daily speaking..."></textarea>
+              </label>
+            </div>
+            <button class="primary-btn" type="button">
+              Submit Trial Request
+              <span>提交试听申请</span>
+            </button>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
