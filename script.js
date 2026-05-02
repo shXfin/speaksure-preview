@@ -5,7 +5,7 @@ const courseData = {
     teacher: "Maya Chen",
     level: "Intermediate",
     schedule: "Tue / Thu, 20:00 China time",
-    color: "blue",
+    color: "course-blue",
     initial: "M",
     streamTitle: "Maya posted: Client update meeting practice",
     streamText:
@@ -27,7 +27,7 @@ const courseData = {
     teacher: "Daniel Brooks",
     level: "Beginner to Intermediate",
     schedule: "Mon / Wed, 19:30 China time",
-    color: "green",
+    color: "course-green",
     initial: "D",
     streamTitle: "Daniel posted: Daily conversation warm-up",
     streamText:
@@ -49,7 +49,7 @@ const courseData = {
     teacher: "Sophia Miller",
     level: "Band 5.5+",
     schedule: "Sat / Sun, 10:00 China time",
-    color: "amber",
+    color: "course-amber",
     initial: "S",
     streamTitle: "Sophia posted: Part 2 cue-card structure",
     streamText:
@@ -71,7 +71,7 @@ const courseData = {
     teacher: "Ethan Park",
     level: "Intermediate",
     schedule: "Fri, 20:30 China time",
-    color: "red",
+    color: "course-red",
     initial: "E",
     streamTitle: "Ethan posted: Tell me about yourself",
     streamText:
@@ -93,7 +93,7 @@ const courseData = {
     teacher: "Olivia Wang",
     level: "Beginner",
     schedule: "Tue, 18:30 China time",
-    color: "purple",
+    color: "course-purple",
     initial: "O",
     streamTitle: "Olivia posted: Airport and hotel check-in",
     streamText:
@@ -115,7 +115,7 @@ const courseData = {
     teacher: "Grace Lin",
     level: "Upper Intermediate",
     schedule: "Wed, 21:00 China time",
-    color: "teal",
+    color: "course-teal",
     initial: "G",
     streamTitle: "Grace posted: Opening and transition language",
     streamText:
