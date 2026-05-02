@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>SpeakSure Classroom Preview</title>
-    <link rel="stylesheet" href="./styles.css?v=20260503-0210" />
+    <link rel="stylesheet" href="./styles.css?v=20260503-0224" />
   </head>
   <body>
     <svg class="svg-sprite" aria-hidden="true">
@@ -91,6 +91,20 @@
             </aside>
 
             <section class="content-column">
+              <div class="quick-actions" aria-label="Student tools">
+                <a href="#classroom" data-route="classroom">
+                  <svg class="icon"><use href="#icon-stream"></use></svg>
+                  <span>Open stream</span>
+                </a>
+                <a href="#classroom" data-route="classroom">
+                  <svg class="icon"><use href="#icon-assignment"></use></svg>
+                  <span>View classwork</span>
+                </a>
+                <a href="#trial" data-route="trial">
+                  <svg class="icon"><use href="#icon-calendar"></use></svg>
+                  <span>Book a trial</span>
+                </a>
+              </div>
               <div class="stream-card">
                 <span class="avatar">S</span>
                 <div>
@@ -284,9 +298,20 @@
                   <svg class="icon"><use href="#icon-clock"></use></svg>
                   <span>Voice task due this week</span>
                 </div>
+                <div class="class-code">
+                  <span>Class code</span>
+                  <strong id="classCode">BIZ-204</strong>
+                </div>
                 <a href="#trial" data-route="trial">Book trial / 预约试听</a>
               </aside>
               <div class="stream-list">
+                <article class="post-card share-card">
+                  <span class="avatar ghost">+</span>
+                  <div>
+                    <strong>Share something with your class</strong>
+                    <p>Ask a speaking question or send your practice note before the live lesson.</p>
+                  </div>
+                </article>
                 <article class="post-card">
                   <span class="avatar" id="teacherInitial">M</span>
                   <div>
@@ -314,6 +339,7 @@
           <section class="tab-panel" id="classwork">
             <article class="panel">
               <h2>Classwork / 课堂任务</h2>
+              <p class="panel-intro">Organized like a real classroom: live lesson prep, practice work, resources, and feedback.</p>
               <div class="task-list" id="taskList"></div>
             </article>
           </section>
@@ -406,6 +432,6 @@
       </aside>
     </div>
 
-    <script src="./script.js?v=20260503-0210"></script>
+    <script src="./script.js?v=20260503-0224"></script>
   </body>
 </html>

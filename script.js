@@ -6,6 +6,7 @@ const courseData = {
     level: "Intermediate",
     schedule: "Tue / Thu, 20:00 China time",
     color: "course-blue",
+    code: "BIZ-204",
     initial: "M",
     streamTitle: "Maya posted: Client update meeting practice",
     streamText:
@@ -15,9 +16,9 @@ const courseData = {
     bio:
       "Maya helps adult learners in China speak more naturally in work situations. Her lessons focus on useful phrases, realistic role play, and clear feedback.",
     tasks: [
-      ["Meeting language", "Open a meeting, agree politely, interrupt clearly, and summarize next steps."],
-      ["Email correction lab", "Rewrite short workplace messages with better tone and clearer structure."],
-      ["Speaking review", "Record a project update and receive teacher notes on fluency and vocabulary."],
+      ["Before live class", "Meeting phrases", "Read the phrase sheet and mark 5 expressions you want to use.", "Material"],
+      ["Speaking practice", "Project update voice task", "Record a 2-minute project update for teacher feedback.", "Due Friday"],
+      ["Feedback", "Email correction lab", "Rewrite short workplace messages with better tone and clearer structure.", "Returned with notes"],
     ],
     outcomes: ["Run simple meetings in English", "Explain project updates with confidence", "Write polite workplace messages"],
   },
@@ -28,6 +29,7 @@ const courseData = {
     level: "Beginner to Intermediate",
     schedule: "Mon / Wed, 19:30 China time",
     color: "course-green",
+    code: "FLU-118",
     initial: "D",
     streamTitle: "Daniel posted: Daily conversation warm-up",
     streamText:
@@ -37,9 +39,9 @@ const courseData = {
     bio:
       "Daniel teaches practical spoken English for Chinese students who understand grammar but need more speaking confidence.",
     tasks: [
-      ["Small talk patterns", "Practice greetings, hobbies, daily routines, and natural follow-up questions."],
-      ["Pronunciation clinic", "Fix common sounds for Chinese speakers and improve sentence stress."],
-      ["Voice-note practice", "Send short recordings and get feedback on clarity and confidence."],
+      ["Before live class", "Small talk pattern cards", "Review daily-life prompts and prepare 3 follow-up questions.", "Material"],
+      ["Speaking practice", "Daily voice-note practice", "Send a 60-second voice note about your day.", "Due Wednesday"],
+      ["Feedback", "Pronunciation clinic", "Teacher marks stress, rhythm, and common sounds for Chinese speakers.", "Returned with notes"],
     ],
     outcomes: ["Speak with less hesitation", "Answer daily questions naturally", "Improve pronunciation habits"],
   },
@@ -50,6 +52,7 @@ const courseData = {
     level: "Band 5.5+",
     schedule: "Sat / Sun, 10:00 China time",
     color: "course-amber",
+    code: "IELTS-55",
     initial: "S",
     streamTitle: "Sophia posted: Part 2 cue-card structure",
     streamText:
@@ -59,9 +62,9 @@ const courseData = {
     bio:
       "Sophia prepares Chinese IELTS learners for clear, structured speaking answers with practical scoring feedback.",
     tasks: [
-      ["Part 1 answer upgrade", "Move from short answers to natural answers with examples."],
-      ["Cue-card framework", "Plan a two-minute answer with story, detail, and opinion."],
-      ["Mock interview", "Practice Part 3 follow-up questions with score-focused feedback."],
+      ["Before live class", "Part 1 answer bank", "Read sample answers and highlight useful topic vocabulary.", "Material"],
+      ["Speaking practice", "Part 2 cue-card recording", "Record one 2-minute answer using the class framework.", "Due Sunday"],
+      ["Feedback", "Mock speaking notes", "Teacher gives band-focused notes on fluency, grammar, and vocabulary.", "Returned with notes"],
     ],
     outcomes: ["Structure stronger answers", "Use topic vocabulary better", "Handle follow-up questions calmly"],
   },
@@ -72,6 +75,7 @@ const courseData = {
     level: "Intermediate",
     schedule: "Fri, 20:30 China time",
     color: "course-red",
+    code: "INT-310",
     initial: "E",
     streamTitle: "Ethan posted: Tell me about yourself",
     streamText:
@@ -81,9 +85,9 @@ const courseData = {
     bio:
       "Ethan helps learners prepare for English interviews with answer structure, mock practice, and confidence coaching.",
     tasks: [
-      ["Self-introduction", "Create a 45-second intro that sounds clear and professional."],
-      ["Experience answers", "Explain projects, achievements, and challenges with simple structure."],
-      ["Mock interview", "Practice pressure questions and receive direct feedback."],
+      ["Before live class", "Self-introduction template", "Prepare a 45-second intro for work or school interviews.", "Material"],
+      ["Speaking practice", "Mock interview recording", "Answer 3 common interview questions and submit a voice recording.", "Due Friday"],
+      ["Feedback", "Answer structure review", "Teacher comments on clarity, confidence, and answer structure.", "Returned with notes"],
     ],
     outcomes: ["Introduce yourself clearly", "Explain your experience", "Answer interview questions with structure"],
   },
@@ -94,6 +98,7 @@ const courseData = {
     level: "Beginner",
     schedule: "Tue, 18:30 China time",
     color: "course-purple",
+    code: "DAY-072",
     initial: "O",
     streamTitle: "Olivia posted: Airport and hotel check-in",
     streamText:
@@ -103,9 +108,9 @@ const courseData = {
     bio:
       "Olivia teaches simple, useful English for Chinese learners who want to travel or handle daily situations abroad.",
     tasks: [
-      ["Airport English", "Ask about baggage, gates, delays, and basic travel problems."],
-      ["Restaurant role-play", "Order food, ask questions, and handle simple problems politely."],
-      ["Hotel check-in", "Practice check-in, room requests, and asking for help."],
+      ["Before live class", "Airport phrase sheet", "Review phrases for baggage, gates, delays, and travel problems.", "Material"],
+      ["Speaking practice", "Restaurant role-play", "Record a short ordering-food role-play with polite requests.", "Due Tuesday"],
+      ["Feedback", "Hotel check-in practice", "Teacher checks clarity and useful travel phrases.", "Returned with notes"],
     ],
     outcomes: ["Travel with more confidence", "Ask for help in English", "Handle daily situations abroad"],
   },
@@ -116,6 +121,7 @@ const courseData = {
     level: "Upper Intermediate",
     schedule: "Wed, 21:00 China time",
     color: "course-teal",
+    code: "PRS-409",
     initial: "G",
     streamTitle: "Grace posted: Opening and transition language",
     streamText:
@@ -125,9 +131,9 @@ const courseData = {
     bio:
       "Grace coaches Chinese professionals and students to present clearly in English for work, class, and pitches.",
     tasks: [
-      ["Presentation opening", "Introduce your topic and agenda in a confident, simple way."],
-      ["Slide narration", "Explain charts, bullet points, and comparisons clearly."],
-      ["Final mini talk", "Deliver a short presentation with teacher delivery notes."],
+      ["Before live class", "Presentation opening phrases", "Prepare your topic, agenda, and opening sentence.", "Material"],
+      ["Speaking practice", "3-slide mini presentation", "Record a short presentation and explain one chart or comparison.", "Due Wednesday"],
+      ["Feedback", "Delivery review", "Teacher comments on transitions, pronunciation, and confidence.", "Returned with notes"],
     ],
     outcomes: ["Open presentations confidently", "Connect ideas between slides", "Deliver a short English presentation"],
   },
@@ -159,6 +165,7 @@ function renderCourse(courseKey) {
   setText("classroom-title", course.title);
   setText("classroomSubtitle", `${course.zh} · ${course.teacher} · ${course.level}`);
   setText("courseSchedule", course.schedule);
+  setText("classCode", course.code);
   setText("teacherInitial", course.initial);
   setText("streamTitle", course.streamTitle);
   setText("streamText", course.streamText);
@@ -175,12 +182,16 @@ function renderCourse(courseKey) {
   if (taskList) {
     taskList.innerHTML = course.tasks
       .map(
-        ([title, description], index) => `
-          <div class="task">
-            <span>${index + 1}</span>
-            <div>
-              <h3>${title}</h3>
-              <p>${description}</p>
+        ([topic, title, description, status], index) => `
+          <div class="classwork-topic">
+            <div class="topic-label">${topic}</div>
+            <div class="task">
+              <span>${index + 1}</span>
+              <div>
+                <h3>${title}</h3>
+                <p>${description}</p>
+              </div>
+              <strong>${status}</strong>
             </div>
           </div>
         `
