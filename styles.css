@@ -5,13 +5,14 @@
   --muted: #5f6368;
   --line: #dadce0;
   --soft: #f1f3f4;
-  --primary: #137333;
-  --primary-soft: #e6f4ea;
-  --green: #137333;
-  --amber: #8a5a00;
-  --red: #a50e0e;
-  --purple: #5f35b1;
-  --teal: #006a6a;
+  --primary: #6750a4;
+  --primary-soft: #eaddff;
+  --primary-dark: #4f378b;
+  --secondary: #625b71;
+  --secondary-dark: #4a4458;
+  --tertiary: #7d5260;
+  --tertiary-dark: #633b48;
+  --success: #386a20;
   --shadow: 0 1px 2px rgba(60, 64, 67, 0.2);
   --shadow-hover: 0 3px 8px rgba(60, 64, 67, 0.24);
 }
@@ -111,7 +112,7 @@ textarea {
   height: 48px;
   place-items: center;
   border-radius: 13px;
-  background: #137333;
+  background: var(--primary);
   color: #fff;
   font-weight: 800;
 }
@@ -404,47 +405,47 @@ p {
 
 .card-menu {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 12px;
+  right: 12px;
   display: grid;
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
   place-items: center;
   border: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.16);
+  border-radius: 0;
+  background: transparent;
   color: #fff;
   pointer-events: none;
 }
 
 .card-menu .icon {
-  width: 20px;
-  height: 20px;
-  stroke-width: 2.4;
+  width: 22px;
+  height: 22px;
+  stroke-width: 2.2;
 }
 
 .course-blue {
-  background: #137333;
+  background: var(--primary-dark);
 }
 
 .course-green {
-  background: #0b8043;
+  background: var(--secondary-dark);
 }
 
 .course-amber {
-  background: #8a5a00;
+  background: var(--tertiary-dark);
 }
 
 .course-red {
-  background: #a50e0e;
+  background: var(--primary);
 }
 
 .course-purple {
-  background: #5f35b1;
+  background: var(--secondary);
 }
 
 .course-teal {
-  background: #006a6a;
+  background: var(--tertiary);
 }
 
 .card-body {
@@ -711,7 +712,7 @@ p {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: var(--green);
+  background: var(--success);
 }
 
 .trial-screen.active {
