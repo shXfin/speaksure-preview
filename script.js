@@ -145,7 +145,6 @@ const tabs = Array.from(document.querySelectorAll(".tab"));
 const tabPanels = Array.from(document.querySelectorAll(".tab-panel"));
 const menuButton = document.querySelector(".icon-button");
 const drawer = document.querySelector(".drawer");
-const trialForm = document.querySelector(".trial-form");
 let activeCourse = "business";
 
 function setText(id, value) {
@@ -173,10 +172,7 @@ function renderCourse(courseKey) {
   setText("teacherName", course.teacher);
   setText("teacherInitialPeople", course.initial);
   setText("teacherBio", course.bio);
-  setText("trialPanelTitle", `Book a trial for ${course.title}`);
-
-  const trialCourse = document.getElementById("trialCourse");
-  if (trialCourse) trialCourse.value = course.title;
+  setText("progressTitle", `${course.title} progress`);
 
   const taskList = document.getElementById("taskList");
   if (taskList) {
@@ -256,13 +252,11 @@ menuButton?.addEventListener("click", () => {
   drawer?.setAttribute("aria-hidden", isOpen ? "false" : "true");
 });
 
-trialForm?.addEventListener("submit", (event) => {
-  event.preventDefault();
-  trialForm.classList.add("is-submitted");
-});
-
-trialForm?.querySelector(".primary-btn")?.addEventListener("click", () => {
-  trialForm.requestSubmit();
+document.querySelectorAll("[data-tab-target]").forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    showTab(link.dataset.tabTarget);
+  });
 });
 
 window.addEventListener("popstate", () => {

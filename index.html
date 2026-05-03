@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>SpeakSure Classroom Preview</title>
-    <link rel="stylesheet" href="./styles.css?v=20260503-1558" />
+    <link rel="stylesheet" href="./styles.css?v=20260503-1606" />
   </head>
   <body>
     <svg class="svg-sprite" aria-hidden="true">
@@ -19,11 +19,6 @@
       </symbol>
       <symbol id="icon-calendar" viewBox="0 0 24 24">
         <path d="M7 3v4M17 3v4M4 8h16M5 5h14v15H5z" />
-      </symbol>
-      <symbol id="icon-more" viewBox="0 0 24 24">
-        <circle cx="12" cy="5" r="1.7" />
-        <circle cx="12" cy="12" r="1.7" />
-        <circle cx="12" cy="19" r="1.7" />
       </symbol>
       <symbol id="icon-assignment" viewBox="0 0 24 24">
         <path d="M8 5h8M8 11h8M8 15h5M6 3h12v18H6z" />
@@ -57,15 +52,11 @@
             <svg class="icon"><use href="#icon-stream"></use></svg>
             Stream
           </a>
-          <a href="#trial" data-route="trial">
-            <svg class="icon"><use href="#icon-calendar"></use></svg>
-            Trial
-          </a>
         </nav>
-        <a class="profile-pill" href="#trial" data-route="trial">
-          <span>Trial</span>
-          <strong>预约</strong>
-        </a>
+        <div class="profile-pill">
+          <span>Student</span>
+          <strong>学员</strong>
+        </div>
       </header>
 
       <main>
@@ -77,17 +68,17 @@
                 <h1 id="dashboard-title">English classrooms</h1>
                 <p>
                   Live English courses for adult Chinese students. Pick a class, check the stream,
-                  and book a trial.
+                  and continue your practice.
                 </p>
               </div>
               <div class="mini-card">
                 <svg class="icon mini-icon"><use href="#icon-calendar"></use></svg>
                 <div>
                   <strong>Today</strong>
-                  <p>2 trial slots open after 19:00 China time.</p>
+                  <p>IELTS speaking class starts at 19:00 China time.</p>
                 </div>
               </div>
-              <a class="text-action" href="#trial" data-route="trial">Book trial class / 预约试听</a>
+              <a class="text-action" href="#classroom" data-route="classroom">Continue learning / 继续学习</a>
             </aside>
 
             <section class="content-column">
@@ -100,9 +91,9 @@
                   <svg class="icon"><use href="#icon-assignment"></use></svg>
                   <span>View classwork</span>
                 </a>
-                <a href="#trial" data-route="trial">
+                <a href="#classroom" data-route="classroom">
                   <svg class="icon"><use href="#icon-calendar"></use></svg>
-                  <span>Book a trial</span>
+                  <span>Today’s class</span>
                 </a>
               </div>
               <div class="stream-card">
@@ -132,7 +123,6 @@
                   data-course="business"
                 >
                   <div class="card-banner course-blue">
-                    <span class="card-menu" aria-hidden="true"><svg class="icon"><use href="#icon-more"></use></svg></span>
                     <h3>Business English</h3>
                     <span>商务英语</span>
                     <small>Maya Chen</small>
@@ -156,7 +146,6 @@
                   data-course="fluency"
                 >
                   <div class="card-banner course-green">
-                    <span class="card-menu" aria-hidden="true"><svg class="icon"><use href="#icon-more"></use></svg></span>
                     <h3>Spoken English Fluency</h3>
                     <span>英语口语流利度</span>
                     <small>Daniel Brooks</small>
@@ -180,7 +169,6 @@
                   data-course="ielts"
                 >
                   <div class="card-banner course-amber">
-                    <span class="card-menu" aria-hidden="true"><svg class="icon"><use href="#icon-more"></use></svg></span>
                     <h3>IELTS Speaking Prep</h3>
                     <span>雅思口语备考</span>
                     <small>Sophia Miller</small>
@@ -204,7 +192,6 @@
                   data-course="interview"
                 >
                   <div class="card-banner course-red">
-                    <span class="card-menu" aria-hidden="true"><svg class="icon"><use href="#icon-more"></use></svg></span>
                     <h3>Interview English</h3>
                     <span>英语面试</span>
                     <small>Ethan Park</small>
@@ -228,7 +215,6 @@
                   data-course="travel"
                 >
                   <div class="card-banner course-purple">
-                    <span class="card-menu" aria-hidden="true"><svg class="icon"><use href="#icon-more"></use></svg></span>
                     <h3>Travel & Daily English</h3>
                     <span>旅行与日常英语</span>
                     <small>Olivia Wang</small>
@@ -252,7 +238,6 @@
                   data-course="presentation"
                 >
                   <div class="card-banner course-teal">
-                    <span class="card-menu" aria-hidden="true"><svg class="icon"><use href="#icon-more"></use></svg></span>
                     <h3>Presentation English</h3>
                     <span>英文演讲与汇报</span>
                     <small>Grace Lin</small>
@@ -286,7 +271,7 @@
             <button class="tab active" type="button" data-tab="stream">Stream</button>
             <button class="tab" type="button" data-tab="classwork">Classwork</button>
             <button class="tab" type="button" data-tab="people">People</button>
-            <button class="tab" type="button" data-tab="trial-panel">Trial Class</button>
+            <button class="tab" type="button" data-tab="progress">Progress</button>
           </div>
 
           <section class="tab-panel active" id="stream">
@@ -302,7 +287,7 @@
                   <span>Class code</span>
                   <strong id="classCode">BIZ-204</strong>
                 </div>
-                <a href="#trial" data-route="trial">Book trial / 预约试听</a>
+                <a href="#classwork" class="inline-link" data-tab-target="classwork">View classwork</a>
               </aside>
               <div class="stream-list">
                 <article class="post-card share-card">
@@ -361,77 +346,25 @@
             </article>
           </section>
 
-          <section class="tab-panel" id="trial-panel">
+          <section class="tab-panel" id="progress">
             <article class="panel">
-              <p class="eyebrow">Trial Class / 预约试听课</p>
-              <h2 id="trialPanelTitle">Book a trial for Business English</h2>
-              <p>Share your WeChat ID and English goal. SpeakSure will confirm a trial time.</p>
-              <a class="primary-btn inline" href="#trial" data-route="trial">
-                Open trial form
-                <span>打开试听表单</span>
-              </a>
+              <p class="eyebrow">Progress / 学习进度</p>
+              <h2 id="progressTitle">Business English progress</h2>
+              <div class="progress-grid">
+                <div><strong>3</strong><span>Tasks completed</span></div>
+                <div><strong>2</strong><span>Teacher feedback notes</span></div>
+                <div><strong>85%</strong><span>Attendance</span></div>
+              </div>
             </article>
           </section>
-        </section>
-
-        <section class="screen trial-screen" id="trial" aria-labelledby="trial-title">
-          <form class="panel trial-form">
-            <p class="eyebrow">Book Trial / 预约试听课</p>
-            <h1 id="trial-title">Start with a trial class</h1>
-            <p>
-              For Chinese adult learners: tell us your goal and WeChat ID, and we will suggest
-              the right English class.
-            </p>
-            <div class="form-grid">
-              <label>
-                <span>Name / 姓名</span>
-                <input type="text" placeholder="Your name" />
-              </label>
-              <label>
-                <span>WeChat ID / 微信号</span>
-                <input type="text" placeholder="WeChat contact" />
-              </label>
-              <label>
-                <span>Current level / 当前水平</span>
-                <select>
-                  <option>Beginner</option>
-                  <option>Intermediate</option>
-                  <option>Advanced</option>
-                </select>
-              </label>
-              <label>
-                <span>Preferred class / 想试听的课程</span>
-                <select id="trialCourse">
-                  <option>Business English</option>
-                  <option>Spoken English Fluency</option>
-                  <option>IELTS Speaking Prep</option>
-                  <option>Interview English</option>
-                  <option>Travel & Daily English</option>
-                  <option>Presentation English</option>
-                </select>
-              </label>
-              <label class="wide">
-                <span>English goal / 学习目标</span>
-                <textarea rows="4" placeholder="Work meetings, IELTS, interview, travel, daily speaking..."></textarea>
-              </label>
-            </div>
-            <button class="primary-btn" type="button">
-              Submit trial request
-              <span>提交试听申请</span>
-            </button>
-            <div class="form-success" role="status" aria-live="polite">
-              Trial request saved for preview. SpeakSure will confirm by WeChat.
-            </div>
-          </form>
         </section>
       </main>
       <aside class="drawer" aria-label="Classroom menu" aria-hidden="true">
         <a href="#dashboard" data-route="dashboard"><svg class="icon"><use href="#icon-grid"></use></svg> Classes</a>
         <a href="#classroom" data-route="classroom"><svg class="icon"><use href="#icon-stream"></use></svg> Stream</a>
-        <a href="#trial" data-route="trial"><svg class="icon"><use href="#icon-calendar"></use></svg> Trial Class</a>
       </aside>
     </div>
 
-    <script src="./script.js?v=20260503-1558"></script>
+    <script src="./script.js?v=20260503-1606"></script>
   </body>
 </html>
