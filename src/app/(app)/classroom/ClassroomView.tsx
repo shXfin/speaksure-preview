@@ -2,206 +2,190 @@
 
 import { useSearchParams } from "next/navigation"
 import { useState } from "react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent } from "@/components/ui/card"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
 import { courses } from "@/lib/courses"
+
+const card: React.CSSProperties = {
+  background: "#fff", border: "1px solid #e8e0ef", borderRadius: 12,
+  boxShadow: "0 1px 3px rgba(0,0,0,0.07)",
+}
+const muted: React.CSSProperties = { color: "#625b71" }
+const primary = "#6750a4"
+const primarySoft = "#eaddff"
+
+function ClockIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="9" /><polyline points="12 7 12 12 15.5 14" />
+    </svg>
+  )
+}
+function DocIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
+      <rect x="9" y="3" width="6" height="4" rx="1" />
+      <line x1="9" y1="12" x2="15" y2="12" /><line x1="9" y1="16" x2="12" y2="16" />
+    </svg>
+  )
+}
+
+const TABS = ["Stream", "Classwork", "People", "Progress"]
 
 export default function ClassroomView() {
   const searchParams = useSearchParams()
   const courseId = searchParams.get("course") ?? "business"
-  const defaultTab = searchParams.get("tab") ?? "stream"
-
-  const course = courses.find((c) => c.id === courseId) ?? courses[0]
-  const [tab, setTab] = useState(defaultTab)
+  const urlTab = searchParams.get("tab")
+  const course = courses.find(c => c.id === courseId) ?? courses[0]
+  const [tab, setTab] = useState(urlTab ? TABS.find(t => t.toLowerCase() === urlTab) ?? "Stream" : "Stream")
 
   return (
-    <div className="flex flex-col">
-      {/* Banner */}
-      <div className={`${course.color} text-white px-6 py-8`}>
-        <p className="text-white/70 text-sm mb-1">SpeakSure classroom</p>
-        <h1 className="text-2xl font-bold">{course.title}</h1>
-        <p className="text-white/80 text-sm mt-1">
-          {course.titleZh} · {course.teacher} · {course.level}
-        </p>
+    <div style={{ width: "min(1280px, calc(100% - 48px))", margin: "0 auto", padding: "28px 0 64px" }}>
+
+      {/* ── Banner ── */}
+      <div style={{
+        borderRadius: 16, background: course.bannerColor,
+        padding: "36px 32px 32px", marginBottom: 8, color: "#fff",
+        minHeight: 180, display: "flex", flexDirection: "column", justifyContent: "flex-end",
+      }}>
+        <p style={{ margin: "0 0 6px", fontSize: 13, color: "rgba(255,255,255,0.8)" }}>SpeakSure classroom</p>
+        <h1 style={{ margin: "0 0 6px", fontSize: 36, fontWeight: 700, lineHeight: 1.15, color: "#fff", letterSpacing: "-0.5px" }}>{course.title}</h1>
+        <span style={{ fontSize: 14, color: "rgba(255,255,255,0.85)" }}>{course.zh} · {course.teacher} · {course.level}</span>
       </div>
 
-      {/* Tabs */}
-      <Tabs value={tab} onValueChange={setTab} className="flex-1">
-        <TabsList className="w-full justify-start rounded-none border-b border-border bg-background h-auto px-6 gap-1">
-          {["stream", "classwork", "people", "progress"].map((t) => (
-            <TabsTrigger
-              key={t}
-              value={t}
-              className="capitalize rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent pb-3 pt-3"
-            >
-              {t}
-            </TabsTrigger>
-          ))}
-        </TabsList>
+      {/* ── Tabs ── */}
+      <div style={{ display: "flex", borderBottom: "1px solid #e0d9ea", marginBottom: 24, gap: 0 }}>
+        {TABS.map(t => (
+          <button key={t} onClick={() => setTab(t)} style={{
+            padding: "14px 20px 12px",
+            border: "none", borderBottom: `3px solid ${tab === t ? primary : "transparent"}`,
+            background: "transparent",
+            color: tab === t ? primary : "#625b71",
+            fontWeight: tab === t ? 700 : 500,
+            fontSize: 14, cursor: "pointer",
+            transition: "color 150ms, border-color 150ms",
+            fontFamily: "inherit",
+          }}>
+            {t}
+          </button>
+        ))}
+      </div>
 
-        {/* Stream */}
-        <TabsContent value="stream" className="m-0">
-          <div className="flex gap-6 p-6 max-w-7xl mx-auto">
-            <aside className="hidden lg:flex flex-col gap-4 w-56 shrink-0">
-              <Card>
-                <CardContent className="p-4 flex flex-col gap-3">
-                  <h2 className="font-semibold text-sm">Upcoming</h2>
-                  <p className="text-xs text-muted-foreground">{course.schedule} China time</p>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                      <circle cx="12" cy="12" r="8" /><path d="M12 7v5l4 2" />
-                    </svg>
-                    Voice task due this week
-                  </div>
-                  <div className="border-t border-border pt-3">
-                    <p className="text-xs text-muted-foreground">Class code</p>
-                    <strong className="text-sm font-mono">{course.classCode}</strong>
-                  </div>
-                </CardContent>
-              </Card>
-            </aside>
+      {/* ── Stream ── */}
+      {tab === "Stream" && (
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 260px", gap: 20, alignItems: "start" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            {/* Share card */}
+            <div style={{ ...card, display: "flex", gap: 14, padding: "16px 20px", borderStyle: "dashed", background: "#fafafa" }}>
+              <div style={{ display: "grid", placeItems: "center", flexShrink: 0, width: 40, height: 40, borderRadius: "50%", border: "1px solid #cac4d0", color: primary, fontSize: 20, fontWeight: 300, background: "#fff" }}>+</div>
+              <div>
+                <strong style={{ fontSize: 14, fontWeight: 600 }}>Share something with your class</strong>
+                <p style={{ margin: "4px 0 0", fontSize: 13, ...muted, lineHeight: 1.5 }}>
+                  Ask a speaking question or send your practice note before the live lesson.
+                </p>
+              </div>
+            </div>
 
-            <div className="flex-1 flex flex-col gap-4">
-              <Card className="border-dashed">
-                <CardContent className="p-4 flex gap-3 items-center">
-                  <Avatar className="w-9 h-9 bg-muted">
-                    <AvatarFallback>+</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <strong className="text-sm">Share something with your class</strong>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      Ask a speaking question or send your practice note before the live lesson.
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
+            {/* Teacher post */}
+            <div style={{ ...card, display: "flex", gap: 14, padding: "16px 20px" }}>
+              <div style={{ display: "grid", placeItems: "center", flexShrink: 0, width: 40, height: 40, borderRadius: "50%", background: primary, color: "#fff", fontWeight: 700, fontSize: 16 }}>{course.initial}</div>
+              <div>
+                <strong style={{ fontSize: 14, fontWeight: 600 }}>{course.streamTitle}</strong>
+                <p style={{ margin: "4px 0 0", fontSize: 14, ...muted, lineHeight: 1.6 }}>{course.streamText}</p>
+              </div>
+            </div>
 
-              <Card>
-                <CardContent className="p-4 flex gap-3 items-start">
-                  <Avatar className="w-9 h-9 bg-primary">
-                    <AvatarFallback className="text-primary-foreground bg-primary">
-                      {course.teacher[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <strong className="text-sm">{course.streamTitle}</strong>
-                    <p className="text-sm text-muted-foreground mt-0.5">{course.streamText}</p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-muted/40">
-                <CardContent className="p-4 flex gap-3 items-start">
-                  <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                    <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                      <path d="M8 5h8M8 11h8M8 15h5M6 3h12v18H6z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <strong className="text-sm">Speaking assignment</strong>
-                    <p className="text-sm text-muted-foreground mt-0.5">{course.assignmentText}</p>
-                  </div>
-                </CardContent>
-              </Card>
+            {/* Assignment */}
+            <div style={{ ...card, display: "flex", gap: 14, padding: "16px 20px" }}>
+              <div style={{ display: "grid", placeItems: "center", flexShrink: 0, width: 40, height: 40, borderRadius: "50%", background: primarySoft, color: primary }}><DocIcon /></div>
+              <div>
+                <strong style={{ fontSize: 14, fontWeight: 600 }}>Speaking assignment</strong>
+                <p style={{ margin: "4px 0 0", fontSize: 14, ...muted, lineHeight: 1.6 }}>{course.assignment}</p>
+              </div>
             </div>
           </div>
-        </TabsContent>
 
-        {/* Classwork */}
-        <TabsContent value="classwork" className="m-0">
-          <div className="p-6 max-w-3xl mx-auto">
-            <Card>
-              <CardContent className="p-6 flex flex-col gap-4">
-                <div>
-                  <h2 className="text-lg font-semibold">Classwork / 课堂任务</h2>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Organized like a real classroom: live lesson prep, practice work, resources, and feedback.
-                  </p>
-                </div>
-                <div className="flex flex-col gap-3">
-                  {["Live lesson prep", "Speaking practice", "Vocabulary resources", "Teacher feedback"].map((task, i) => (
-                    <div key={task} className="flex items-center gap-3 p-3 rounded-lg border border-border">
-                      <div className={`w-2 h-2 rounded-full ${i === 0 ? "bg-green-500" : i === 1 ? "bg-amber-500" : "bg-muted-foreground/30"}`} />
-                      <span className="text-sm font-medium">{task}</span>
-                      <Badge variant="outline" className="ml-auto text-xs">
-                        {i === 0 ? "Due soon" : i === 1 ? "In progress" : "Upcoming"}
-                      </Badge>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+          {/* Sidebar */}
+          <div style={{ ...card, padding: 20 }}>
+            <h2 style={{ margin: "0 0 12px", fontSize: 16, fontWeight: 700 }}>Upcoming</h2>
+            <p style={{ margin: "0 0 16px", fontSize: 13, ...muted, lineHeight: 1.5 }}>{course.schedule}</p>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 12px", borderRadius: 8, background: primarySoft, color: primary, fontSize: 13, fontWeight: 500, marginBottom: 16 }}>
+              <ClockIcon /> Voice task due this week
+            </div>
+            <div style={{ paddingTop: 14, borderTop: "1px solid #e8e0ef", display: "flex", justifyContent: "space-between", fontSize: 13 }}>
+              <span style={muted}>Class code</span>
+              <strong style={{ fontFamily: "monospace", fontWeight: 700, fontSize: 14 }}>{course.code}</strong>
+            </div>
+            <button onClick={() => setTab("Classwork")} style={{ display: "block", marginTop: 14, color: primary, fontWeight: 700, fontSize: 13, background: "none", border: "none", cursor: "pointer", padding: 0, fontFamily: "inherit" }}>
+              View classwork →
+            </button>
           </div>
-        </TabsContent>
+        </div>
+      )}
 
-        {/* People */}
-        <TabsContent value="people" className="m-0">
-          <div className="p-6 max-w-3xl mx-auto">
-            <Card>
-              <CardContent className="p-6 flex flex-col gap-5">
-                <h2 className="text-lg font-semibold">People / 成员</h2>
-                <div className="flex gap-4 items-start">
-                  <Avatar className="w-12 h-12 bg-primary shrink-0">
-                    <AvatarFallback className="text-primary-foreground bg-primary font-semibold">
-                      {course.teacher[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <strong className="text-sm">{course.teacher}</strong>
-                    <Badge className="ml-2 text-xs" variant="secondary">Teacher</Badge>
-                    <p className="text-sm text-muted-foreground mt-1">{course.teacherBio}</p>
+      {/* ── Classwork ── */}
+      {tab === "Classwork" && (
+        <div style={{ ...card, padding: "24px 28px" }}>
+          <h2 style={{ margin: "0 0 6px", fontSize: 20, fontWeight: 700 }}>Classwork / 课堂任务</h2>
+          <p style={{ margin: "0 0 24px", fontSize: 14, ...muted }}>
+            Organized like a real classroom: live lesson prep, practice work, resources, and feedback.
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            {course.tasks.map(([topic, title, description, status], i) => (
+              <div key={i}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: primary, textTransform: "uppercase", letterSpacing: "0.6px", marginBottom: 10 }}>{topic}</div>
+                <div style={{ display: "flex", alignItems: "flex-start", gap: 16, padding: "16px 20px", borderRadius: 10, border: "1px solid #e8e0ef", background: "#fff" }}>
+                  <div style={{ display: "grid", placeItems: "center", flexShrink: 0, width: 36, height: 36, borderRadius: "50%", background: primarySoft, color: primary, fontWeight: 700, fontSize: 14 }}>{i + 1}</div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <h3 style={{ margin: "0 0 4px", fontSize: 16, fontWeight: 600 }}>{title}</h3>
+                    <p style={{ margin: 0, fontSize: 13, ...muted, lineHeight: 1.5 }}>{description}</p>
                   </div>
+                  <span style={{ flexShrink: 0, padding: "4px 10px", borderRadius: 99, background: primarySoft, color: primary, fontSize: 12, fontWeight: 600 }}>{status}</span>
                 </div>
-                <div className="border-t border-border pt-4">
-                  <h3 className="text-sm font-medium mb-3">Learning outcomes</h3>
-                  <ul className="flex flex-col gap-2">
-                    {course.outcomes.map((outcome) => (
-                      <li key={outcome} className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <svg className="w-4 h-4 text-green-500 shrink-0" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                          <path d="M5 12.5l4.5 4.5L19 7" />
-                        </svg>
-                        {outcome}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
+              </div>
+            ))}
           </div>
-        </TabsContent>
+        </div>
+      )}
 
-        {/* Progress */}
-        <TabsContent value="progress" className="m-0">
-          <div className="p-6 max-w-3xl mx-auto">
-            <Card>
-              <CardContent className="p-6 flex flex-col gap-4">
-                <div>
-                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                    Progress / 学习进度
-                  </p>
-                  <h2 className="text-lg font-semibold mt-1">{course.title} progress</h2>
-                </div>
-                <div className="grid grid-cols-3 gap-4">
-                  {[
-                    { value: "3", label: "Tasks completed" },
-                    { value: "2", label: "Teacher feedback notes" },
-                    { value: "85%", label: "Attendance" },
-                  ].map((stat) => (
-                    <Card key={stat.label} className="bg-muted/40">
-                      <CardContent className="p-4 flex flex-col gap-1">
-                        <strong className="text-2xl font-bold">{stat.value}</strong>
-                        <span className="text-xs text-muted-foreground">{stat.label}</span>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+      {/* ── People ── */}
+      {tab === "People" && (
+        <div style={{ ...card, padding: "24px 28px" }}>
+          <h2 style={{ margin: "0 0 20px", fontSize: 20, fontWeight: 700 }}>People / 成员</h2>
+          <div style={{ display: "flex", gap: 16, padding: "16px 0", borderTop: "1px solid #e8e0ef", borderBottom: "1px solid #e8e0ef" }}>
+            <div style={{ display: "grid", placeItems: "center", flexShrink: 0, width: 44, height: 44, borderRadius: "50%", background: primary, color: "#fff", fontWeight: 700, fontSize: 18 }}>{course.initial}</div>
+            <div>
+              <strong style={{ fontSize: 15, fontWeight: 600 }}>{course.teacher}</strong>
+              <span style={{ display: "inline-block", marginLeft: 8, padding: "2px 8px", borderRadius: 99, background: primarySoft, color: primary, fontSize: 11, fontWeight: 700 }}>Teacher</span>
+              <p style={{ margin: "6px 0 0", fontSize: 13, ...muted, lineHeight: 1.6 }}>{course.bio}</p>
+            </div>
           </div>
-        </TabsContent>
-      </Tabs>
+          <h3 style={{ margin: "20px 0 12px", fontSize: 15, fontWeight: 600 }}>Learning outcomes</h3>
+          <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 10 }}>
+            {course.outcomes.map(o => (
+              <li key={o} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 14, ...muted }}>
+                <span style={{ width: 8, height: 8, borderRadius: "50%", background: primary, flexShrink: 0, display: "inline-block" }} />
+                {o}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* ── Progress ── */}
+      {tab === "Progress" && (
+        <div style={{ ...card, padding: "24px 28px" }}>
+          <p style={{ margin: "0 0 4px", fontSize: 11, fontWeight: 700, color: primary, textTransform: "uppercase", letterSpacing: "0.8px" }}>Progress / 学习进度</p>
+          <h2 style={{ margin: "0 0 24px", fontSize: 20, fontWeight: 700 }}>{course.title} progress</h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16 }}>
+            {[["3", "Tasks completed"], ["2", "Teacher feedback notes"], ["85%", "Attendance"]].map(([val, label]) => (
+              <div key={label} style={{ padding: "20px 24px", borderRadius: 12, background: "#f3edf7", border: "1px solid #e8e0ef" }}>
+                <strong style={{ display: "block", fontSize: 32, fontWeight: 700, color: primary, lineHeight: 1 }}>{val}</strong>
+                <span style={{ display: "block", marginTop: 8, fontSize: 13, ...muted }}>{label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
