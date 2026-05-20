@@ -104,13 +104,33 @@ const courses = [
   { title: { en: "Spoken English Fluency", zh: "英语口语流利度" }, teacher: "Daniel Brooks", credential: { en: "MA TESOL · 5 yrs", zh: "TESOL硕士 · 5年经验" }, banner: "#4a4458", students: "4,492" },
 ]
 
-const teachers = [
-  { name: "Adnan Kalam", initial: "A", credential: { en: "TESOL · Managing Director, Mindset Academy", zh: "TESOL认证 · Mindset Academy总监" }, years: { en: "15+ years", zh: "15年以上" }, course: { en: "Head Teacher · IELTS & English", zh: "首席教师 · 雅思与英语" }, head: true },
-  { name: "Maya Chen", initial: "M", credential: { en: "CELTA Certified", zh: "CELTA认证" }, years: { en: "8 years", zh: "8年" }, course: { en: "Business English", zh: "商务英语" }, head: false },
-  { name: "Sophia Miller", initial: "S", credential: { en: "IELTS Examiner", zh: "雅思考官" }, years: { en: "12 years", zh: "12年" }, course: { en: "IELTS Speaking Prep", zh: "雅思口语备考" }, head: false },
-  { name: "Daniel Brooks", initial: "D", credential: { en: "MA TESOL", zh: "TESOL硕士" }, years: { en: "5 years", zh: "5年" }, course: { en: "Spoken English Fluency", zh: "英语口语流利度" }, head: false },
-  { name: "Ethan Park", initial: "E", credential: { en: "Cambridge DELTA", zh: "剑桥DELTA认证" }, years: { en: "7 years", zh: "7年" }, course: { en: "Interview English", zh: "英语面试" }, head: false },
-]
+// Adnan's credentials from resume
+const adnan = {
+  tags: {
+    en: ["TESOL Certified", "15+ years teaching", "Native English", "Canadian"],
+    zh: ["TESOL认证", "15年以上教学经验", "英语母语者", "加拿大籍"],
+  },
+  bio: {
+    en: "Adnan grew up across four continents — Canada, Uganda, Malaysia, and Vietnam — which gives him a rare ability to understand exactly where Chinese students get stuck in English. He's not just a teacher; he ran Mindset Academy in Kuala Lumpur, trained IELTS students for immigration to Canada and the UK, and lectured at Perdana University on academic writing. His students don't just pass exams — they actually start speaking.",
+    zh: "Adnan在四大洲长大——加拿大、乌干达、马来西亚和越南——这让他具备了罕见的能力，能够准确理解中国学生在英语学习中的困难所在。他不仅是一位老师，还在吉隆坡经营Mindset Academy，为移民加拿大和英国的学生提供雅思培训，并在博大大学担任学术写作讲师。他的学生不只是通过考试——他们真正开口说话了。",
+  },
+  facts: {
+    en: [
+      { icon: "🌍", text: "Lived in Canada, Uganda, Malaysia & Vietnam" },
+      { icon: "🎓", text: "TESOL · ELS Language Center, Kuala Lumpur" },
+      { icon: "🏫", text: "Managing Director, Mindset Academy KL" },
+      { icon: "📖", text: "Guest Lecturer, Perdana University" },
+      { icon: "🗣️", text: "English · French · Hindi · Urdu · Bengali" },
+    ],
+    zh: [
+      { icon: "🌍", text: "曾居住于加拿大、乌干达、马来西亚和越南" },
+      { icon: "🎓", text: "TESOL认证 · 吉隆坡ELS语言中心" },
+      { icon: "🏫", text: "Mindset Academy吉隆坡总监" },
+      { icon: "📖", text: "博大大学客座讲师" },
+      { icon: "🗣️", text: "英语·法语·印地语·乌尔都语·孟加拉语" },
+    ],
+  },
+}
 
 const testimonials = [
   { quote: { en: "My confidence at work doubled in 3 months. The teachers really understand the challenges Chinese students face.", zh: "3个月后，我在工作中的英语自信翻倍了。老师们真正理解中国学生的挑战。" }, result: "从零基础到职场流利 · 3个月", name: "Wei", city: { en: "Shanghai", zh: "上海" } },
@@ -487,47 +507,81 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Teachers */}
+      {/* Teacher — Adnan Kalam full profile */}
       <section className="l-pad" style={{ background: m3.surface }}>
         <div className="l-section">
-          <p style={{ textAlign: "center", fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", color: m3.muted, textTransform: "uppercase", marginBottom: 10 }}>{t.teachersLabel}</p>
-          <h2 style={{ textAlign: "center", fontSize: 34, fontWeight: 800, margin: "0 0 52px", color: m3.text }}>{t.teachersTitle}</h2>
-          <div className="l-5col">
-            {teachers.map(tc => (
-              <div key={tc.name} style={{
-                background: "#fff", borderRadius: 20, overflow: "hidden",
-                border: tc.head ? `2px solid ${m3.primary}` : `1px solid ${m3.border}`,
-                position: "relative",
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", color: m3.muted, textTransform: "uppercase", marginBottom: 10 }}>
+            {lang === "en" ? "YOUR TEACHER" : "你的老师"}
+          </p>
+          <h2 style={{ fontSize: 34, fontWeight: 800, margin: "0 0 40px", color: m3.text }}>
+            {lang === "en" ? "One teacher. Fully committed." : "专注一位老师，全力投入。"}
+          </h2>
+
+          <div className="l-impact-grid" style={{ display: "grid", gridTemplateColumns: "340px 1fr", gap: 40, alignItems: "start" }}>
+
+            {/* Left — photo + tags */}
+            <div>
+              <div style={{
+                borderRadius: 20, overflow: "hidden",
+                border: `2px solid ${m3.primary}`,
+                marginBottom: 20,
+                boxShadow: "0 8px 32px rgba(103,80,164,0.15)",
               }}>
-                {tc.head && (
-                  <div style={{
-                    position: "absolute", top: 10, left: 10, zIndex: 2,
-                    background: m3.primary, color: "#fff",
-                    fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 99,
-                    letterSpacing: "0.05em",
-                  }}>{lang === "en" ? "HEAD TEACHER" : "首席教师"}</div>
-                )}
-                <div style={{
-                  aspectRatio: "1", background: tc.head ? m3.primary : m3.primarySoft,
-                  display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10,
-                }}>
-                  <span style={{
-                    width: 60, height: 60, borderRadius: "50%",
-                    background: tc.head ? "rgba(255,255,255,0.2)" : m3.primary,
-                    border: tc.head ? "2px solid rgba(255,255,255,0.6)" : "none",
-                    color: "#fff",
-                    display: "grid", placeItems: "center",
-                    fontSize: 26, fontWeight: 700,
-                  }}>{tc.initial}</span>
-                  <span style={{ fontSize: 11, color: tc.head ? "rgba(255,255,255,0.7)" : m3.muted }}>{t.teacherPhoto}</span>
-                </div>
-                <div style={{ padding: "16px 18px" }}>
-                  <p style={{ fontWeight: 700, fontSize: 15, margin: "0 0 4px", color: m3.text }}>{tc.name}</p>
-                  <p style={{ fontSize: 11, color: m3.primary, fontWeight: 600, margin: "0 0 3px", lineHeight: 1.4 }}>{tc.credential[lang]}</p>
-                  <p style={{ fontSize: 11, color: m3.muted, margin: 0 }}>{tc.years[lang]} · {tc.course[lang]}</p>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/adnan.jpg"
+                  alt="Adnan Kalam"
+                  style={{ width: "100%", display: "block", aspectRatio: "4/5", objectFit: "cover" }}
+                />
+                <div style={{ background: m3.primary, padding: "16px 20px" }}>
+                  <p style={{ fontSize: 18, fontWeight: 800, color: "#fff", margin: "0 0 2px" }}>Adnan Rushdi Kalam</p>
+                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.75)", margin: 0 }}>
+                    {lang === "en" ? "Head Teacher · SpeakSure" : "首席教师 · SpeakSure"}
+                  </p>
                 </div>
               </div>
-            ))}
+
+              {/* Credential tags */}
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                {adnan.tags[lang].map(tag => (
+                  <span key={tag} style={{
+                    padding: "6px 14px", borderRadius: 99,
+                    background: m3.primarySoft, color: m3.primary,
+                    fontSize: 12, fontWeight: 600,
+                  }}>{tag}</span>
+                ))}
+              </div>
+            </div>
+
+            {/* Right — bio + facts */}
+            <div>
+              <p style={{ fontSize: 16, color: m3.text, lineHeight: 1.8, margin: "0 0 36px" }}>
+                {adnan.bio[lang]}
+              </p>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                {adnan.facts[lang].map(f => (
+                  <div key={f.text} style={{
+                    display: "flex", alignItems: "center", gap: 14,
+                    padding: "14px 18px", borderRadius: 14,
+                    background: "#fff", border: `1px solid ${m3.border}`,
+                  }}>
+                    <span style={{ fontSize: 20, flexShrink: 0 }}>{f.icon}</span>
+                    <span style={{ fontSize: 14, color: m3.text, fontWeight: 500 }}>{f.text}</span>
+                  </div>
+                ))}
+              </div>
+
+              <Link href="/register" style={{
+                display: "inline-block", marginTop: 32,
+                padding: "14px 28px", borderRadius: 20,
+                background: m3.primary, color: "#fff",
+                fontWeight: 700, fontSize: 15, textDecoration: "none",
+                boxShadow: "0 4px 16px rgba(103,80,164,0.3)",
+              }}>
+                {lang === "en" ? "Book a free first lesson →" : "预约免费第一课 →"}
+              </Link>
+            </div>
           </div>
         </div>
       </section>
