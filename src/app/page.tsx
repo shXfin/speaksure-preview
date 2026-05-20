@@ -105,10 +105,11 @@ const courses = [
 ]
 
 const teachers = [
-  { name: "Maya Chen", initial: "M", credential: { en: "CELTA Certified", zh: "CELTA认证" }, years: { en: "8 years", zh: "8年" }, course: { en: "Business English", zh: "商务英语" } },
-  { name: "Sophia Miller", initial: "S", credential: { en: "IELTS Examiner", zh: "雅思考官" }, years: { en: "12 years", zh: "12年" }, course: { en: "IELTS Speaking Prep", zh: "雅思口语备考" } },
-  { name: "Daniel Brooks", initial: "D", credential: { en: "MA TESOL", zh: "TESOL硕士" }, years: { en: "5 years", zh: "5年" }, course: { en: "Spoken English Fluency", zh: "英语口语流利度" } },
-  { name: "Ethan Park", initial: "E", credential: { en: "Cambridge DELTA", zh: "剑桥DELTA认证" }, years: { en: "7 years", zh: "7年" }, course: { en: "Interview English", zh: "英语面试" } },
+  { name: "Adnan Kalam", initial: "A", credential: { en: "TESOL · Managing Director, Mindset Academy", zh: "TESOL认证 · Mindset Academy总监" }, years: { en: "15+ years", zh: "15年以上" }, course: { en: "Head Teacher · IELTS & English", zh: "首席教师 · 雅思与英语" }, head: true },
+  { name: "Maya Chen", initial: "M", credential: { en: "CELTA Certified", zh: "CELTA认证" }, years: { en: "8 years", zh: "8年" }, course: { en: "Business English", zh: "商务英语" }, head: false },
+  { name: "Sophia Miller", initial: "S", credential: { en: "IELTS Examiner", zh: "雅思考官" }, years: { en: "12 years", zh: "12年" }, course: { en: "IELTS Speaking Prep", zh: "雅思口语备考" }, head: false },
+  { name: "Daniel Brooks", initial: "D", credential: { en: "MA TESOL", zh: "TESOL硕士" }, years: { en: "5 years", zh: "5年" }, course: { en: "Spoken English Fluency", zh: "英语口语流利度" }, head: false },
+  { name: "Ethan Park", initial: "E", credential: { en: "Cambridge DELTA", zh: "剑桥DELTA认证" }, years: { en: "7 years", zh: "7年" }, course: { en: "Interview English", zh: "英语面试" }, head: false },
 ]
 
 const testimonials = [
@@ -141,7 +142,7 @@ export default function LandingPage() {
             background: m3.primary, color: "#fff",
             fontSize: 20, fontWeight: 900, flexShrink: 0,
           }}>S</span>
-          <span className="l-nav-tagline" style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
+          <span className="l-nav-tagline">
             <strong style={{ fontSize: 18, fontWeight: 700, color: m3.text }}>SpeakSure</strong>
             <small style={{ fontSize: 11, color: m3.muted, marginTop: 3 }}>{t.tagline}</small>
           </span>
@@ -339,84 +340,109 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Impact Stats */}
+      {/* Impact Stats — editorial layout */}
       <section className="l-pad" style={{ background: "#fff" }}>
         <div className="l-section">
-          <p style={{ textAlign: "center", fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", color: m3.muted, textTransform: "uppercase", marginBottom: 10 }}>
-            {lang === "en" ? "THE IMPACT" : "数据说话"}
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", color: m3.muted, textTransform: "uppercase", marginBottom: 10 }}>
+            {lang === "en" ? "BY THE NUMBERS" : "数据说话"}
           </p>
-          <h2 style={{ textAlign: "center", fontSize: 34, fontWeight: 800, margin: "0 0 12px", color: m3.text }}>
-            {lang === "en" ? "English fluency changes careers" : "英语流利度改变职业生涯"}
+          <h2 style={{ fontSize: 34, fontWeight: 800, margin: "0 0 8px", color: m3.text, maxWidth: 560 }}>
+            {lang === "en" ? "Speaking practice is what actually moves the needle" : "口语练习才是真正改变的关键"}
           </h2>
-          <p style={{ textAlign: "center", fontSize: 15, color: m3.muted, margin: "0 0 52px" }}>
+          <p style={{ fontSize: 15, color: m3.muted, margin: "0 0 48px", maxWidth: 520, lineHeight: 1.7 }}>
             {lang === "en"
-              ? "Data from 500M+ Chinese English learners shows speaking practice is the #1 predictor of fluency."
-              : "来自5亿中国英语学习者的数据显示，口语练习是流利度提升的第一预测因素。"}
+              ? "Most students have studied English for years. The gap isn't grammar — it's never having enough real conversation practice."
+              : "大多数学生已经学了多年英语。差距不在语法，而在于缺乏足够的真实对话练习。"}
           </p>
 
-          {/* Big numbers row */}
-          <div className="l-3col" style={{ marginBottom: 48 }}>
+          {/* Editorial stat strip */}
+          <div style={{
+            display: "grid", gridTemplateColumns: "1fr 1px 1fr 1px 1fr",
+            gap: 0, marginBottom: 48,
+            background: m3.surface, borderRadius: 20,
+            border: `1px solid ${m3.border}`, overflow: "hidden",
+          }}>
             {[
-              { num: "500M+", label: lang === "en" ? "Chinese students currently learning English" : "中国在读英语学习者", source: "Ministry of Education, 2023" },
-              { num: "3×", label: lang === "en" ? "faster fluency with live speaking practice vs. apps" : "相比应用程序，直播口语练习提升流利度快3倍", source: "Cambridge English Research, 2022" },
-              { num: "78%", label: lang === "en" ? "of SpeakSure students report confident speaking within 90 days" : "78%的学员在90天内自信开口", source: "SpeakSure internal survey, 2024" },
-            ].map(s => (
-              <div key={s.num} style={{
-                textAlign: "center", padding: "32px 24px",
-                background: m3.surface, borderRadius: 20,
-                border: `1px solid ${m3.border}`,
-              }}>
-                <p style={{ fontSize: 52, fontWeight: 900, color: m3.primary, margin: "0 0 10px", letterSpacing: "-0.03em" }}>{s.num}</p>
-                <p style={{ fontSize: 14, color: m3.text, margin: "0 0 12px", lineHeight: 1.6, fontWeight: 500 }}>{s.label}</p>
-                <p style={{ fontSize: 11, color: m3.muted, margin: 0, fontStyle: "italic" }}>— {s.source}</p>
-              </div>
-            ))}
+              { num: "500M+", label: lang === "en" ? "Chinese students learning English right now" : "中国英语学习者", source: lang === "en" ? "Ministry of Education, 2023" : "中国教育部, 2023" },
+              null,
+              { num: "3×", label: lang === "en" ? "faster progress with live speaking vs. self-study apps" : "相比自学应用快3倍", source: lang === "en" ? "Cambridge English Research, 2022" : "剑桥英语研究, 2022" },
+              null,
+              { num: "78%", label: lang === "en" ? "of our students speak with confidence within 90 days" : "学员在90天内开口自信表达", source: lang === "en" ? "SpeakSure student survey, 2024" : "SpeakSure学员调查, 2024" },
+            ].map((s, i) =>
+              s === null
+                ? <div key={i} style={{ background: m3.border }} />
+                : <div key={i} style={{ padding: "36px 32px" }}>
+                    <p style={{ fontSize: 48, fontWeight: 900, color: m3.primary, margin: "0 0 8px", letterSpacing: "-0.03em", lineHeight: 1 }}>{s.num}</p>
+                    <p style={{ fontSize: 14, color: m3.text, margin: "0 0 10px", lineHeight: 1.5, fontWeight: 500 }}>{s.label}</p>
+                    <p style={{ fontSize: 11, color: m3.muted, margin: 0 }}>{s.source}</p>
+                  </div>
+            )}
           </div>
 
-          {/* Progress bars */}
-          <div style={{ background: m3.surface, borderRadius: 20, padding: "32px 36px", border: `1px solid ${m3.border}` }}>
-            <p style={{ fontSize: 14, fontWeight: 700, color: m3.text, margin: "0 0 24px" }}>
-              {lang === "en" ? "Average student improvement after 3 months" : "学员平均3个月后的提升情况"}
-            </p>
-            {[
-              { label: lang === "en" ? "Speaking confidence" : "口语自信", before: 28, after: 84 },
-              { label: lang === "en" ? "Pronunciation accuracy" : "发音准确度", before: 41, after: 79 },
-              { label: lang === "en" ? "Vocabulary in use" : "实际词汇量", before: 35, after: 72 },
-              { label: lang === "en" ? "Meeting / presentation readiness" : "会议与演讲准备度", before: 22, after: 76 },
-            ].map(bar => (
-              <div key={bar.label} style={{ marginBottom: 20 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                  <span style={{ fontSize: 13, fontWeight: 500, color: m3.text }}>{bar.label}</span>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: m3.primary }}>{bar.after}%</span>
+          {/* Progress — cleaner, two-column layout */}
+          <div className="l-impact-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+            <div>
+              <p style={{ fontSize: 16, fontWeight: 700, color: m3.text, margin: "0 0 6px" }}>
+                {lang === "en" ? "Where students improve most" : "学员提升最明显的方面"}
+              </p>
+              <p style={{ fontSize: 13, color: m3.muted, margin: "0 0 28px", lineHeight: 1.6 }}>
+                {lang === "en" ? "Self-reported after 3 months of weekly classes." : "每周上课3个月后的自我评估。"}
+              </p>
+              {[
+                { label: lang === "en" ? "Speaking confidence" : "口语自信", before: 28, after: 84 },
+                { label: lang === "en" ? "Pronunciation" : "发音准确度", before: 41, after: 79 },
+                { label: lang === "en" ? "Vocabulary in use" : "实际词汇量", before: 35, after: 72 },
+                { label: lang === "en" ? "Presentation readiness" : "演讲准备度", before: 22, after: 76 },
+              ].map(bar => (
+                <div key={bar.label} style={{ marginBottom: 18 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                    <span style={{ fontSize: 13, color: m3.text }}>{bar.label}</span>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: m3.primary }}>{bar.after}%</span>
+                  </div>
+                  <div style={{ height: 8, borderRadius: 8, background: m3.border, position: "relative", overflow: "hidden" }}>
+                    <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: `${bar.before}%`, background: "#ddd8e8", borderRadius: 8 }} />
+                    <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: `${bar.after}%`, background: m3.primary, borderRadius: 8, opacity: 0.9 }} />
+                  </div>
                 </div>
-                {/* Track */}
-                <div style={{ height: 10, borderRadius: 10, background: m3.border, position: "relative", overflow: "hidden" }}>
-                  {/* Before */}
-                  <div style={{
-                    position: "absolute", left: 0, top: 0, bottom: 0,
-                    width: `${bar.before}%`,
-                    background: "#cac4d0", borderRadius: 10,
-                  }} />
-                  {/* After */}
-                  <div style={{
-                    position: "absolute", left: 0, top: 0, bottom: 0,
-                    width: `${bar.after}%`,
-                    background: `linear-gradient(90deg, ${m3.primary} 0%, #9c82d4 100%)`,
-                    borderRadius: 10, opacity: 0.85,
-                  }} />
+              ))}
+              <div style={{ display: "flex", gap: 20, marginTop: 12 }}>
+                <span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: m3.muted }}>
+                  <span style={{ width: 10, height: 10, borderRadius: 2, background: "#ddd8e8", display: "inline-block" }} />
+                  {lang === "en" ? "Before" : "加入前"}
+                </span>
+                <span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: m3.muted }}>
+                  <span style={{ width: 10, height: 10, borderRadius: 2, background: m3.primary, display: "inline-block" }} />
+                  {lang === "en" ? "After 3 months" : "3个月后"}
+                </span>
+              </div>
+            </div>
+            {/* Right — pull quote */}
+            <div style={{
+              background: m3.primary, borderRadius: 20, padding: "36px 32px",
+              display: "flex", flexDirection: "column", justifyContent: "space-between",
+            }}>
+              <p style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.6)", margin: "0 0 20px", letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                {lang === "en" ? "Head Teacher" : "首席教师"}
+              </p>
+              <p style={{ fontSize: 18, color: "#fff", lineHeight: 1.7, margin: "0 0 32px", fontStyle: "italic" }}>
+                {lang === "en"
+                  ? '"Most Chinese students already know a lot of English. What holds them back is the fear of speaking. Once you remove that — everything else follows."'
+                  : '"大多数中国学生已经掌握了很多英语知识。阻碍他们的是开口说话的恐惧。一旦克服了这一点，其他一切都会随之而来。"'}
+              </p>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <span style={{
+                  width: 44, height: 44, borderRadius: "50%",
+                  background: "rgba(255,255,255,0.2)", color: "#fff",
+                  display: "grid", placeItems: "center",
+                  fontSize: 18, fontWeight: 700,
+                }}>A</span>
+                <div>
+                  <p style={{ fontWeight: 700, fontSize: 14, margin: 0, color: "#fff" }}>Adnan Kalam</p>
+                  <p style={{ fontSize: 12, margin: 0, color: "rgba(255,255,255,0.7)" }}>
+                    {lang === "en" ? "TESOL Certified · 15+ years · Mindset Academy KL" : "TESOL认证 · 15年以上 · 吉隆坡Mindset Academy"}
+                  </p>
                 </div>
               </div>
-            ))}
-            {/* Legend */}
-            <div style={{ display: "flex", gap: 24, marginTop: 8 }}>
-              <span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: m3.muted }}>
-                <span style={{ width: 12, height: 12, borderRadius: 3, background: "#cac4d0", display: "inline-block" }} />
-                {lang === "en" ? "Before SpeakSure" : "加入前"}
-              </span>
-              <span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: m3.muted }}>
-                <span style={{ width: 12, height: 12, borderRadius: 3, background: m3.primary, display: "inline-block" }} />
-                {lang === "en" ? "After 3 months" : "3个月后"}
-              </span>
             </div>
           </div>
         </div>
@@ -466,25 +492,39 @@ export default function LandingPage() {
         <div className="l-section">
           <p style={{ textAlign: "center", fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", color: m3.muted, textTransform: "uppercase", marginBottom: 10 }}>{t.teachersLabel}</p>
           <h2 style={{ textAlign: "center", fontSize: 34, fontWeight: 800, margin: "0 0 52px", color: m3.text }}>{t.teachersTitle}</h2>
-          <div className="l-4col">
+          <div className="l-5col">
             {teachers.map(tc => (
-              <div key={tc.name} style={{ background: "#fff", borderRadius: 20, overflow: "hidden", border: `1px solid ${m3.border}` }}>
+              <div key={tc.name} style={{
+                background: "#fff", borderRadius: 20, overflow: "hidden",
+                border: tc.head ? `2px solid ${m3.primary}` : `1px solid ${m3.border}`,
+                position: "relative",
+              }}>
+                {tc.head && (
+                  <div style={{
+                    position: "absolute", top: 10, left: 10, zIndex: 2,
+                    background: m3.primary, color: "#fff",
+                    fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 99,
+                    letterSpacing: "0.05em",
+                  }}>{lang === "en" ? "HEAD TEACHER" : "首席教师"}</div>
+                )}
                 <div style={{
-                  aspectRatio: "1", background: m3.primarySoft,
+                  aspectRatio: "1", background: tc.head ? m3.primary : m3.primarySoft,
                   display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10,
                 }}>
                   <span style={{
                     width: 60, height: 60, borderRadius: "50%",
-                    background: m3.primary, color: "#fff",
+                    background: tc.head ? "rgba(255,255,255,0.2)" : m3.primary,
+                    border: tc.head ? "2px solid rgba(255,255,255,0.6)" : "none",
+                    color: "#fff",
                     display: "grid", placeItems: "center",
                     fontSize: 26, fontWeight: 700,
                   }}>{tc.initial}</span>
-                  <span style={{ fontSize: 11, color: m3.muted }}>{t.teacherPhoto}</span>
+                  <span style={{ fontSize: 11, color: tc.head ? "rgba(255,255,255,0.7)" : m3.muted }}>{t.teacherPhoto}</span>
                 </div>
                 <div style={{ padding: "16px 18px" }}>
                   <p style={{ fontWeight: 700, fontSize: 15, margin: "0 0 4px", color: m3.text }}>{tc.name}</p>
-                  <p style={{ fontSize: 12, color: m3.primary, fontWeight: 600, margin: "0 0 3px" }}>{tc.credential[lang]} · {tc.years[lang]}</p>
-                  <p style={{ fontSize: 12, color: m3.muted, margin: 0 }}>{tc.course[lang]}</p>
+                  <p style={{ fontSize: 11, color: m3.primary, fontWeight: 600, margin: "0 0 3px", lineHeight: 1.4 }}>{tc.credential[lang]}</p>
+                  <p style={{ fontSize: 11, color: m3.muted, margin: 0 }}>{tc.years[lang]} · {tc.course[lang]}</p>
                 </div>
               </div>
             ))}
