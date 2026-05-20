@@ -139,7 +139,10 @@ export default function ClassroomView() {
                     <h3 style={{ margin: "0 0 4px", fontSize: 16, fontWeight: 600 }}>{title}</h3>
                     <p style={{ margin: 0, fontSize: 13, ...muted, lineHeight: 1.5 }}>{description}</p>
                   </div>
-                  <span style={{ flexShrink: 0, padding: "4px 10px", borderRadius: 99, background: primarySoft, color: primary, fontSize: 12, fontWeight: 600 }}>{status}</span>
+                  <span style={{ flexShrink: 0, padding: "4px 10px", borderRadius: 99, fontSize: 12, fontWeight: 600,
+                    background: status.startsWith("Due") ? "#fff3e0" : status.startsWith("Returned") ? "#e8f5e9" : primarySoft,
+                    color:      status.startsWith("Due") ? "#bf6200" : status.startsWith("Returned") ? "#2e7d32" : primary,
+                  }}>{status}</span>
                 </div>
               </div>
             ))}
