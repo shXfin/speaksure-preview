@@ -111,8 +111,8 @@ const adnan = {
     zh: ["TESOL认证", "15年以上教学经验", "英语母语者", "加拿大籍"],
   },
   bio: {
-    en: "Adnan grew up across four continents — Canada, Uganda, Malaysia, and Vietnam — which gives him a rare ability to understand exactly where Chinese students get stuck in English. He's not just a teacher; he ran Mindset Academy in Kuala Lumpur, trained IELTS students for immigration to Canada and the UK, and lectured at Perdana University on academic writing. His students don't just pass exams — they actually start speaking.",
-    zh: "Adnan在四大洲长大——加拿大、乌干达、马来西亚和越南——这让他具备了罕见的能力，能够准确理解中国学生在英语学习中的困难所在。他不仅是一位老师，还在吉隆坡经营Mindset Academy，为移民加拿大和英国的学生提供雅思培训，并在博大大学担任学术写作讲师。他的学生不只是通过考试——他们真正开口说话了。",
+    en: "Adnan has lived in Canada, Uganda, Malaysia, and Vietnam. He knows what it feels like to be the person in the room who sounds different. That background is exactly why his Chinese students trust him. He ran Mindset Academy in Kuala Lumpur, prepared students for IELTS to immigrate to Canada and the UK, and lectured at Perdana University on academic writing. He has seen every mistake Chinese speakers make in English. More importantly, he knows how to fix them.",
+    zh: "Adnan曾在加拿大、乌干达、马来西亚和越南生活。他深知作为房间里口音不同的那个人是什么感受。正是这段经历让他的中国学生信任他。他在吉隆坡经营Mindset Academy，帮助学生备考雅思移民加拿大和英国，并在博大大学担任学术写作讲师。他见过中国英语学习者犯的每一种错误，更重要的是，他知道如何纠正它们。",
   },
   facts: {
     en: [
@@ -289,7 +289,7 @@ export default function LandingPage() {
                 {/* Tasks */}
                 {[
                   { label: "Meeting phrases", tag: "Material" },
-                  { label: "Voice task — project update", tag: "Due Friday" },
+                  { label: "Voice task: project update", tag: "Due Friday" },
                   { label: "Email correction lab", tag: "Returned ✓" },
                 ].map(task => (
                   <div key={task.label} style={{
@@ -371,7 +371,7 @@ export default function LandingPage() {
           </h2>
           <p style={{ fontSize: 15, color: m3.muted, margin: "0 0 48px", maxWidth: 520, lineHeight: 1.7 }}>
             {lang === "en"
-              ? "Most students have studied English for years. The gap isn't grammar — it's never having enough real conversation practice."
+              ? "Most students have studied English for years. The gap isn't grammar. It's never having enough real conversation practice."
               : "大多数学生已经学了多年英语。差距不在语法，而在于缺乏足够的真实对话练习。"}
           </p>
 
@@ -446,7 +446,7 @@ export default function LandingPage() {
               </p>
               <p style={{ fontSize: 18, color: "#fff", lineHeight: 1.7, margin: "0 0 32px", fontStyle: "italic" }}>
                 {lang === "en"
-                  ? '"Most Chinese students already know a lot of English. What holds them back is the fear of speaking. Once you remove that — everything else follows."'
+                  ? '"Most Chinese students already know a lot of English. What holds them back is the fear of speaking. Once you remove that, everything else follows."'
                   : '"大多数中国学生已经掌握了很多英语知识。阻碍他们的是开口说话的恐惧。一旦克服了这一点，其他一切都会随之而来。"'}
               </p>
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -513,11 +513,18 @@ export default function LandingPage() {
           <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", color: m3.muted, textTransform: "uppercase", marginBottom: 10 }}>
             {lang === "en" ? "YOUR TEACHER" : "你的老师"}
           </p>
-          <h2 style={{ fontSize: 34, fontWeight: 800, margin: "0 0 40px", color: m3.text }}>
-            {lang === "en" ? "One teacher. Fully committed." : "专注一位老师，全力投入。"}
+          <h2 style={{ fontSize: 34, fontWeight: 800, margin: "0 0 8px", color: m3.text, maxWidth: 600 }}>
+            {lang === "en"
+              ? "He knows exactly where you get stuck."
+              : "他清楚地知道你卡在哪里。"}
           </h2>
+          <p style={{ fontSize: 16, color: m3.muted, margin: "0 0 40px", maxWidth: 560, lineHeight: 1.7 }}>
+            {lang === "en"
+              ? "Most Chinese students have studied English for years. The problem is never grammar. Adnan built his entire teaching method around this one fact."
+              : "大多数中国学生已经学了多年英语。问题从来不在语法。Adnan的整个教学方法就建立在这一事实之上。"}
+          </p>
 
-          <div className="l-impact-grid" style={{ display: "grid", gridTemplateColumns: "340px 1fr", gap: 40, alignItems: "start" }}>
+          <div className="l-teacher-grid" style={{ display: "grid", gridTemplateColumns: "320px 1fr", gap: 40, alignItems: "start" }}>
 
             {/* Left — photo + tags */}
             <div>

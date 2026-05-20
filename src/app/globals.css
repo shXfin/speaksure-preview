@@ -204,6 +204,8 @@
   .l-nav-tagline  { display: none !important; }
   .l-nav-login    { display: none !important; }
   .l-lang-label   { display: none !important; }
-  .l-impact-grid  { grid-template-columns: 1fr !important; }
-  .l-stat-strip   { grid-template-columns: 1fr !important; }
+  .l-impact-grid    { grid-template-columns: 1fr !important; }
+  .l-stat-strip     { grid-template-columns: 1fr !important; }
+  .l-teacher-grid   { grid-template-columns: 1fr !important; }
+  .l-stat-row       { grid-template-columns: 1fr 1px 1fr !important; }
 }
