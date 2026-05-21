@@ -71,12 +71,12 @@ export default function Topbar() {
           }}>S</span>
           <span style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
             <strong style={{ fontSize: 18, fontWeight: 700, color: "#1d1b20", letterSpacing: "-0.2px" }}>SpeakSure</strong>
-            <small style={{ fontSize: 12, color: "#625b71", marginTop: 3, fontWeight: 400 }}>English classes for Chinese learners</small>
+            <small className="t-tagline" style={{ fontSize: 12, color: "#625b71", marginTop: 3, fontWeight: 400 }}>English classes for Chinese learners</small>
           </span>
         </Link>
 
-        {/* Nav — centred */}
-        <nav style={{ display: "flex", alignItems: "center", gap: 4, flex: 1, justifyContent: "center" }}>
+        {/* Nav — centred, hidden on mobile */}
+        <nav className="t-nav">
           <Link href="/dashboard" style={{
             ...pill,
             background: onClasses ? "#eaddff" : "transparent",

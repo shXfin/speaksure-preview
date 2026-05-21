@@ -39,7 +39,7 @@ export default function ClassroomView() {
   const [tab, setTab] = useState(urlTab ? TABS.find(t => t.toLowerCase() === urlTab) ?? "Stream" : "Stream")
 
   return (
-    <div style={{ width: "min(1280px, calc(100% - 48px))", margin: "0 auto", padding: "28px 0 64px" }}>
+    <div className="app-main" style={{ margin: "0 auto", padding: "28px 0 64px" }}>
 
       {/* ── Banner ── */}
       <div style={{
@@ -72,7 +72,7 @@ export default function ClassroomView() {
 
       {/* ── Stream ── */}
       {tab === "Stream" && (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 260px", gap: 20, alignItems: "start" }}>
+        <div className="cl-stream">
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {/* Share card */}
             <div style={{ ...card, display: "flex", gap: 14, padding: "16px 20px", borderStyle: "dashed", background: "#fafafa" }}>
@@ -179,7 +179,7 @@ export default function ClassroomView() {
         <div style={{ ...card, padding: "24px 28px" }}>
           <p style={{ margin: "0 0 4px", fontSize: 11, fontWeight: 700, color: primary, textTransform: "uppercase", letterSpacing: "0.8px" }}>Progress / 学习进度</p>
           <h2 style={{ margin: "0 0 24px", fontSize: 20, fontWeight: 700 }}>{course.title} progress</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16 }}>
+          <div className="cl-progress">
             {[["3", "Tasks completed"], ["2", "Teacher feedback notes"], ["85%", "Attendance"]].map(([val, label]) => (
               <div key={label} style={{ padding: "20px 24px", borderRadius: 12, background: "#f3edf7", border: "1px solid #e8e0ef" }}>
                 <strong style={{ display: "block", fontSize: 32, fontWeight: 700, color: primary, lineHeight: 1 }}>{val}</strong>

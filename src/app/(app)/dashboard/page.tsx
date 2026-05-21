@@ -32,10 +32,10 @@ function AssignmentIcon() {
 
 export default function DashboardPage() {
   return (
-    <main style={{ width: "min(1280px, calc(100% - 48px))", margin: "0 auto", padding: "28px 0 64px" }}>
+    <main className="app-main" style={{ margin: "0 auto", padding: "28px 0 64px" }}>
 
       {/* ── Banner card ── */}
-      <div style={{ ...s.surface, display: "grid", gridTemplateColumns: "1fr auto auto", alignItems: "center", gap: 24, padding: "20px 24px", marginBottom: 20 }}>
+      <div className="db-banner" style={{ ...s.surface, padding: "20px 24px", marginBottom: 20 }}>
         <div>
           <p style={s.eyebrow}>SpeakSure / 口语课堂</p>
           <h1 style={{ margin: "0 0 8px", fontSize: 28, fontWeight: 700, letterSpacing: "-0.3px", lineHeight: 1.2 }}>English classrooms</h1>
@@ -58,7 +58,7 @@ export default function DashboardPage() {
       </div>
 
       {/* ── Quick actions ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12, marginBottom: 20 }}>
+      <div className="db-quick" style={{ marginBottom: 20 }}>
         {[
           { label: "Open stream", href: "/classroom", icon: <StreamIcon /> },
           { label: "View classwork", href: "/classroom?tab=classwork", icon: <AssignmentIcon /> },
@@ -102,7 +102,7 @@ export default function DashboardPage() {
       </div>
 
       {/* ── Course grid ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20 }}>
+      <div className="db-courses">
         {courses.map((course) => (
           <Link key={course.id} href={`/classroom?course=${course.id}`} style={{ textDecoration: "none", color: "inherit", display: "block" }}>
             <div style={{
