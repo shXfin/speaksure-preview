@@ -2,7 +2,9 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { createClient } from "@/lib/supabase/client"
+import { getProfile } from "@/lib/supabase/profile"
 
 function MenuIcon() {
   return (
@@ -37,8 +39,16 @@ const pill: React.CSSProperties = {
 export default function Topbar() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
-  const onClasses = pathname === "/dashboard"
+  const [userName, setUserName] = useState("")
+  const [isTeacher, setIsTeacher] = useState(false)
+  const onClasses = pathname === "/classes"
   const onStream = pathname.startsWith("/classroom")
+
+  useEffect(() => {
+    getProfile().then(p => {
+      if (p) { setUserName(p.full_name ?? ""); setIsTeacher(p.role === "teacher") }
+    })
+  }, [])
 
   return (
     <>
@@ -61,7 +71,7 @@ export default function Topbar() {
         </button>
 
         {/* Brand */}
-        <Link href="/dashboard" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: "inherit", marginRight: 8, minWidth: 0 }}>
+        <Link href="/classes" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: "inherit", marginRight: 8, minWidth: 0 }}>
           <span style={{
             display: "grid", placeItems: "center",
             width: 46, height: 46, borderRadius: 12,
@@ -77,7 +87,7 @@ export default function Topbar() {
 
         {/* Nav — centred, hidden on mobile */}
         <nav className="t-nav">
-          <Link href="/dashboard" style={{
+          <Link href="/classes" style={{
             ...pill,
             background: onClasses ? "#eaddff" : "transparent",
             color: onClasses ? "#6750a4" : "#625b71",
@@ -89,19 +99,31 @@ export default function Topbar() {
             background: onStream ? "#eaddff" : "transparent",
             color: onStream ? "#6750a4" : "#625b71",
           }}>
-            <StreamIcon /> Stream
+            <StreamIcon /> Classroom
           </Link>
         </nav>
 
         {/* Profile pill */}
         <div style={{
-          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-          padding: "6px 16px", borderRadius: 999,
+          display: "flex", alignItems: "center", gap: 10,
+          padding: "6px 14px 6px 8px", borderRadius: 999,
           border: "1px solid #cac4d0", background: "#fff",
-          fontSize: 12, lineHeight: 1.3, flexShrink: 0, minWidth: 68,
-        }}>
-          <span style={{ color: "#625b71", fontWeight: 400 }}>Student</span>
-          <strong style={{ color: "#1d1b20", fontWeight: 700 }}>学员</strong>
+          fontSize: 12, lineHeight: 1.3, flexShrink: 0, cursor: "pointer",
+          transition: "background 150ms",
+        }}
+          onClick={async () => { const s = createClient(); await s.auth.signOut(); window.location.href = "/login" }}
+          title="Sign out"
+          onMouseEnter={e => (e.currentTarget.style.background = "#fdecea")}
+          onMouseLeave={e => (e.currentTarget.style.background = "#fff")}
+        >
+          {/* Avatar circle */}
+          <div style={{ display: "grid", placeItems: "center", width: 28, height: 28, borderRadius: "50%", background: "#6750a4", color: "#fff", fontWeight: 700, fontSize: 13, flexShrink: 0 }}>
+            {(userName || "?").charAt(0).toUpperCase()}
+          </div>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <span style={{ color: "#1d1b20", fontWeight: 600, fontSize: 13 }}>{userName || "—"} · {isTeacher ? "Teacher" : "Student"}</span>
+            <span style={{ color: "#c62828", fontWeight: 500, fontSize: 11 }}>Sign out</span>
+          </div>
         </div>
       </header>
 
@@ -114,12 +136,22 @@ export default function Topbar() {
             background: "#fff", border: "1px solid #e0e0e0",
             boxShadow: "0 3px 12px rgba(0,0,0,0.15)",
           }}>
-            <Link href="/dashboard" onClick={() => setOpen(false)} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 6, color: "#1d1b20", fontWeight: 500, textDecoration: "none", fontSize: 14 }}>
+            <Link href="/classes" onClick={() => setOpen(false)} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 6, color: "#1d1b20", fontWeight: 500, textDecoration: "none", fontSize: 14 }}>
               <GridIcon /> Classes
             </Link>
             <Link href="/classroom" onClick={() => setOpen(false)} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 6, color: "#1d1b20", fontWeight: 500, textDecoration: "none", fontSize: 14 }}>
-              <StreamIcon /> Stream
+              <StreamIcon /> Classroom
             </Link>
+            <div style={{ margin: "4px 8px", borderTop: "1px solid #e0e0e0" }} />
+            <button
+              onClick={async () => { const s = createClient(); await s.auth.signOut(); window.location.href = "/login" }}
+              style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", padding: "12px 16px", borderRadius: 6, color: "#c62828", fontWeight: 500, fontSize: 14, background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", textAlign: "left" }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+              Sign out {userName ? `(${userName})` : ""}
+            </button>
           </nav>
         </div>
       )}

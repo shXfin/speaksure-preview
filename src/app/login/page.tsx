@@ -1,7 +1,33 @@
+"use client"
+
 import Link from "next/link"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { m3, BrandMark, GoogleSVG, OrDivider } from "@/lib/m3"
+import { createClient } from "@/lib/supabase/client"
 
 export default function LoginPage() {
+  const router = useRouter()
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
+
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault()
+    setError("")
+    setLoading(true)
+    const supabase = createClient()
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) {
+      setError(error.message)
+      setLoading(false)
+    } else {
+      router.push("/classes")
+      router.refresh()
+    }
+  }
+
   return (
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: m3.color.surfaceContainer, padding: "24px 16px" }}>
       <div style={{ width: "100%", maxWidth: 400, display: "flex", flexDirection: "column", gap: 24 }}>
@@ -20,15 +46,30 @@ export default function LoginPage() {
         </div>
 
         {/* Card */}
-        <div style={{ ...m3.card, padding: 28, display: "flex", flexDirection: "column", gap: 18 }}>
+        <form onSubmit={handleLogin} style={{ ...m3.card, padding: 28, display: "flex", flexDirection: "column", gap: 18 }}>
+
+          {error && (
+            <div style={{ padding: "10px 14px", borderRadius: 8, background: "#fdecea", border: "1px solid #f5c6c6", fontSize: 13, color: "#c62828" }}>
+              {error}
+            </div>
+          )}
+
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             <label htmlFor="email" style={m3.label}>Email</label>
-            <input id="email" type="email" placeholder="you@example.com" style={m3.input} />
+            <input
+              id="email" type="email" placeholder="you@example.com"
+              value={email} onChange={e => setEmail(e.target.value)}
+              required style={m3.input}
+            />
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             <label htmlFor="password" style={m3.label}>Password</label>
-            <input id="password" type="password" placeholder="••••••••" style={m3.input} />
+            <input
+              id="password" type="password" placeholder="••••••••"
+              value={password} onChange={e => setPassword(e.target.value)}
+              required style={m3.input}
+            />
           </div>
 
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
@@ -37,14 +78,16 @@ export default function LoginPage() {
             </Link>
           </div>
 
-          <button style={m3.btnPrimary}>Sign In</button>
+          <button type="submit" disabled={loading} style={{ ...m3.btnPrimary, opacity: loading ? 0.7 : 1, cursor: loading ? "not-allowed" : "pointer" }}>
+            {loading ? "Signing in..." : "Sign In"}
+          </button>
 
           <OrDivider />
 
-          <button style={m3.btnOutline}>
+          <button type="button" style={m3.btnOutline}>
             <GoogleSVG /> Continue with Google
           </button>
-        </div>
+        </form>
 
         <p style={{ textAlign: "center", fontSize: m3.font.base, color: m3.color.muted, margin: 0 }}>
           Don&apos;t have an account?{" "}
