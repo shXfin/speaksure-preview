@@ -27,6 +27,13 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl
 
+  // Legacy redirect — /dashboard → /classes
+  if (pathname === "/dashboard") {
+    const url = request.nextUrl.clone()
+    url.pathname = "/classes"
+    return NextResponse.redirect(url)
+  }
+
   // Protected routes — redirect to login if not signed in
   const protectedRoutes = ["/classes", "/classroom"]
   const isProtected = protectedRoutes.some(r => pathname.startsWith(r))
