@@ -15,6 +15,14 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
 
+  async function handleGoogle() {
+    const supabase = createClient()
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    })
+  }
+
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault()
     setError("")
@@ -122,7 +130,7 @@ export default function RegisterPage() {
 
           <OrDivider />
 
-          <button type="button" style={m3.btnOutline}>
+          <button type="button" onClick={handleGoogle} style={m3.btnOutline}>
             <GoogleSVG /> Continue with Google
           </button>
         </form>

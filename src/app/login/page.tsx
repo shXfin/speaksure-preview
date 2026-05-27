@@ -13,6 +13,14 @@ export default function LoginPage() {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
 
+  async function handleGoogle() {
+    const supabase = createClient()
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    })
+  }
+
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
     setError("")
@@ -84,7 +92,7 @@ export default function LoginPage() {
 
           <OrDivider />
 
-          <button type="button" style={m3.btnOutline}>
+          <button type="button" onClick={handleGoogle} style={m3.btnOutline}>
             <GoogleSVG /> Continue with Google
           </button>
         </form>
