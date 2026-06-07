@@ -81,7 +81,7 @@ export default function LoginPage() {
           </div>
 
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <Link href="#" style={{ fontSize: 13, color: m3.color.primary, fontWeight: 500, textDecoration: "none" }}>
+            <Link href="/forgot-password" style={{ fontSize: 13, color: m3.color.primary, fontWeight: 500, textDecoration: "none" }}>
               Forgot password?
             </Link>
           </div>
