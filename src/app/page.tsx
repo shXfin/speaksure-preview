@@ -1,505 +1,275 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { useState } from "react"
 
-const m3 = {
-  primary: "#6750a4",
-  primarySoft: "#eaddff",
-  bg: "#fffbfe",
-  surface: "#f8f2f9",
-  text: "#1d1b20",
-  muted: "#625b71",
-  border: "#e8e0ef",
-}
-
-const content = {
-  en: {
-    tagline: "English classes for Chinese students",
-    eyebrow: "🎓 Live English · Native Teachers",
-    h1a: "Speak English",
-    h1b: "with confidence",
-    sub: "Live classes designed for Chinese students",
-    enrolled: (n: string) => <><strong style={{ fontSize: 20 }}>{n}</strong> students already enrolled</>,
-    cta1: "Start for free →",
-    cta2: "See how it works",
-    badges: ["⭐ 4.9/5 rating", "📚 6 live courses", "🎓 Native teachers", "✅ Free first lesson"],
-    howLabel: "HOW IT WORKS",
-    howTitle: "Three steps to fluency",
-    steps: [
-      { step: "01", icon: "🎥", title: "Join a live class", desc: "Connect with native teachers in real-time video sessions.", stat: "avg. 2x/week" },
-      { step: "02", icon: "🎙️", title: "Practice speaking", desc: "Complete 60-second voice tasks designed for Chinese students.", stat: "60-sec voice tasks" },
-      { step: "03", icon: "✏️", title: "Get teacher feedback", desc: "Receive personalised corrections on pronunciation and fluency.", stat: "returned within 24hrs" },
-    ],
-    coursesLabel: "UPCOMING CLASSES",
-    coursesTitle: "Find your course",
-    viewLessons: "View lessons",
-    teachersLabel: "MEET THE TEACHERS",
-    teachersTitle: "Learn from the experts",
-    teacherPhoto: "Teacher Photo",
-    testiLabel: "STUDENT SUCCESS",
-    testiTitle: "Real results, real students",
-    pricingLabel: "PRICING",
-    pricingTitle: "Simple, transparent pricing",
-    planName: "SpeakSure Pro",
-    originalPrice: "¥1,200/mo",
-    price: "¥899",
-    pricePer: "/mo",
-    perks: ["Unlimited live group sessions", "Personalised weekly feedback", "Business & IELTS specialised modules", "Community access & networking"],
-    pricingCta: "Free first lesson →",
-    guarantee: "7-day money-back guarantee. No questions asked.",
-    footerTagline: "Building English confidence for Chinese students worldwide.",
-    links: "Links",
-    legal: "Legal",
-    copyright: "© 2024 SpeakSure. All rights reserved.",
-    login: "Log In",
-    signup: "Sign Up",
-  },
-  zh: {
-    tagline: "专为中国学生设计的英语口语课堂",
-    eyebrow: "🎓 直播英语课 · 专业外籍教师",
-    h1a: "用英语",
-    h1b: "自信表达",
-    sub: "专为中国学生量身打造的直播口语课",
-    enrolled: (n: string) => <>已有 <strong style={{ fontSize: 20 }}>{n}</strong> 名学生加入</>,
-    cta1: "免费开始 →",
-    cta2: "了解更多",
-    badges: ["⭐ 4.9分好评", "📚 6门直播课", "🎓 外籍教师", "✅ 第一课免费"],
-    howLabel: "课程流程",
-    howTitle: "三步提升英语流利度",
-    steps: [
-      { step: "01", icon: "🎥", title: "加入直播课", desc: "与外籍教师进行实时视频互动学习。", stat: "平均每周2次" },
-      { step: "02", icon: "🎙️", title: "开口练习", desc: "完成专为中国学生设计的60秒语音任务。", stat: "60秒语音练习" },
-      { step: "03", icon: "✏️", title: "获得老师反馈", desc: "收到发音和流利度的个性化纠正建议。", stat: "24小时内返回" },
-    ],
-    coursesLabel: "即将开课",
-    coursesTitle: "选择你的课程",
-    viewLessons: "查看课程",
-    teachersLabel: "认识老师",
-    teachersTitle: "向专家学习",
-    teacherPhoto: "教师照片",
-    testiLabel: "学生成果",
-    testiTitle: "真实成果，真实学生",
-    pricingLabel: "课程定价",
-    pricingTitle: "简单透明，无隐藏费用",
-    planName: "SpeakSure 专业版",
-    originalPrice: "¥1,200/月",
-    price: "¥899",
-    pricePer: "/月",
-    perks: ["无限次小班直播课", "每周个性化反馈", "商务英语 & 雅思专项模块", "学员社群 & 人脉资源"],
-    pricingCta: "免费体验第一课 →",
-    guarantee: "7天无理由退款，无需任何理由。",
-    footerTagline: "帮助中国学生在全球舞台上自信表达。",
-    links: "链接",
-    legal: "法律",
-    copyright: "© 2024 SpeakSure 版权所有",
-    login: "登录",
-    signup: "立即注册",
-  },
+// ── Brand palette ──────────────────────────────────────────────
+const C = {
+  navy:      "#0d1e3d",
+  navyMid:   "#142040",
+  navyLight: "#1a2f5a",
+  navyCard:  "#162448",
+  gold:      "#f5c518",
+  goldDark:  "#c9a200",
+  white:     "#ffffff",
+  muted:     "rgba(255,255,255,0.6)",
+  border:    "rgba(255,255,255,0.08)",
+  borderGold:"rgba(245,197,24,0.25)",
 }
 
 const courses = [
-  { title: { en: "Business English", zh: "商务英语" }, teacher: "Maya Chen", credential: { en: "CELTA Certified · 8 yrs", zh: "CELTA认证 · 8年经验" }, banner: "#4f378b", students: "3,241" },
-  { title: { en: "IELTS Speaking Prep", zh: "雅思口语备考" }, teacher: "Sophia Miller", credential: { en: "IELTS Examiner · 12 yrs", zh: "雅思考官 · 12年经验" }, banner: "#633b48", students: "5,108" },
-  { title: { en: "Spoken English Fluency", zh: "英语口语流利度" }, teacher: "Daniel Brooks", credential: { en: "MA TESOL · 5 yrs", zh: "TESOL硕士 · 5年经验" }, banner: "#4a4458", students: "4,492" },
+  {
+    id: 1,
+    title:    { en: "6-Month English Course",    zh: "6个月英语课程"  },
+    desc:     { en: "Six months of English for adults",          zh: "成人英语6个月课程"   },
+    duration: { en: "6 Months", zh: "6个月" },
+    price:    "¥1,099",
+    origPrice:"¥2,200",
+    hours:    240, lessons: 120, views: "116,345",
+    photo: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&q=80",
+  },
+  {
+    id: 2,
+    title:    { en: "3-Month Intensive",         zh: "3个月强化课程"  },
+    desc:     { en: "Three months of English language",          zh: "三个月英语语言课程"  },
+    duration: { en: "3 Months", zh: "3个月" },
+    price:    "¥699",
+    origPrice:"¥1,400",
+    hours:    120, lessons: 60, views: "52,438",
+    photo: "https://images.unsplash.com/photo-1513258496099-48168024aec0?w=600&q=80",
+  },
+  {
+    id: 3,
+    title:    { en: "2-Month English Course",    zh: "2个月英语课程"  },
+    desc:     { en: "Two levels of English for adults",          zh: "成人两级英语课程"    },
+    duration: { en: "2 Months", zh: "2个月" },
+    price:    "¥499",
+    origPrice:"¥1,000",
+    hours:    80,  lessons: 40, views: "243,418",
+    photo: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80",
+  },
+  {
+    id: 4,
+    title:    { en: "1-Month English Course",    zh: "1个月英语课程"  },
+    desc:     { en: "One level of English language",             zh: "一个月英语基础课程"  },
+    duration: { en: "1 Month", zh: "1个月" },
+    price:    "¥299",
+    origPrice:"¥600",
+    hours:    40,  lessons: 20, views: "564,828",
+    photo: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=80",
+  },
+  {
+    id: 5,
+    title:    { en: "IELTS Speaking Prep",       zh: "雅思口语备考"   },
+    desc:     { en: "Target 7.0+ in IELTS Speaking",             zh: "雅思口语目标7.0+"   },
+    duration: { en: "2 Months", zh: "2个月" },
+    price:    "¥599",
+    origPrice:"¥1,200",
+    hours:    80,  lessons: 40, views: "87,234",
+    photo: "https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?w=600&q=80",
+  },
+  {
+    id: 6,
+    title:    { en: "Business English",          zh: "商务英语"       },
+    desc:     { en: "Professional English for the workplace",    zh: "职场专业英语课程"   },
+    duration: { en: "3 Months", zh: "3个月" },
+    price:    "¥799",
+    origPrice:"¥1,600",
+    hours:    120, lessons: 60, views: "43,129",
+    photo: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&q=80",
+  },
 ]
 
-// Adnan's credentials from resume
-const adnan = {
-  tags: {
-    en: ["TESOL Certified", "15+ years teaching", "Native English", "Canadian"],
-    zh: ["TESOL认证", "15年以上教学经验", "英语母语者", "加拿大籍"],
-  },
-  bio: {
-    en: "Adnan has lived in Canada, Uganda, Malaysia, and Vietnam. He knows what it feels like to be the person in the room who sounds different. That background is exactly why his Chinese students trust him. He ran Mindset Academy in Kuala Lumpur, prepared students for IELTS to immigrate to Canada and the UK, and lectured at Perdana University on academic writing. He has seen every mistake Chinese speakers make in English. More importantly, he knows how to fix them.",
-    zh: "Adnan曾在加拿大、乌干达、马来西亚和越南生活。他深知作为房间里口音不同的那个人是什么感受。正是这段经历让他的中国学生信任他。他在吉隆坡经营Mindset Academy，帮助学生备考雅思移民加拿大和英国，并在博大大学担任学术写作讲师。他见过中国英语学习者犯的每一种错误，更重要的是，他知道如何纠正它们。",
-  },
-  facts: {
-    en: [
-      { icon: "🌍", text: "Lived in Canada, Uganda, Malaysia & Vietnam" },
-      { icon: "🎓", text: "TESOL · ELS Language Center, Kuala Lumpur" },
-      { icon: "🏫", text: "Managing Director, Mindset Academy KL" },
-      { icon: "📖", text: "Guest Lecturer, Perdana University" },
-      { icon: "🗣️", text: "English · French · Hindi · Urdu · Bengali" },
+const reviews = [
+  { name: "Li Wei",    date: "27/06/2026", stars: 5, comment: "Excellent teacher, very clear explanations!" },
+  { name: "Zhang Min", date: "20/06/2026", stars: 5, comment: "My IELTS score jumped from 5.5 to 7.0. Highly recommend." },
+  { name: "Wang Fang", date: "15/06/2026", stars: 5, comment: "The structured curriculum made a huge difference." },
+  { name: "Chen Yu",   date: "10/06/2026", stars: 4, comment: "Great content. Very professional." },
+  { name: "Liu Jing",  date: "05/06/2026", stars: 5, comment: "Very beautiful lessons, learned so much!" },
+]
+
+const content = {
+  en: {
+    nav: { home: "Home", courses: "Courses", about: "About", login: "Log in", signup: "Create account" },
+    hero: {
+      badge: "TESOL Certified · 15+ Years Experience",
+
+      h1a: "Speak English",
+      h1b: "with Confidence",
+      sub:  "Live online classes designed for Chinese students. Expert teacher, structured curriculum, proven results.",
+      cta1: "Start for free →",
+      cta2: "Browse courses",
+      stats: [
+        { n: "12,847", l: "Students" },
+        { n: "4.9★",   l: "Rating"   },
+        { n: "6",      l: "Courses"  },
+        { n: "15+",    l: "Yrs exp." },
+      ],
+    },
+    offerBadge: "🔥 Limited time — 50% OFF all courses",
+    coursesTitle: "Most Requested Courses",
+    coursesSub:   "Choose the course that fits your level and schedule",
+    enroll:  "Enroll now",
+    reviewsTitle: "What students say",
+    courseRate:   "Course Rate",
+    ratingBars: [
+      { stars: 5, pct: 87 },
+      { stars: 4, pct: 10 },
+      { stars: 3, pct: 3  },
+      { stars: 2, pct: 0  },
+      { stars: 1, pct: 0  },
     ],
-    zh: [
-      { icon: "🌍", text: "曾居住于加拿大、乌干达、马来西亚和越南" },
-      { icon: "🎓", text: "TESOL认证 · 吉隆坡ELS语言中心" },
-      { icon: "🏫", text: "Mindset Academy吉隆坡总监" },
-      { icon: "📖", text: "博大大学客座讲师" },
-      { icon: "🗣️", text: "英语·法语·印地语·乌尔都语·孟加拉语" },
+    special: {
+      title: "Not sure which course fits you?",
+      sub:   "Fill out a quick form and we'll match you with the right level and schedule.",
+      cta:   "Request a special course →",
+    },
+    footer: {
+      tagline: "Building English confidence for Chinese students worldwide.",
+      getApp:  "Get the app",
+      contact: "Contact Us",
+      links:   "Quick links",
+      legal:   "Legal",
+      copy:    "© 2025 SpeakSure. All rights reserved.",
+    },
+  },
+  zh: {
+    nav: { home: "首页", courses: "课程", about: "关于", login: "登录", signup: "创建账号" },
+    hero: {
+      badge: "TESOL认证 · 15年以上经验",
+      h1a: "用英语",
+      h1b: "自信表达",
+      sub:  "专为中国学生设计的在线直播课。专业教师，结构化课程，真实成果。",
+      cta1: "免费开始 →",
+      cta2: "浏览课程",
+      stats: [
+        { n: "12,847", l: "学生"   },
+        { n: "4.9★",   l: "评分"   },
+        { n: "6",      l: "课程"   },
+        { n: "15+",    l: "年经验" },
+      ],
+    },
+    offerBadge: "🔥 限时优惠 — 全课程5折",
+    coursesTitle: "最受欢迎的课程",
+    coursesSub:   "选择适合您水平和时间表的课程",
+    enroll:  "立即报名",
+    reviewsTitle: "学生反馈",
+    courseRate:   "课程评分",
+    ratingBars: [
+      { stars: 5, pct: 87 },
+      { stars: 4, pct: 10 },
+      { stars: 3, pct: 3  },
+      { stars: 2, pct: 0  },
+      { stars: 1, pct: 0  },
     ],
+    special: {
+      title: "不确定哪个课程适合您？",
+      sub:   "填写快速表格，我们将为您匹配合适的水平和时间表。",
+      cta:   "申请特别课程 →",
+    },
+    footer: {
+      tagline: "帮助中国学生在全球舞台上自信表达。",
+      getApp:  "下载应用",
+      contact: "联系我们",
+      links:   "快速链接",
+      legal:   "法律",
+      copy:    "© 2025 SpeakSure 版权所有",
+    },
   },
 }
 
-const testimonials = [
-  { quote: { en: "My confidence at work doubled in 3 months. The teachers really understand the challenges Chinese students face.", zh: "3个月后，我在工作中的英语自信翻倍了。老师们真正理解中国学生的挑战。" }, result: "从零基础到职场流利 · 3个月", name: "Wei", city: { en: "Shanghai", zh: "上海" } },
-  { quote: { en: "Structured feedback helped me fix errors I had been making for years. Highly professional.", zh: "系统性的反馈帮我改正了多年的错误习惯，非常专业。" }, result: "雅思口语从5.5提升到7.0", name: "Jing", city: { en: "Beijing", zh: "北京" } },
-  { quote: { en: "I passed IELTS with 7.5. The preparation strategy for Chinese students is unmatched.", zh: "我雅思考了7.5分。针对中国学生的备考策略无可比拟。" }, result: "雅思7.5 · 备考8周", name: "Hao", city: { en: "Chengdu", zh: "成都" } },
-]
+function Stars({ count, size = 16 }: { count: number; size?: number }) {
+  return (
+    <span style={{ display: "inline-flex", gap: 2 }}>
+      {[1,2,3,4,5].map(i => (
+        <span key={i} style={{ fontSize: size, color: i <= count ? C.gold : "rgba(255,255,255,0.2)" }}>★</span>
+      ))}
+    </span>
+  )
+}
 
 export default function LandingPage() {
   const [lang, setLang] = useState<"en" | "zh">("en")
   const t = content[lang]
 
   return (
-    <div style={{ background: m3.bg, color: m3.text, fontFamily: "'Roboto', 'PingFang SC', Arial, sans-serif", minWidth: 320 }}>
+    <div style={{ background: C.navy, color: C.white, fontFamily: "'Segoe UI','PingFang SC',Arial,sans-serif", minWidth: 320 }}>
 
-      {/* Topbar */}
-      <nav className="l-nav" style={{
-        position: "sticky", top: 0, zIndex: 100,
-        height: 64, display: "flex", alignItems: "center",
-        background: "#fff",
-        borderBottom: `1px solid ${m3.border}`,
-        boxShadow: "0 1px 3px rgba(0,0,0,0.07)",
-        justifyContent: "space-between", gap: 16,
-      }}>
-        {/* Brand */}
-        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: "inherit", flexShrink: 0 }}>
-          <span style={{
-            display: "grid", placeItems: "center",
-            width: 46, height: 46, borderRadius: 12,
-            background: m3.primary, color: "#fff",
-            fontSize: 20, fontWeight: 900, flexShrink: 0,
-          }}>S</span>
-          <span className="l-nav-tagline">
-            <strong style={{ fontSize: 18, fontWeight: 700, color: m3.text }}>SpeakSure</strong>
-            <small style={{ fontSize: 11, color: m3.muted, marginTop: 3 }}>{t.tagline}</small>
-          </span>
-        </Link>
+      {/* ── Offer strip ─────────────────────────────────────── */}
+      <div style={{ background: C.gold, color: C.navy, textAlign: "center", padding: "8px 16px", fontSize: 13, fontWeight: 700 }}>
+        {t.offerBadge}
+      </div>
 
-        {/* Right actions */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          {/* Language toggle */}
-          <button
-            onClick={() => setLang(lang === "en" ? "zh" : "en")}
-            style={{
-              display: "flex", alignItems: "center", gap: 4,
-              padding: "7px 12px", borderRadius: 20,
-              border: `1.5px solid ${m3.border}`,
-              background: "transparent", cursor: "pointer",
-              fontSize: 13, fontWeight: 600, color: m3.muted,
-              whiteSpace: "nowrap",
-            }}
-          >
-            🌐 <span className="l-lang-label">{lang === "en" ? "中文" : "English"}</span>
-            <span style={{ fontSize: 12 }}>{lang === "en" ? "中文" : "EN"}</span>
-          </button>
-          <Link className="l-nav-login" href="/login" style={{
-            padding: "8px 18px", borderRadius: 20,
-            border: `2px solid ${m3.primary}`, color: m3.primary,
-            fontWeight: 600, fontSize: 14, textDecoration: "none",
-            whiteSpace: "nowrap",
-          }}>{t.login}</Link>
-          <Link href="/register" style={{
-            padding: "8px 18px", borderRadius: 20,
-            background: m3.primary, color: "#fff",
-            fontWeight: 600, fontSize: 14, textDecoration: "none",
-            whiteSpace: "nowrap",
-          }}>{t.signup}</Link>
+      {/* ── Nav ─────────────────────────────────────────────── */}
+      <nav style={{ background: C.navyMid, borderBottom: `1px solid ${C.border}`, position: "sticky", top: 0, zIndex: 100 }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+            <span style={{ width: 36, height: 36, borderRadius: 8, background: C.gold, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 900, color: C.navy, flexShrink: 0, lineHeight: 1 }}>S</span>
+            <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+              <div style={{ fontSize: 16, fontWeight: 800, color: C.white, lineHeight: 1.2 }}>SpeakSure</div>
+              <div style={{ fontSize: 10, color: C.muted, lineHeight: 1.2 }}>English · 英语</div>
+            </div>
+          </Link>
+
+          <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
+            {[{ l: t.nav.home, h: "#" }, { l: t.nav.courses, h: "#courses" }].map(x => (
+              <a key={x.l} href={x.h} style={{ fontSize: 13, color: C.muted, textDecoration: "none", fontWeight: 500, whiteSpace: "nowrap" }}>{x.l}</a>
+            ))}
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+            <button onClick={() => setLang(lang === "en" ? "zh" : "en")} style={{ background: "transparent", border: `1px solid ${C.border}`, color: C.white, borderRadius: 20, padding: "5px 12px", fontSize: 12, cursor: "pointer", fontWeight: 600 }}>
+              🌐 {lang === "en" ? "中文" : "EN"}
+            </button>
+            <Link href="/login" style={{ padding: "7px 16px", borderRadius: 20, border: `1.5px solid ${C.border}`, color: C.white, fontWeight: 600, fontSize: 13, textDecoration: "none" }}>{t.nav.login}</Link>
+            <Link href="/register" style={{ padding: "7px 16px", borderRadius: 20, background: C.gold, color: C.navy, fontWeight: 700, fontSize: 13, textDecoration: "none" }}>{t.nav.signup}</Link>
+          </div>
         </div>
       </nav>
 
-      {/* Hero — 2 column */}
-      <section className="l-pad hero-glow" style={{ background: "#fff" }}>
-        <div className="l-hero">
+      {/* ── Hero ────────────────────────────────────────────── */}
+      <section style={{ background: `linear-gradient(135deg, ${C.navyMid} 0%, ${C.navyLight} 60%, ${C.navyMid} 100%)`, padding: "72px 20px 64px", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: -160, right: -160, width: 520, height: 520, borderRadius: "50%", background: "rgba(245,197,24,0.05)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: -80, left: -80, width: 360, height: 360, borderRadius: "50%", background: "rgba(245,197,24,0.04)", pointerEvents: "none" }} />
 
-          {/* Left */}
+        <div style={{ maxWidth: 1200, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 60, alignItems: "center" }}>
           <div>
-            <span style={{
-              display: "inline-block", padding: "5px 16px", borderRadius: 20,
-              background: m3.primarySoft, color: m3.primary,
-              fontSize: 13, fontWeight: 600, marginBottom: 24,
-            }}>{t.eyebrow}</span>
-
-            <h1 style={{
-              fontSize: "clamp(38px, 4vw, 58px)", fontWeight: 900,
-              color: m3.text, margin: "0 0 16px",
-              lineHeight: 1.1, letterSpacing: "-0.03em",
-            }}>
-              {t.h1a}<br />
-              <span style={{ color: m3.primary }}>{t.h1b}</span>
+            <span style={{ display: "inline-block", padding: "5px 14px", borderRadius: 20, background: "rgba(245,197,24,0.12)", color: C.gold, fontSize: 12, fontWeight: 700, marginBottom: 20, border: `1px solid ${C.borderGold}` }}>
+              🎓 {t.hero.badge}
+            </span>
+            <h1 style={{ fontSize: "clamp(36px,4.5vw,60px)", fontWeight: 900, margin: "0 0 14px", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
+              {t.hero.h1a}<br />
+              <span style={{ color: C.gold }}>{t.hero.h1b}</span>
             </h1>
-
-            <p style={{ fontSize: 17, color: m3.muted, margin: "0 0 8px", lineHeight: 1.6 }}>
-              {t.sub}
-            </p>
-            <p style={{ fontSize: 15, fontWeight: 700, color: m3.primary, margin: "0 0 32px" }}>
-              {t.enrolled("12,847")}
-            </p>
-
-            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 36 }}>
-              <Link href="/register" style={{
-                padding: "14px 28px", borderRadius: 20,
-                background: m3.primary, color: "#fff",
-                fontWeight: 700, fontSize: 15, textDecoration: "none",
-                boxShadow: "0 4px 16px rgba(103,80,164,0.3)",
-              }}>{t.cta1}</Link>
-              <a href="#how-it-works" style={{
-                padding: "14px 28px", borderRadius: 20,
-                border: `2px solid ${m3.border}`, color: m3.muted,
-                fontWeight: 600, fontSize: 15, textDecoration: "none",
-              }}>{t.cta2}</a>
+            <p style={{ fontSize: 16, color: C.muted, margin: "0 0 36px", lineHeight: 1.75, maxWidth: 460 }}>{t.hero.sub}</p>
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 44 }}>
+              <Link href="/register" style={{ padding: "13px 26px", borderRadius: 10, background: C.gold, color: C.navy, fontWeight: 700, fontSize: 15, textDecoration: "none", boxShadow: "0 4px 18px rgba(245,197,24,0.35)" }}>{t.hero.cta1}</Link>
+              <a href="#courses" style={{ padding: "13px 26px", borderRadius: 10, border: `1.5px solid ${C.border}`, color: C.white, fontWeight: 600, fontSize: 15, textDecoration: "none" }}>{t.hero.cta2}</a>
             </div>
-
-            <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
-              {t.badges.map(b => (
-                <span key={b} style={{ fontSize: 13, color: m3.muted, fontWeight: 500 }}>{b}</span>
-              ))}
-            </div>
-          </div>
-
-          {/* Right — product preview card */}
-          <div style={{ position: "relative" }}>
-            {/* Main course card preview */}
-            <div style={{
-              borderRadius: 20, overflow: "hidden",
-              border: `1px solid ${m3.border}`,
-              background: "#fff",
-              boxShadow: "0 16px 48px rgba(103,80,164,0.12)",
-            }}>
-              {/* Banner */}
-              <div style={{
-                height: 110, background: "#4f378b",
-                display: "flex", flexDirection: "column",
-                justifyContent: "flex-end", padding: "0 20px 14px",
-              }}>
-                <span style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", fontWeight: 500, marginBottom: 4 }}>BUSINESS ENGLISH · BIZ-204</span>
-                <span style={{ fontSize: 18, fontWeight: 700, color: "#fff" }}>Client update meeting</span>
-              </div>
-              {/* Card body */}
-              <div style={{ padding: "20px 20px 8px" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-                  <span style={{
-                    width: 36, height: 36, borderRadius: "50%",
-                    background: m3.primary, color: "#fff",
-                    display: "grid", placeItems: "center",
-                    fontSize: 15, fontWeight: 700, flexShrink: 0,
-                  }}>M</span>
-                  <div>
-                    <p style={{ fontSize: 13, fontWeight: 700, margin: 0, color: m3.text }}>Maya Chen</p>
-                    <p style={{ fontSize: 11, color: m3.muted, margin: 0 }}>CELTA Certified · 8 years</p>
-                  </div>
-                  <span style={{
-                    marginLeft: "auto", fontSize: 11, fontWeight: 600,
-                    padding: "4px 10px", borderRadius: 99,
-                    background: "#e8f5e9", color: "#2e7d32",
-                  }}>● Live now</span>
-                </div>
-                {/* Tasks */}
-                {[
-                  { label: "Meeting phrases", tag: "Material" },
-                  { label: "Voice task: project update", tag: "Due Friday" },
-                  { label: "Email correction lab", tag: "Returned ✓" },
-                ].map(task => (
-                  <div key={task.label} style={{
-                    display: "flex", justifyContent: "space-between", alignItems: "center",
-                    padding: "10px 0", borderTop: `1px solid ${m3.border}`,
-                  }}>
-                    <span style={{ fontSize: 13, color: m3.text, fontWeight: 500 }}>{task.label}</span>
-                    <span style={{
-                      fontSize: 12, fontWeight: 600, padding: "4px 10px", borderRadius: 99,
-                      whiteSpace: "nowrap",
-                      background: task.tag.startsWith("Due") ? "#fff3e0" : task.tag.startsWith("Returned") ? "#e8f5e9" : m3.primarySoft,
-                      color:      task.tag.startsWith("Due") ? "#bf6200" : task.tag.startsWith("Returned") ? "#2e7d32" : m3.primary,
-                    }}>{task.tag}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Floating stat strip below card */}
-            <div style={{
-              marginTop: 16, borderRadius: 16,
-              background: "#fff", border: `1px solid ${m3.border}`,
-              padding: "14px 20px",
-              display: "flex", justifyContent: "space-between", alignItems: "center",
-            }}>
-              {[
-                { num: "12,847", label: lang === "en" ? "students" : "名学生" },
-                { num: "4.9★", label: lang === "en" ? "rating" : "评分" },
-                { num: "6", label: lang === "en" ? "courses" : "门课程" },
-              ].map((s, i) => (
-                <div key={i} style={{ textAlign: "center", flex: 1, borderRight: i < 2 ? `1px solid ${m3.border}` : "none" }}>
-                  <p style={{ fontSize: 18, fontWeight: 800, margin: 0, color: m3.primary }}>{s.num}</p>
-                  <p style={{ fontSize: 11, margin: 0, color: m3.muted }}>{s.label}</p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", background: "rgba(255,255,255,0.04)", borderRadius: 14, border: `1px solid ${C.border}`, overflow: "hidden" }}>
+              {t.hero.stats.map((s, i) => (
+                <div key={i} style={{ padding: "16px 8px", textAlign: "center", borderRight: i < 3 ? `1px solid ${C.border}` : "none" }}>
+                  <div style={{ fontSize: 20, fontWeight: 900, color: C.gold }}>{s.n}</div>
+                  <div style={{ fontSize: 10, color: C.muted, marginTop: 4 }}>{s.l}</div>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* How It Works */}
-      <section id="how-it-works" className="l-pad" style={{ background: m3.surface }}>
-        <div className="l-section">
-          <p style={{ textAlign: "center", fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", color: m3.muted, textTransform: "uppercase", marginBottom: 10 }}>{t.howLabel}</p>
-          <h2 style={{ textAlign: "center", fontSize: 34, fontWeight: 800, margin: "0 0 52px", color: m3.text }}>{t.howTitle}</h2>
-          <div className="l-3col">
-            {t.steps.map(s => (
-              <div key={s.step} style={{ background: "#fff", borderRadius: 20, padding: 32, border: `1px solid ${m3.border}` }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
-                  <span style={{
-                    width: 36, height: 36, borderRadius: "50%",
-                    background: m3.primary, color: "#fff",
-                    display: "grid", placeItems: "center",
-                    fontSize: 14, fontWeight: 800, flexShrink: 0,
-                  }}>{s.step}</span>
-                  <div style={{ fontSize: 28 }}>{s.icon}</div>
+          {/* 2x2 preview cards */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+            {courses.slice(0, 2).map((c, i) => (
+              <div key={i} style={{ background: C.navyCard, border: `1px solid ${C.border}`, borderRadius: 14, overflow: "hidden" }}>
+                <div style={{ position: "relative", height: 110 }}>
+                  <Image src={c.photo} alt={c.title.en} fill style={{ objectFit: "cover", opacity: 0.75 }} unoptimized />
+                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(13,30,61,0.2) 0%, rgba(13,30,61,0.8) 100%)" }} />
+                  <span style={{ position: "absolute", top: 8, right: 8, background: C.gold, color: C.navy, fontSize: 9, fontWeight: 800, padding: "3px 8px", borderRadius: 20 }}>{c.duration[lang]}</span>
                 </div>
-                <h3 style={{ fontSize: 18, fontWeight: 700, margin: "0 0 10px", color: m3.text }}>{s.title}</h3>
-                <p style={{ fontSize: 14, color: m3.muted, margin: "0 0 20px", lineHeight: 1.7 }}>{s.desc}</p>
-                <span style={{
-                  display: "inline-block", padding: "5px 14px", borderRadius: 12,
-                  background: m3.primarySoft, color: m3.primary,
-                  fontSize: 12, fontWeight: 600,
-                }}>{s.stat}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Impact Stats — editorial layout */}
-      <section className="l-pad" style={{ background: "#fff" }}>
-        <div className="l-section">
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", color: m3.muted, textTransform: "uppercase", marginBottom: 10 }}>
-            {lang === "en" ? "BY THE NUMBERS" : "数据说话"}
-          </p>
-          <h2 style={{ fontSize: 34, fontWeight: 800, margin: "0 0 8px", color: m3.text, maxWidth: 560 }}>
-            {lang === "en" ? "Speaking practice is what actually moves the needle" : "口语练习才是真正改变的关键"}
-          </h2>
-          <p style={{ fontSize: 15, color: m3.muted, margin: "0 0 48px", maxWidth: 520, lineHeight: 1.7 }}>
-            {lang === "en"
-              ? "Most students have studied English for years. The gap isn't grammar. It's never having enough real conversation practice."
-              : "大多数学生已经学了多年英语。差距不在语法，而在于缺乏足够的真实对话练习。"}
-          </p>
-
-          {/* Editorial stat strip */}
-          <div style={{
-            display: "grid", gridTemplateColumns: "1fr 1px 1fr 1px 1fr",
-            gap: 0, marginBottom: 48,
-            background: m3.surface, borderRadius: 20,
-            border: `1px solid ${m3.border}`, overflow: "hidden",
-          }}>
-            {[
-              { num: "500M+", label: lang === "en" ? "Chinese students learning English right now" : "中国英语学习者", source: lang === "en" ? "Ministry of Education, 2023" : "中国教育部, 2023" },
-              null,
-              { num: "3×", label: lang === "en" ? "faster progress with live speaking vs. self-study apps" : "相比自学应用快3倍", source: lang === "en" ? "Cambridge English Research, 2022" : "剑桥英语研究, 2022" },
-              null,
-              { num: "78%", label: lang === "en" ? "of our students speak with confidence within 90 days" : "学员在90天内开口自信表达", source: lang === "en" ? "SpeakSure student survey, 2024" : "SpeakSure学员调查, 2024" },
-            ].map((s, i) =>
-              s === null
-                ? <div key={i} style={{ background: m3.border }} />
-                : <div key={i} style={{ padding: "36px 32px" }}>
-                    <p style={{ fontSize: 48, fontWeight: 900, color: m3.primary, margin: "0 0 8px", letterSpacing: "-0.03em", lineHeight: 1 }}>{s.num}</p>
-                    <p style={{ fontSize: 14, color: m3.text, margin: "0 0 10px", lineHeight: 1.5, fontWeight: 500 }}>{s.label}</p>
-                    <p style={{ fontSize: 11, color: m3.muted, margin: 0 }}>{s.source}</p>
-                  </div>
-            )}
-          </div>
-
-          {/* Progress — cleaner, two-column layout */}
-          <div className="l-impact-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
-            <div>
-              <p style={{ fontSize: 16, fontWeight: 700, color: m3.text, margin: "0 0 6px" }}>
-                {lang === "en" ? "Where students improve most" : "学员提升最明显的方面"}
-              </p>
-              <p style={{ fontSize: 13, color: m3.muted, margin: "0 0 28px", lineHeight: 1.6 }}>
-                {lang === "en" ? "Self-reported after 3 months of weekly classes." : "每周上课3个月后的自我评估。"}
-              </p>
-              {[
-                { label: lang === "en" ? "Speaking confidence" : "口语自信", before: 28, after: 84 },
-                { label: lang === "en" ? "Pronunciation" : "发音准确度", before: 41, after: 79 },
-                { label: lang === "en" ? "Vocabulary in use" : "实际词汇量", before: 35, after: 72 },
-                { label: lang === "en" ? "Presentation readiness" : "演讲准备度", before: 22, after: 76 },
-              ].map(bar => (
-                <div key={bar.label} style={{ marginBottom: 18 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                    <span style={{ fontSize: 13, color: m3.text }}>{bar.label}</span>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: m3.primary }}>{bar.after}%</span>
-                  </div>
-                  <div style={{ height: 8, borderRadius: 8, background: m3.border, position: "relative", overflow: "hidden" }}>
-                    <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: `${bar.before}%`, background: "#ddd8e8", borderRadius: 8 }} />
-                    <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: `${bar.after}%`, background: m3.primary, borderRadius: 8, opacity: 0.9 }} />
-                  </div>
-                </div>
-              ))}
-              <div style={{ display: "flex", gap: 20, marginTop: 12 }}>
-                <span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: m3.muted }}>
-                  <span style={{ width: 10, height: 10, borderRadius: 2, background: "#ddd8e8", display: "inline-block" }} />
-                  {lang === "en" ? "Before" : "加入前"}
-                </span>
-                <span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: m3.muted }}>
-                  <span style={{ width: 10, height: 10, borderRadius: 2, background: m3.primary, display: "inline-block" }} />
-                  {lang === "en" ? "After 3 months" : "3个月后"}
-                </span>
-              </div>
-            </div>
-            {/* Right — pull quote */}
-            <div style={{
-              background: m3.primary, borderRadius: 20, padding: "36px 32px",
-              display: "flex", flexDirection: "column", justifyContent: "space-between",
-            }}>
-              <p style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.6)", margin: "0 0 20px", letterSpacing: "0.05em", textTransform: "uppercase" }}>
-                {lang === "en" ? "Head Teacher" : "首席教师"}
-              </p>
-              <p style={{ fontSize: 18, color: "#fff", lineHeight: 1.7, margin: "0 0 32px", fontStyle: "italic" }}>
-                {lang === "en"
-                  ? '"Most Chinese students already know a lot of English. What holds them back is the fear of speaking. Once you remove that, everything else follows."'
-                  : '"大多数中国学生已经掌握了很多英语知识。阻碍他们的是开口说话的恐惧。一旦克服了这一点，其他一切都会随之而来。"'}
-              </p>
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <span style={{
-                  width: 44, height: 44, borderRadius: "50%",
-                  background: "rgba(255,255,255,0.2)", color: "#fff",
-                  display: "grid", placeItems: "center",
-                  fontSize: 18, fontWeight: 700,
-                }}>A</span>
-                <div>
-                  <p style={{ fontWeight: 700, fontSize: 14, margin: 0, color: "#fff" }}>Adnan Kalam</p>
-                  <p style={{ fontSize: 12, margin: 0, color: "rgba(255,255,255,0.7)" }}>
-                    {lang === "en" ? "TESOL Certified · 15+ years · Mindset Academy KL" : "TESOL认证 · 15年以上 · 吉隆坡Mindset Academy"}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Course Cards */}
-      <section className="l-pad" style={{ background: m3.surface }}>
-        <div className="l-section">
-          <p style={{ textAlign: "center", fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", color: m3.muted, textTransform: "uppercase", marginBottom: 10 }}>{t.coursesLabel}</p>
-          <h2 style={{ textAlign: "center", fontSize: 34, fontWeight: 800, margin: "0 0 52px", color: m3.text }}>{t.coursesTitle}</h2>
-          <div className="l-3col">
-            {courses.map(c => (
-              <div key={c.title.en} style={{ borderRadius: 20, overflow: "hidden", border: `1px solid ${m3.border}`, background: "#fff", transition: "box-shadow 0.2s" }}>
-                <div style={{
-                  height: 100, background: c.banner,
-                  display: "flex", alignItems: "flex-end", padding: "0 20px 14px",
-                  position: "relative",
-                }}>
-                  <span style={{ color: "#fff", fontWeight: 700, fontSize: 16 }}>{c.title[lang]}</span>
-                  <span style={{
-                    position: "absolute", top: 14, right: 14,
-                    background: "rgba(255,255,255,0.18)", color: "#fff",
-                    fontSize: 11, padding: "3px 10px", borderRadius: 10, fontWeight: 600,
-                    backdropFilter: "blur(4px)",
-                  }}>🔴 Live</span>
-                </div>
-                <div style={{ padding: "18px 20px" }}>
-                  <p style={{ fontSize: 15, fontWeight: 700, color: m3.text, margin: "0 0 4px" }}>{c.teacher}</p>
-                  <p style={{ fontSize: 12, color: m3.muted, margin: "0 0 16px" }}>{c.credential[lang]}</p>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ fontSize: 12, color: m3.muted }}>👥 {c.students}</span>
-                    <Link href="/register" style={{
-                      padding: "7px 18px", borderRadius: 14,
-                      background: m3.primarySoft, color: m3.primary,
-                      fontSize: 13, fontWeight: 600, textDecoration: "none",
-                    }}>{t.viewLessons}</Link>
-                  </div>
+                <div style={{ padding: "10px 12px" }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: C.white, marginBottom: 4, lineHeight: 1.3 }}>{c.title[lang]}</div>
+                  <div style={{ fontSize: 10, color: C.muted, textDecoration: "line-through" }}>{c.origPrice}</div>
+                  <div style={{ fontSize: 18, fontWeight: 900, color: C.gold }}>{c.price}</div>
                 </div>
               </div>
             ))}
@@ -507,202 +277,166 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Teacher — Adnan Kalam full profile */}
-      <section className="l-pad" style={{ background: m3.surface }}>
-        <div className="l-section">
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", color: m3.muted, textTransform: "uppercase", marginBottom: 10 }}>
-            {lang === "en" ? "YOUR TEACHER" : "你的老师"}
-          </p>
-          <h2 style={{ fontSize: 34, fontWeight: 800, margin: "0 0 8px", color: m3.text, maxWidth: 600 }}>
-            {lang === "en"
-              ? "He knows exactly where you get stuck."
-              : "他清楚地知道你卡在哪里。"}
-          </h2>
-          <p style={{ fontSize: 16, color: m3.muted, margin: "0 0 40px", maxWidth: 560, lineHeight: 1.7 }}>
-            {lang === "en"
-              ? "Most Chinese students have studied English for years. The problem is never grammar. Adnan built his entire teaching method around this one fact."
-              : "大多数中国学生已经学了多年英语。问题从来不在语法。Adnan的整个教学方法就建立在这一事实之上。"}
-          </p>
+      {/* ── Courses ─────────────────────────────────────────── */}
+      <section id="courses" style={{ padding: "72px 20px", background: C.navy }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <h2 style={{ fontSize: 32, fontWeight: 800, margin: "0 0 8px", textAlign: "center" }}>{t.coursesTitle}</h2>
+          <p style={{ fontSize: 15, color: C.muted, textAlign: "center", margin: "0 0 44px" }}>{t.coursesSub}</p>
 
-          <div className="l-teacher-grid" style={{ display: "grid", gridTemplateColumns: "320px 1fr", gap: 40, alignItems: "start" }}>
-
-            {/* Left — photo + tags */}
-            <div>
-              <div style={{
-                borderRadius: 20, overflow: "hidden",
-                border: `2px solid ${m3.primary}`,
-                marginBottom: 20,
-                boxShadow: "0 8px 32px rgba(103,80,164,0.15)",
-              }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/adnan.jpg"
-                  alt="Adnan Kalam"
-                  style={{ width: "100%", display: "block", aspectRatio: "4/5", objectFit: "cover" }}
-                />
-                <div style={{ background: m3.primary, padding: "16px 20px" }}>
-                  <p style={{ fontSize: 18, fontWeight: 800, color: "#fff", margin: "0 0 2px" }}>Adnan Rushdi Kalam</p>
-                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.75)", margin: 0 }}>
-                    {lang === "en" ? "Head Teacher · SpeakSure" : "首席教师 · SpeakSure"}
-                  </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(400px, 1fr))", gap: 20 }}>
+            {courses.slice(0, 2).map(c => (
+              <Link key={c.id} href={`/courses/${c.id}`} style={{ textDecoration: "none", display: "flex", flexDirection: "column", background: C.navyCard, borderRadius: 16, overflow: "hidden", border: `1px solid ${C.border}` }}>
+                {/* Photo */}
+                <div style={{ position: "relative", height: 200 }}>
+                  <Image src={c.photo} alt={c.title.en} fill style={{ objectFit: "cover" }} unoptimized />
+                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 55%, rgba(0,0,0,0.5) 100%)" }} />
+                  <span style={{ position: "absolute", top: 12, right: 12, background: C.gold, color: C.navy, fontSize: 11, fontWeight: 800, padding: "4px 12px", borderRadius: 20 }}>
+                    {c.duration[lang]}
+                  </span>
+                  <span style={{ position: "absolute", bottom: 10, left: 12, fontSize: 22 }}>🇬🇧</span>
                 </div>
-              </div>
 
-              {/* Credential tags */}
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                {adnan.tags[lang].map(tag => (
-                  <span key={tag} style={{
-                    padding: "6px 14px", borderRadius: 99,
-                    background: m3.primarySoft, color: m3.primary,
-                    fontSize: 12, fontWeight: 600,
-                  }}>{tag}</span>
-                ))}
-              </div>
-            </div>
+                <div style={{ padding: "16px", flex: 1, display: "flex", flexDirection: "column", gap: 10 }}>
+                  <h3 style={{ fontSize: 15, fontWeight: 700, color: C.white, margin: 0, lineHeight: 1.3 }}>{c.title[lang]}</h3>
+                  <p style={{ fontSize: 12, color: C.muted, margin: 0, lineHeight: 1.6 }}>{c.desc[lang]}</p>
 
-            {/* Right — bio + facts */}
-            <div>
-              <p style={{ fontSize: 16, color: m3.text, lineHeight: 1.8, margin: "0 0 36px" }}>
-                {adnan.bio[lang]}
-              </p>
-
-              <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-                {adnan.facts[lang].map(f => (
-                  <div key={f.text} style={{
-                    display: "flex", alignItems: "center", gap: 14,
-                    padding: "14px 18px", borderRadius: 14,
-                    background: "#fff", border: `1px solid ${m3.border}`,
-                  }}>
-                    <span style={{ fontSize: 20, flexShrink: 0 }}>{f.icon}</span>
-                    <span style={{ fontSize: 14, color: m3.text, fontWeight: 500 }}>{f.text}</span>
+                  <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginTop: "auto" }}>
+                    <div>
+                      <div style={{ fontSize: 11, color: C.muted, textDecoration: "line-through" }}>{c.origPrice}</div>
+                      <div style={{ fontSize: 26, fontWeight: 900, color: C.gold, lineHeight: 1.1 }}>{c.price}</div>
+                    </div>
+                    <span style={{ padding: "9px 18px", borderRadius: 10, background: C.gold, color: C.navy, fontWeight: 700, fontSize: 12 }}>
+                      {t.enroll}
+                    </span>
                   </div>
-                ))}
-              </div>
 
-              <Link href="/register" style={{
-                display: "inline-block", marginTop: 32,
-                padding: "14px 28px", borderRadius: 20,
-                background: m3.primary, color: "#fff",
-                fontWeight: 700, fontSize: 15, textDecoration: "none",
-                boxShadow: "0 4px 16px rgba(103,80,164,0.3)",
-              }}>
-                {lang === "en" ? "Book a free first lesson →" : "预约免费第一课 →"}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="l-pad" style={{ background: "#fff" }}>
-        <div className="l-section">
-          <p style={{ textAlign: "center", fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", color: m3.muted, textTransform: "uppercase", marginBottom: 10 }}>{t.testiLabel}</p>
-          <h2 style={{ textAlign: "center", fontSize: 34, fontWeight: 800, margin: "0 0 52px", color: m3.text }}>{t.testiTitle}</h2>
-          <div className="l-3col">
-            {testimonials.map(tst => (
-              <div key={tst.name} style={{ background: m3.primarySoft, borderRadius: 20, padding: 32 }}>
-                <span style={{
-                  display: "inline-block", padding: "5px 14px", borderRadius: 12,
-                  background: m3.primary, color: "#fff",
-                  fontSize: 12, fontWeight: 600, marginBottom: 20,
-                }}>{tst.result}</span>
-                <p style={{ fontSize: 15, color: m3.text, lineHeight: 1.7, margin: "0 0 24px", fontStyle: "italic" }}>
-                  &ldquo;{tst.quote[lang]}&rdquo;
-                </p>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <span style={{
-                    width: 38, height: 38, borderRadius: "50%",
-                    background: m3.primary, color: "#fff",
-                    display: "grid", placeItems: "center",
-                    fontSize: 15, fontWeight: 700, flexShrink: 0,
-                  }}>{tst.name[0]}</span>
-                  <div>
-                    <p style={{ fontWeight: 700, fontSize: 14, margin: 0, color: m3.text }}>{tst.name}</p>
-                    <p style={{ fontSize: 12, color: m3.muted, margin: 0 }}>{tst.city[lang]}</p>
+                  {/* Hours / Lessons / Views — exactly like Tfaseel */}
+                  <div style={{ display: "flex", gap: 14, paddingTop: 12, borderTop: `1px solid ${C.border}` }}>
+                    <span style={{ fontSize: 11, color: C.muted, display: "flex", alignItems: "center", gap: 4 }}>
+                      🕐 {c.hours}
+                    </span>
+                    <span style={{ fontSize: 11, color: C.muted, display: "flex", alignItems: "center", gap: 4 }}>
+                      📖 {c.lessons} {lang === "en" ? "lessons" : "课"}
+                    </span>
+                    <span style={{ fontSize: 11, color: C.muted, display: "flex", alignItems: "center", gap: 4 }}>
+                      👁 {c.views}
+                    </span>
                   </div>
                 </div>
-              </div>
+            </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Pricing */}
-      <section className="l-pad" style={{ background: m3.surface }}>
-        <div style={{ maxWidth: 520, margin: "0 auto", textAlign: "center" }}>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", color: m3.muted, textTransform: "uppercase", marginBottom: 10 }}>{t.pricingLabel}</p>
-          <h2 style={{ fontSize: 34, fontWeight: 800, margin: "0 0 36px", color: m3.text }}>{t.pricingTitle}</h2>
-          <div style={{
-            background: "#fff", borderRadius: 24, padding: "44px 40px",
-            border: `2px solid ${m3.primary}`,
-            boxShadow: "0 12px 40px rgba(103,80,164,0.12)",
-          }}>
-            <span style={{
-              display: "inline-block", padding: "5px 18px", borderRadius: 20,
-              background: m3.primary, color: "#fff",
-              fontSize: 12, fontWeight: 700, marginBottom: 24,
-            }}>今日特价</span>
-            <h3 style={{ fontSize: 22, fontWeight: 800, margin: "0 0 10px", color: m3.text }}>{t.planName}</h3>
-            <p style={{ fontSize: 14, color: m3.muted, textDecoration: "line-through", margin: "0 0 6px" }}>{t.originalPrice}</p>
-            <p style={{ fontSize: 52, fontWeight: 900, color: m3.primary, margin: "0 0 36px", letterSpacing: "-0.03em" }}>
-              {t.price}<span style={{ fontSize: 16, fontWeight: 500, color: m3.muted }}>{t.pricePer}</span>
-            </p>
-            <ul style={{ listStyle: "none", padding: 0, margin: "0 0 36px", textAlign: "left", display: "flex", flexDirection: "column", gap: 14 }}>
-              {t.perks.map(item => (
-                <li key={item} style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 15, color: m3.text }}>
-                  <span style={{
-                    width: 22, height: 22, borderRadius: "50%",
-                    background: m3.primarySoft, color: m3.primary,
-                    display: "grid", placeItems: "center",
-                    fontSize: 13, fontWeight: 700, flexShrink: 0,
-                  }}>✓</span>
-                  {item}
-                </li>
+      {/* ── Reviews ─────────────────────────────────────────── */}
+      <section style={{ padding: "72px 20px", background: "#0a1830" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <h2 style={{ fontSize: 32, fontWeight: 800, margin: "0 0 40px", textAlign: "center" }}>{t.reviewsTitle}</h2>
+
+          <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: 48, alignItems: "start" }}>
+            {/* Rating summary panel */}
+            <div style={{ background: C.navyCard, borderRadius: 16, padding: "28px", border: `1px solid ${C.border}` }}>
+              <div style={{ textAlign: "center", marginBottom: 24 }}>
+                <div style={{ fontSize: 52, fontWeight: 900, color: C.gold, lineHeight: 1 }}>4.9</div>
+                <Stars count={5} size={18} />
+                <div style={{ fontSize: 12, color: C.muted, marginTop: 6 }}>{t.courseRate}</div>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {t.ratingBars.map(r => (
+                  <div key={r.stars} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{ display: "flex", gap: 2, flexShrink: 0 }}>
+                      {[1,2,3,4,5].map(i => <span key={i} style={{ fontSize: 11, color: i <= r.stars ? C.gold : "rgba(255,255,255,0.15)" }}>★</span>)}
+                    </div>
+                    <div style={{ flex: 1, height: 6, borderRadius: 4, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
+                      <div style={{ height: "100%", width: `${r.pct}%`, background: C.gold, borderRadius: 4 }} />
+                    </div>
+                    <span style={{ fontSize: 11, color: C.muted, width: 36, textAlign: "right" }}>{r.pct}%</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Comment cards */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              {reviews.map((r, i) => (
+                <div key={i} style={{ background: C.navyCard, borderRadius: 14, padding: "18px 20px", border: `1px solid ${C.border}`, display: "flex", gap: 14, alignItems: "flex-start" }}>
+                  <div style={{ width: 42, height: 42, borderRadius: "50%", background: C.navyLight, border: `2px solid ${C.borderGold}`, display: "grid", placeItems: "center", fontSize: 16, flexShrink: 0, fontWeight: 700 }}>
+                    {r.name[0]}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                      <span style={{ fontWeight: 700, fontSize: 14 }}>{r.name}</span>
+                      <span style={{ fontSize: 11, color: C.muted }}>{r.date}</span>
+                    </div>
+                    <Stars count={r.stars} size={13} />
+                    <p style={{ fontSize: 13, color: C.muted, margin: "6px 0 0", lineHeight: 1.6 }}>{r.comment}</p>
+                  </div>
+                </div>
               ))}
-            </ul>
-            <Link href="/register" style={{
-              display: "block", padding: 18, borderRadius: 20,
-              background: m3.primary, color: "#fff",
-              fontWeight: 700, fontSize: 16, textDecoration: "none",
-              marginBottom: 14, boxShadow: "0 4px 16px rgba(103,80,164,0.3)",
-            }}>{t.pricingCta}</Link>
-            <p style={{ fontSize: 12, color: m3.muted, margin: 0 }}>{t.guarantee}</p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer style={{ padding: "48px 40px 32px", borderTop: `1px solid ${m3.border}`, background: "#fff" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 32 }}>
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-              <span style={{
-                display: "grid", placeItems: "center",
-                width: 36, height: 36, borderRadius: 10,
-                background: m3.primary, color: "#fff",
-                fontSize: 16, fontWeight: 900,
-              }}>S</span>
-              <strong style={{ fontSize: 16, color: m3.text }}>SpeakSure</strong>
+      {/* ── Footer ──────────────────────────────────────────── */}
+      <footer style={{ background: "#07112a", borderTop: `1px solid ${C.border}`, padding: "48px 20px 24px" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 40, marginBottom: 44 }}>
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+                <span style={{ width: 32, height: 32, borderRadius: 8, background: C.gold, display: "grid", placeItems: "center", fontSize: 15, fontWeight: 900, color: C.navy }}>S</span>
+                <strong style={{ fontSize: 15, color: C.white }}>SpeakSure</strong>
+              </div>
+              <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.7, margin: 0 }}>{t.footer.tagline}</p>
             </div>
-            <p style={{ fontSize: 13, color: m3.muted, margin: 0, maxWidth: 260, lineHeight: 1.6 }}>
-              {t.footerTagline}
-            </p>
+
+
+            <div>
+              <strong style={{ fontSize: 13, color: C.white, display: "block", marginBottom: 16 }}>{t.footer.contact}</strong>
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <a href="https://wa.me/60123456789" style={{ fontSize: 13, color: C.muted, textDecoration: "none" }}>📱 WhatsApp</a>
+                <a href="mailto:hello@speaksure.app" style={{ fontSize: 13, color: C.muted, textDecoration: "none" }}>✉️ hello@speaksure.app</a>
+              </div>
+            </div>
+
+            <div>
+              <strong style={{ fontSize: 13, color: C.white, display: "block", marginBottom: 16 }}>{t.footer.links}</strong>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {[t.nav.home, t.nav.courses].map(l => (
+                  <a key={l} href="#" style={{ fontSize: 13, color: C.muted, textDecoration: "none" }}>{l}</a>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <strong style={{ fontSize: 13, color: C.white, display: "block", marginBottom: 16 }}>{t.footer.legal}</strong>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {["Privacy Policy", "Terms & Conditions", "Refund Policy"].map(l => (
+                  <a key={l} href="#" style={{ fontSize: 13, color: C.muted, textDecoration: "none" }}>{l}</a>
+                ))}
+              </div>
+            </div>
           </div>
-          <div style={{ display: "flex", gap: 48, flexWrap: "wrap" }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              <strong style={{ fontSize: 13, color: m3.text }}>{t.links}</strong>
-              {["Classes", "Contact"].map(l => <a key={l} href="#" style={{ fontSize: 13, color: m3.muted, textDecoration: "none" }}>{l}</a>)}
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              <strong style={{ fontSize: 13, color: m3.text }}>{t.legal}</strong>
-              {["Privacy Policy", "Terms"].map(l => <a key={l} href="#" style={{ fontSize: 13, color: m3.muted, textDecoration: "none" }}>{l}</a>)}
+
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: 24, borderTop: `1px solid ${C.border}`, flexWrap: "wrap", gap: 16 }}>
+            <p style={{ fontSize: 12, color: C.muted, margin: 0 }}>{t.footer.copy}</p>
+            <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+              {["📱 Touch 'n Go"].map(p => (
+                <span key={p} style={{ fontSize: 11, color: C.muted, padding: "4px 10px", border: `1px solid ${C.border}`, borderRadius: 6 }}>{p}</span>
+              ))}
             </div>
           </div>
-        </div>
-        <div style={{ maxWidth: 1100, margin: "28px auto 0", paddingTop: 24, borderTop: `1px solid ${m3.border}` }}>
-          <p style={{ fontSize: 12, color: m3.muted, margin: 0 }}>{t.copyright}</p>
         </div>
       </footer>
+
+      {/* ── WhatsApp float (bottom left like Tfaseel) ────────── */}
+      <a href="https://wa.me/60123456789" target="_blank" rel="noopener noreferrer"
+        style={{ position: "fixed", bottom: 24, left: 24, zIndex: 999, width: 54, height: 54, borderRadius: "50%", background: "#25d366", display: "grid", placeItems: "center", boxShadow: "0 4px 18px rgba(37,211,102,0.5)", textDecoration: "none" }}>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+      </a>
 
     </div>
   )
