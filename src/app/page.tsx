@@ -194,14 +194,18 @@ export default function LandingPage() {
   const t = content[lang]
 
   return (
-    <div style={{ background: C.navy, color: C.white, fontFamily: "'Segoe UI','PingFang SC',Arial,sans-serif", minWidth: 320 }}>
+    <div style={{ background: C.navy, color: C.white, fontFamily: "'Segoe UI','PingFang SC',Arial,sans-serif", overflowX: "hidden" }}>
       <style>{`
+        html, body { overflow-x: hidden; }
         .l-nav-links { display: flex; }
         .l-nav-login { display: flex; }
         .l-hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .l-hero-grid > * { min-width: 0; }
         .l-hero-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         .l-courses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 20px; }
+        .l-courses-grid > * { min-width: 0; }
         .l-reviews-grid { display: grid; grid-template-columns: 300px 1fr; gap: 48px; align-items: start; }
+        .l-reviews-grid > * { min-width: 0; }
         @media (max-width: 768px) {
           .l-nav-links { display: none !important; }
           .l-nav-login a:first-child { display: none; }

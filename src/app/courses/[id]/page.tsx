@@ -170,14 +170,18 @@ export default function CourseDetail({ params }: { params: Promise<{ id: string 
   ]
 
   return (
-    <div style={{ background: C.navy, color: C.white, fontFamily: "'Segoe UI','PingFang SC',Arial,sans-serif", minHeight: "100vh" }}>
+    <div className="l-page-root" style={{ background: C.navy, color: C.white, fontFamily: "'Segoe UI','PingFang SC',Arial,sans-serif", minHeight: "100vh", overflowX: "hidden" }}>
       <style>{`
+        html, body { overflow-x: hidden; }
+        .l-page-root { overflow-x: hidden; }
         .l-detail-grid { display: grid; grid-template-columns: 320px 1fr; gap: 32px; align-items: start; }
-        .l-sidebar { position: sticky; top: 80px; }
-        .l-tab-bar { overflow-x: auto; white-space: nowrap; }
+        .l-detail-grid > * { min-width: 0; }
+        .l-sidebar { position: sticky; top: 80px; min-width: 0; }
+        .l-tab-bar { display: flex; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .l-tab-bar button { flex-shrink: 0; }
         .l-eval-grid { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: center; }
         @media (max-width: 768px) {
-          .l-detail-grid { grid-template-columns: 1fr !important; }
+          .l-detail-grid { grid-template-columns: 1fr !important; padding: 16px !important; }
           .l-sidebar { position: static !important; order: 2; }
           .l-detail-grid > div:last-child { order: 1; }
           .l-eval-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
