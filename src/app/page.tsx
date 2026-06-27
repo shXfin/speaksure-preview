@@ -195,6 +195,22 @@ export default function LandingPage() {
 
   return (
     <div style={{ background: C.navy, color: C.white, fontFamily: "'Segoe UI','PingFang SC',Arial,sans-serif", minWidth: 320 }}>
+      <style>{`
+        .l-nav-links { display: flex; }
+        .l-nav-login { display: flex; }
+        .l-hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .l-hero-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .l-courses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 20px; }
+        .l-reviews-grid { display: grid; grid-template-columns: 300px 1fr; gap: 48px; align-items: start; }
+        @media (max-width: 768px) {
+          .l-nav-links { display: none !important; }
+          .l-nav-login a:first-child { display: none; }
+          .l-hero-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+          .l-hero-cards { display: none !important; }
+          .l-courses-grid { grid-template-columns: 1fr !important; }
+          .l-reviews-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+        }
+      `}</style>
 
       {/* ── Offer strip ─────────────────────────────────────── */}
       <div style={{ background: C.gold, color: C.navy, textAlign: "center", padding: "8px 16px", fontSize: 13, fontWeight: 700 }}>
@@ -212,13 +228,13 @@ export default function LandingPage() {
             </div>
           </Link>
 
-          <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
+          <div className="l-nav-links" style={{ gap: 24, alignItems: "center" }}>
             {[{ l: t.nav.home, h: "#" }, { l: t.nav.courses, h: "#courses" }].map(x => (
               <a key={x.l} href={x.h} style={{ fontSize: 13, color: C.muted, textDecoration: "none", fontWeight: 500, whiteSpace: "nowrap" }}>{x.l}</a>
             ))}
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+          <div className="l-nav-login" style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
             <button onClick={() => setLang(lang === "en" ? "zh" : "en")} style={{ background: "transparent", border: `1px solid ${C.border}`, color: C.white, borderRadius: 20, padding: "5px 12px", fontSize: 12, cursor: "pointer", fontWeight: 600 }}>
               🌐 {lang === "en" ? "中文" : "EN"}
             </button>
@@ -233,7 +249,7 @@ export default function LandingPage() {
         <div style={{ position: "absolute", top: -160, right: -160, width: 520, height: 520, borderRadius: "50%", background: "rgba(245,197,24,0.05)", pointerEvents: "none" }} />
         <div style={{ position: "absolute", bottom: -80, left: -80, width: 360, height: 360, borderRadius: "50%", background: "rgba(245,197,24,0.04)", pointerEvents: "none" }} />
 
-        <div style={{ maxWidth: 1200, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 60, alignItems: "center" }}>
+        <div className="l-hero-grid" style={{ maxWidth: 1200, margin: "0 auto" }}>
           <div>
             <span style={{ display: "inline-block", padding: "5px 14px", borderRadius: 20, background: "rgba(245,197,24,0.12)", color: C.gold, fontSize: 12, fontWeight: 700, marginBottom: 20, border: `1px solid ${C.borderGold}` }}>
               🎓 {t.hero.badge}
@@ -258,7 +274,7 @@ export default function LandingPage() {
           </div>
 
           {/* 2x2 preview cards */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+          <div className="l-hero-cards">
             {courses.slice(0, 2).map((c, i) => (
               <div key={i} style={{ background: C.navyCard, border: `1px solid ${C.border}`, borderRadius: 14, overflow: "hidden" }}>
                 <div style={{ position: "relative", height: 110 }}>
@@ -283,7 +299,7 @@ export default function LandingPage() {
           <h2 style={{ fontSize: 32, fontWeight: 800, margin: "0 0 8px", textAlign: "center" }}>{t.coursesTitle}</h2>
           <p style={{ fontSize: 15, color: C.muted, textAlign: "center", margin: "0 0 44px" }}>{t.coursesSub}</p>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(400px, 1fr))", gap: 20 }}>
+          <div className="l-courses-grid">
             {courses.slice(0, 2).map(c => (
               <Link key={c.id} href={`/courses/${c.id}`} style={{ textDecoration: "none", display: "flex", flexDirection: "column", background: C.navyCard, borderRadius: 16, overflow: "hidden", border: `1px solid ${C.border}` }}>
                 {/* Photo */}
@@ -334,7 +350,7 @@ export default function LandingPage() {
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <h2 style={{ fontSize: 32, fontWeight: 800, margin: "0 0 40px", textAlign: "center" }}>{t.reviewsTitle}</h2>
 
-          <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: 48, alignItems: "start" }}>
+          <div className="l-reviews-grid">
             {/* Rating summary panel */}
             <div style={{ background: C.navyCard, borderRadius: 16, padding: "28px", border: `1px solid ${C.border}` }}>
               <div style={{ textAlign: "center", marginBottom: 24 }}>

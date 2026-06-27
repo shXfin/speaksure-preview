@@ -171,6 +171,18 @@ export default function CourseDetail({ params }: { params: Promise<{ id: string 
 
   return (
     <div style={{ background: C.navy, color: C.white, fontFamily: "'Segoe UI','PingFang SC',Arial,sans-serif", minHeight: "100vh" }}>
+      <style>{`
+        .l-detail-grid { display: grid; grid-template-columns: 320px 1fr; gap: 32px; align-items: start; }
+        .l-sidebar { position: sticky; top: 80px; }
+        .l-tab-bar { overflow-x: auto; white-space: nowrap; }
+        .l-eval-grid { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: center; }
+        @media (max-width: 768px) {
+          .l-detail-grid { grid-template-columns: 1fr !important; }
+          .l-sidebar { position: static !important; order: 2; }
+          .l-detail-grid > div:last-child { order: 1; }
+          .l-eval-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+        }
+      `}</style>
 
       {/* Nav */}
       <nav style={{ background: C.navyMid, borderBottom: `1px solid ${C.border}`, position: "sticky", top: 0, zIndex: 100 }}>
@@ -185,10 +197,10 @@ export default function CourseDetail({ params }: { params: Promise<{ id: string 
       </nav>
 
       {/* Main layout */}
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 20px", display: "grid", gridTemplateColumns: "320px 1fr", gap: 32, alignItems: "start" }}>
+      <div className="l-detail-grid" style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 20px" }}>
 
         {/* ── Left sidebar ─────────────────────────────────── */}
-        <div style={{ position: "sticky", top: 80 }}>
+        <div className="l-sidebar">
           <div style={{ background: C.navyCard, borderRadius: 16, border: `1px solid ${C.border}`, overflow: "hidden" }}>
             {/* Price block */}
             <div style={{ padding: "24px", borderBottom: `1px solid ${C.border}` }}>
@@ -261,7 +273,7 @@ export default function CourseDetail({ params }: { params: Promise<{ id: string 
           <div style={{ height: 6, background: C.gold, borderRadius: "0 0 4px 4px", marginBottom: 0 }} />
 
           {/* Tabs */}
-          <div style={{ display: "flex", borderBottom: `1px solid ${C.border}`, marginBottom: 28 }}>
+          <div className="l-tab-bar" style={{ display: "flex", borderBottom: `1px solid ${C.border}`, marginBottom: 28 }}>
             {TABS.map(t => (
               <button key={t} onClick={() => setTab(t)} style={{
                 padding: "14px 20px", background: "transparent", border: "none", color: tab === t ? C.gold : C.muted,
@@ -343,7 +355,7 @@ export default function CourseDetail({ params }: { params: Promise<{ id: string 
           {tab === "Evaluation" && (
             <div>
               {/* Rating summary */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 32, alignItems: "center", background: C.navyCard, border: `1px solid ${C.border}`, borderRadius: 12, padding: "24px", marginBottom: 24 }}>
+              <div className="l-eval-grid" style={{ background: C.navyCard, border: `1px solid ${C.border}`, borderRadius: 12, padding: "24px", marginBottom: 24 }}>
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {ratingBars.map(r => (
                     <div key={r.stars} style={{ display: "flex", alignItems: "center", gap: 10 }}>
