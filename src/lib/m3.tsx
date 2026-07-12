@@ -146,13 +146,7 @@ export const GoogleSVG = () => (
 
 // ── Brand mark ───────────────────────────────────────────────────────────────
 export const BrandMark = ({ size = 46 }: { size?: number }) => (
-  <span style={{
-    display: "grid", placeItems: "center",
-    width: size, height: size, borderRadius: 12,
-    background: "#6750a4", color: "#fff",
-    fontSize: Math.round(size * 0.43), fontWeight: 900,
-    letterSpacing: "-0.5px", flexShrink: 0,
-  }}>S</span>
+  <img src="/logo.svg" alt="SpeakSure" width={size} height={size} style={{ borderRadius: Math.round(size * 0.22), flexShrink: 0, display: "block" }} />
 )
 
 // ── Avatar ────────────────────────────────────────────────────────────────────

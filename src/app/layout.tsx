@@ -12,6 +12,10 @@ const roboto = Roboto({
 export const metadata: Metadata = {
   title: "SpeakSure · English classes for Chinese learners",
   description: "Live English courses for adult Chinese students.",
+  icons: {
+    icon: "/logo.svg",
+    apple: "/logo.svg",
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
