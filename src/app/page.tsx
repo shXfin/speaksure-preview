@@ -112,7 +112,6 @@ const content = {
     ratingBars:   [{ stars:5,pct:87},{stars:4,pct:10},{stars:3,pct:3},{stars:2,pct:0},{stars:1,pct:0}],
     footer: {
       tagline: "Building English confidence for Chinese students worldwide.",
-      contact: "Contact Us",
       links:   "Quick links",
       legal:   "Legal",
       copy:    "© 2025 SpeakSure. All rights reserved.",
@@ -145,7 +144,6 @@ const content = {
     ratingBars:   [{ stars:5,pct:87},{stars:4,pct:10},{stars:3,pct:3},{stars:2,pct:0},{stars:1,pct:0}],
     footer: {
       tagline: "帮助中国学生在全球舞台上自信表达。",
-      contact: "联系我们",
       links:   "快速链接",
       legal:   "法律",
       copy:    "© 2025 SpeakSure 版权所有",
@@ -178,7 +176,6 @@ const content = {
     ratingBars:   [{ stars:5,pct:87},{stars:4,pct:10},{stars:3,pct:3},{stars:2,pct:0},{stars:1,pct:0}],
     footer: {
       tagline: "نبني ثقة الطلاب في اللغة الإنجليزية حول العالم.",
-      contact: "تواصل معنا",
       links:   "روابط سريعة",
       legal:   "قانوني",
       copy:    "© 2025 SpeakSure. جميع الحقوق محفوظة.",
@@ -703,14 +700,6 @@ export default function LandingPage() {
             </div>
 
             <div>
-              <strong style={{ fontSize: 13, color: C.white, display: "block", marginBottom: 16 }}>{t.footer.contact}</strong>
-              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                <a href="https://wa.me/60123456789" style={{ fontSize: 13, color: C.muted, textDecoration: "none" }}>📱 WhatsApp</a>
-                <a href="mailto:hello@speaksure.app" style={{ fontSize: 13, color: C.muted, textDecoration: "none" }}>✉️ hello@speaksure.app</a>
-              </div>
-            </div>
-
-            <div>
               <strong style={{ fontSize: 13, color: C.white, display: "block", marginBottom: 16 }}>{t.footer.links}</strong>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 {[t.nav.home, t.nav.courses].map(l => (
@@ -739,7 +728,7 @@ export default function LandingPage() {
       </footer>
 
       {/* ── WhatsApp float ───────────────────────────────────── */}
-      <a href="https://wa.me/60123456789" target="_blank" rel="noopener noreferrer"
+      <a href="https://wa.me/601161684359" target="_blank" rel="noopener noreferrer"
         className="m-wa-float"
         style={{ position: "fixed", left: 24, zIndex: 499, width: 54, height: 54, borderRadius: "50%", background: "#25d366", display: "grid", placeItems: "center", boxShadow: "0 4px 18px rgba(37,211,102,0.5)", textDecoration: "none" }}>
         <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
