@@ -196,19 +196,19 @@ function VideoHero({ className, style }: { className?: string; style?: React.CSS
       const p = new (window as any).YT.Player("yt-hero-player", {
         videoId: YT_ID,
         playerVars: {
-          autoplay: 1, mute: 0, controls: 0,
+          autoplay: 1, mute: 1, controls: 0,
           loop: 1, playlist: YT_ID,
           rel: 0, modestbranding: 1, playsinline: 1,
           iv_load_policy: 3, fs: 0, disablekb: 1,
         },
         events: {
           onReady: (e: any) => {
-            e.target.unMute()
-            e.target.setVolume(80)
+            // Browsers block unmuted autoplay without a user gesture, so we
+            // start muted (always allowed) and only unmute on manual toggle.
             e.target.playVideo()
             setReady(true)
             setPlaying(true)
-            setMuted(false)
+            setMuted(true)
           },
           onStateChange: (e: any) => {
             // 1=playing 2=paused — sync state
