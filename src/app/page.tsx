@@ -235,6 +235,28 @@ function VideoHero({ className, style }: { className?: string; style?: React.CSS
     return () => { playerRef.current?.destroy?.() }
   }, [])
 
+  // Browsers only allow unmuted playback after a real user gesture, so we
+  // unmute automatically on the visitor's first click/tap/keypress anywhere
+  // on the page — not just on the video — so sound kicks in almost instantly
+  // for most visitors without requiring them to interact with the video itself.
+  useEffect(() => {
+    function unlockSound() {
+      if (playerRef.current) {
+        playerRef.current.unMute()
+        playerRef.current.setVolume(80)
+        playerRef.current.playVideo()
+        setMuted(false)
+      }
+    }
+    const opts = { once: true, passive: true } as const
+    window.addEventListener("pointerdown", unlockSound, opts)
+    window.addEventListener("keydown", unlockSound, opts)
+    return () => {
+      window.removeEventListener("pointerdown", unlockSound)
+      window.removeEventListener("keydown", unlockSound)
+    }
+  }, [])
+
   function togglePlay() {
     if (!playerRef.current) return
     if (playing) {
