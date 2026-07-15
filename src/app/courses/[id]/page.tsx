@@ -9,7 +9,7 @@ const C = {
   navyMid:  "#142040",
   navyCard: "#162448",
   navyLight:"#1a2f5a",
-  gold:     "#f5c518",
+  gold:     "#ff5c56",
   white:    "#ffffff",
   muted:    "rgba(255,255,255,0.6)",
   border:   "rgba(255,255,255,0.08)",
@@ -210,7 +210,7 @@ export default function CourseDetail({ params }: { params: Promise<{ id: string 
             <div style={{ padding: "24px", borderBottom: `1px solid ${C.border}` }}>
               <div style={{ fontSize: 11, color: C.muted, textDecoration: "line-through", marginBottom: 4 }}>{course.origPrice}</div>
               <div style={{ fontSize: 36, fontWeight: 900, color: C.gold, marginBottom: 4 }}>{course.price}</div>
-              <div style={{ display: "inline-block", padding: "3px 10px", background: "rgba(245,197,24,0.15)", borderRadius: 20, fontSize: 11, color: C.gold, fontWeight: 700, marginBottom: 20 }}>
+              <div style={{ display: "inline-block", padding: "3px 10px", background: "rgba(255,92,86,0.15)", borderRadius: 20, fontSize: 11, color: C.gold, fontWeight: 700, marginBottom: 20 }}>
                 50% OFF — Limited time
               </div>
 
@@ -367,7 +367,7 @@ export default function CourseDetail({ params }: { params: Promise<{ id: string 
                         {[1,2,3,4,5].map(i => <span key={i} style={{ fontSize: 12, color: i <= r.stars ? C.gold : "rgba(255,255,255,0.15)" }}>★</span>)}
                       </div>
                       <div style={{ flex: 1, height: 6, borderRadius: 4, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
-                        <div style={{ height: "100%", width: `${r.pct}%`, background: r.pct > 10 ? C.gold : "#c9a200", borderRadius: 4 }} />
+                        <div style={{ height: "100%", width: `${r.pct}%`, background: r.pct > 10 ? C.gold : "#c9302c", borderRadius: 4 }} />
                       </div>
                       <span style={{ fontSize: 11, color: C.muted, width: 32, textAlign: "right" }}>{r.pct}%</span>
                     </div>
@@ -385,7 +385,7 @@ export default function CourseDetail({ params }: { params: Promise<{ id: string 
               <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                 {course.studentReviews.map((r, i) => (
                   <div key={i} style={{ background: C.navyCard, borderRadius: 12, padding: "16px 20px", border: `1px solid ${C.border}`, display: "flex", gap: 14, alignItems: "flex-start" }}>
-                    <div style={{ width: 40, height: 40, borderRadius: "50%", background: C.navyLight, border: `2px solid rgba(245,197,24,0.3)`, display: "grid", placeItems: "center", fontSize: 15, fontWeight: 700, flexShrink: 0 }}>
+                    <div style={{ width: 40, height: 40, borderRadius: "50%", background: C.navyLight, border: `2px solid rgba(255,92,86,0.3)`, display: "grid", placeItems: "center", fontSize: 15, fontWeight: 700, flexShrink: 0 }}>
                       {r.name[0]}
                     </div>
                     <div style={{ flex: 1 }}>

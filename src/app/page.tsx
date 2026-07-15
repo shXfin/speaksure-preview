@@ -9,12 +9,12 @@ const C = {
   navyMid:   "#142040",
   navyLight: "#1a2f5a",
   navyCard:  "#162448",
-  gold:      "#f5c518",
-  goldDark:  "#c9a200",
+  gold:      "#ff5c56",
+  goldDark:  "#c9302c",
   white:     "#ffffff",
   muted:     "rgba(255,255,255,0.6)",
   border:    "rgba(255,255,255,0.08)",
-  borderGold:"rgba(245,197,24,0.25)",
+  borderGold:"rgba(255,92,86,0.25)",
 }
 
 type Lang = "en" | "zh" | "ar"
@@ -321,7 +321,7 @@ function VideoHero({ className, style }: { className?: string; style?: React.CSS
       {(!playing || !ready) && (
         <div onClick={togglePlay} style={{ position: "absolute", inset: 0, background: C.navy, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 20, cursor: "pointer" }}>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, pointerEvents: "none" }}>
-            <div style={{ width: 72, height: 72, borderRadius: "50%", background: "rgba(245,197,24,0.92)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 8px 40px rgba(245,197,24,0.5)" }}>
+            <div style={{ width: 72, height: 72, borderRadius: "50%", background: "rgba(255,92,86,0.92)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 8px 40px rgba(255,92,86,0.5)" }}>
               <svg width="28" height="28" viewBox="0 0 24 24" fill="#0d1e3d"><polygon points="6 3 20 12 6 21 6 3"/></svg>
             </div>
             <span style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", fontWeight: 500, letterSpacing: "0.04em" }}>Tap to play with sound</span>
@@ -336,7 +336,7 @@ function VideoHero({ className, style }: { className?: string; style?: React.CSS
             ? <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
             : <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><polygon points="6 3 20 12 6 21 6 3"/></svg>}
         </button>
-        <button onClick={e => { e.stopPropagation(); toggleMute() }} style={{ ...btn, background: muted ? "rgba(245,197,24,0.4)" : "rgba(0,0,0,0.5)", border: muted ? "1px solid rgba(245,197,24,0.6)" : btn.border }}>
+        <button onClick={e => { e.stopPropagation(); toggleMute() }} style={{ ...btn, background: muted ? "rgba(255,92,86,0.4)" : "rgba(0,0,0,0.5)", border: muted ? "1px solid rgba(255,92,86,0.6)" : btn.border }}>
           {muted
             ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
             : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>}
@@ -506,7 +506,7 @@ export default function LandingPage() {
             backdrop-filter: blur(24px) saturate(1.8);
             -webkit-backdrop-filter: blur(24px) saturate(1.8);
             border-top: 1px solid rgba(255,255,255,0.10);
-            box-shadow: 0 -8px 40px rgba(0,0,0,0.45), 0 -1px 0 rgba(245,197,24,0.07);
+            box-shadow: 0 -8px 40px rgba(0,0,0,0.45), 0 -1px 0 rgba(255,92,86,0.07);
           }
 
           /* Add bottom padding so content doesn't hide behind tab bar */
@@ -539,7 +539,7 @@ export default function LandingPage() {
           width: 32px;
           height: 2.5px;
           border-radius: 0 0 4px 4px;
-          background: #f5c518;
+          background: #ff5c56;
         }
         .m-tab-label {
           font-size: 9px;
@@ -552,7 +552,7 @@ export default function LandingPage() {
       <nav style={{ background: C.navyMid, borderBottom: `1px solid ${C.border}`, position: "sticky", top: 0, zIndex: 100 }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
           <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-            <img src="/logo.svg" alt="SpeakSure" width={36} height={36} style={{ borderRadius: 8, flexShrink: 0, display: "block", transform: "translateY(2px)" }} />
+            <img src="/logo.svg" alt="SpeakSure" width={36} height={36} style={{ borderRadius: 8, flexShrink: 0, display: "block" }} />
             <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
               <div style={{ fontSize: 16, fontWeight: 800, color: C.white, lineHeight: 1.2 }}>SpeakSure</div>
               <div style={{ fontSize: 10, color: C.muted, lineHeight: 1.2 }}>English · 英语</div>
@@ -568,7 +568,7 @@ export default function LandingPage() {
           {/* Language toggle — always visible on mobile + desktop */}
           <div className="l-nav-lang" style={{ position: "relative", flexShrink: 0 }}>
             <button onClick={() => setShowLangMenu(v => !v)}
-              style={{ background: showLangMenu ? "rgba(245,197,24,0.12)" : "rgba(255,255,255,0.07)", border: `1px solid ${showLangMenu ? C.borderGold : C.border}`, color: C.white, borderRadius: 20, padding: "6px 14px", fontSize: 13, cursor: "pointer", fontWeight: 700, display: "flex", alignItems: "center", gap: 6 }}>
+              style={{ background: showLangMenu ? "rgba(255,92,86,0.12)" : "rgba(255,255,255,0.07)", border: `1px solid ${showLangMenu ? C.borderGold : C.border}`, color: C.white, borderRadius: 20, padding: "6px 14px", fontSize: 13, cursor: "pointer", fontWeight: 700, display: "flex", alignItems: "center", gap: 6 }}>
               🌐 {LANG_LABEL[lang]} <span style={{ fontSize: 10, opacity: 0.6 }}>▾</span>
             </button>
             {showLangMenu && (
@@ -578,7 +578,7 @@ export default function LandingPage() {
                 <div style={{ position: "absolute", top: "calc(100% + 8px)", [isRTL ? "left" : "right"]: 0, zIndex: 199, background: "#1a2f5a", border: `1px solid ${C.border}`, borderRadius: 12, overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.4)", minWidth: 160 }}>
                   {LANG_CYCLE.map(l => (
                     <button key={l} onClick={() => { setLang(l); setShowLangMenu(false) }}
-                      style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "12px 16px", background: lang === l ? "rgba(245,197,24,0.1)" : "transparent", border: "none", color: lang === l ? C.gold : C.white, fontSize: 13, fontWeight: lang === l ? 700 : 500, cursor: "pointer", textAlign: "left" }}>
+                      style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "12px 16px", background: lang === l ? "rgba(255,92,86,0.1)" : "transparent", border: "none", color: lang === l ? C.gold : C.white, fontSize: 13, fontWeight: lang === l ? 700 : 500, cursor: "pointer", textAlign: "left" }}>
                       <span style={{ fontSize: 16 }}>{l === "en" ? "🇬🇧" : l === "zh" ? "🇨🇳" : "🇸🇦"}</span>
                       <span>{l === "en" ? "English" : l === "zh" ? "中文" : "العربية"}</span>
                       {lang === l && <span style={{ marginLeft: "auto", color: C.gold }}>✓</span>}
@@ -598,13 +598,13 @@ export default function LandingPage() {
 
       {/* ── Hero ────────────────────────────────────────────── */}
       <section className="l-hero-section" style={{ background: `linear-gradient(135deg, ${C.navyMid} 0%, ${C.navyLight} 60%, ${C.navyMid} 100%)`, padding: "72px 20px 64px", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: -160, right: -160, width: 520, height: 520, borderRadius: "50%", background: "rgba(245,197,24,0.05)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: -80, left: -80, width: 360, height: 360, borderRadius: "50%", background: "rgba(245,197,24,0.04)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: -160, right: -160, width: 520, height: 520, borderRadius: "50%", background: "rgba(255,92,86,0.05)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: -80, left: -80, width: 360, height: 360, borderRadius: "50%", background: "rgba(255,92,86,0.04)", pointerEvents: "none" }} />
 
         <div className="l-hero-grid" style={{ maxWidth: 1200, margin: "0 auto" }}>
           {/* Text column */}
           <div className="l-hero-text-col">
-            <span className="l-hero-badge" style={{ display: "inline-block", padding: "5px 14px", borderRadius: 20, background: "rgba(245,197,24,0.12)", color: C.gold, fontSize: 12, fontWeight: 700, marginBottom: 20, border: `1px solid ${C.borderGold}` }}>
+            <span className="l-hero-badge" style={{ display: "inline-block", padding: "5px 14px", borderRadius: 20, background: "rgba(255,92,86,0.12)", color: C.gold, fontSize: 12, fontWeight: 700, marginBottom: 20, border: `1px solid ${C.borderGold}` }}>
               🎓 {t.hero.badge}
             </span>
             <h1 className="l-hero-h1" style={{ fontSize: "clamp(36px,4.5vw,60px)", fontWeight: 900, margin: "0 0 14px", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
@@ -613,7 +613,7 @@ export default function LandingPage() {
             </h1>
             <p className="l-hero-sub" style={{ fontSize: 16, color: C.muted, margin: "0 0 36px", lineHeight: 1.75, maxWidth: 460 }}>{t.hero.sub}</p>
             <div className="l-hero-ctas" style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 44 }}>
-              <Link href="/register" style={{ padding: "13px 26px", borderRadius: 10, background: C.gold, color: C.navy, fontWeight: 700, fontSize: 15, textDecoration: "none", boxShadow: "0 4px 18px rgba(245,197,24,0.35)" }}>{t.hero.cta1}</Link>
+              <Link href="/register" style={{ padding: "13px 26px", borderRadius: 10, background: C.gold, color: C.navy, fontWeight: 700, fontSize: 15, textDecoration: "none", boxShadow: "0 4px 18px rgba(255,92,86,0.35)" }}>{t.hero.cta1}</Link>
               <a href="#courses" style={{ padding: "13px 26px", borderRadius: 10, border: `1.5px solid ${C.border}`, color: C.white, fontWeight: 600, fontSize: 15, textDecoration: "none" }}>{t.hero.cta2}</a>
             </div>
             <div className="l-hero-stats" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", background: "rgba(255,255,255,0.04)", borderRadius: 14, border: `1px solid ${C.border}`, overflow: "hidden" }}>
