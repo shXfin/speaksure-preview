@@ -2,13 +2,14 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { m3, BrandMark } from "@/lib/m3"
+import { m3, BrandMark, EyeSVG, EyeOffSVG } from "@/lib/m3"
 import { createClient } from "@/lib/supabase/client"
 
 export default function ResetPasswordPage() {
   const router = useRouter()
   const [password, setPassword] = useState("")
   const [confirm, setConfirm] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
@@ -59,17 +60,26 @@ export default function ResetPasswordPage() {
 
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             <label htmlFor="password" style={m3.label}>New password</label>
-            <input
-              id="password" type="password" placeholder="min. 6 characters"
-              value={password} onChange={e => setPassword(e.target.value)}
-              minLength={6} required style={m3.input}
-            />
+            <div style={{ position: "relative" }}>
+              <input
+                id="password" type={showPassword ? "text" : "password"} placeholder="min. 6 characters"
+                value={password} onChange={e => setPassword(e.target.value)}
+                minLength={6} required style={{ ...m3.input, paddingRight: 44 }}
+              />
+              <button
+                type="button" onClick={() => setShowPassword(v => !v)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                style={{ position: "absolute", right: 4, top: "50%", transform: "translateY(-50%)", width: 36, height: 36, border: "none", background: "transparent", color: m3.color.muted, display: "grid", placeItems: "center", cursor: "pointer" }}
+              >
+                {showPassword ? <EyeOffSVG /> : <EyeSVG />}
+              </button>
+            </div>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             <label htmlFor="confirm" style={m3.label}>Confirm password</label>
             <input
-              id="confirm" type="password" placeholder="repeat your password"
+              id="confirm" type={showPassword ? "text" : "password"} placeholder="repeat your password"
               value={confirm} onChange={e => setConfirm(e.target.value)}
               minLength={6} required style={m3.input}
             />
