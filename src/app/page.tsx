@@ -552,7 +552,7 @@ export default function LandingPage() {
       <nav style={{ background: C.navyMid, borderBottom: `1px solid ${C.border}`, position: "sticky", top: 0, zIndex: 100 }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
           <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-            <img src="/logo.svg" alt="SpeakSure" width={36} height={36} style={{ borderRadius: 8, flexShrink: 0, display: "block" }} />
+            <img src="/logo.svg" alt="SpeakSure" width={36} height={36} style={{ borderRadius: 8, flexShrink: 0, display: "block", transform: "translateY(2px)" }} />
             <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
               <div style={{ fontSize: 16, fontWeight: 800, color: C.white, lineHeight: 1.2 }}>SpeakSure</div>
               <div style={{ fontSize: 10, color: C.muted, lineHeight: 1.2 }}>English · 英语</div>
