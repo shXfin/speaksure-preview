@@ -186,6 +186,7 @@ const content = {
 const YT_ID = "JMU0CztY3gE"
 
 function VideoHero({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  const containerRef = useRef<HTMLDivElement>(null)
   const playerRef = useRef<any>(null)
   const [playing, setPlaying] = useState(false)
   const [muted,   setMuted]   = useState(false)
@@ -193,7 +194,16 @@ function VideoHero({ className, style }: { className?: string; style?: React.CSS
 
   useEffect(() => {
     function init() {
-      const p = new (window as any).YT.Player("yt-hero-player", {
+      if (!containerRef.current || containerRef.current.querySelector("#yt-hero-player")) return
+      // The YouTube API replaces its target element with an <iframe>, which
+      // fights with React's reconciliation if the target is a React-rendered
+      // node. So we create a plain DOM node here (outside React's tree) for
+      // the API to take over safely.
+      const target = document.createElement("div")
+      target.id = "yt-hero-player"
+      containerRef.current.appendChild(target)
+
+      const p = new (window as any).YT.Player(target, {
         videoId: YT_ID,
         playerVars: {
           autoplay: 1, mute: 1, controls: 0,
@@ -288,7 +298,7 @@ function VideoHero({ className, style }: { className?: string; style?: React.CSS
     <div className={className} style={{ position: "relative", overflow: "hidden", background: "#000", ...style }}>
       {/* 9:16 aspect-ratio box */}
       <div className="yt-ratio" style={{ paddingTop: "177.78%", position: "relative" }}>
-        <div id="yt-hero-player" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} />
+        <div ref={containerRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} />
       </div>
 
       {/* Side gradient masks — mobile only, hides YouTube ◀ ▶ nav arrows */}
@@ -536,7 +546,7 @@ export default function LandingPage() {
       <nav style={{ background: C.navyMid, borderBottom: `1px solid ${C.border}`, position: "sticky", top: 0, zIndex: 100 }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
           <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-            <span style={{ width: 36, height: 36, borderRadius: 8, background: C.gold, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 900, color: C.navy, flexShrink: 0, lineHeight: 1 }}>S</span>
+            <img src="/logo-gold.svg" alt="SpeakSure" width={36} height={36} style={{ borderRadius: 8, flexShrink: 0, display: "block" }} />
             <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
               <div style={{ fontSize: 16, fontWeight: 800, color: C.white, lineHeight: 1.2 }}>SpeakSure</div>
               <div style={{ fontSize: 10, color: C.muted, lineHeight: 1.2 }}>English · 英语</div>
@@ -715,7 +725,7 @@ export default function LandingPage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 40, marginBottom: 44 }}>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-                <span style={{ width: 32, height: 32, borderRadius: 8, background: C.gold, display: "grid", placeItems: "center", fontSize: 15, fontWeight: 900, color: C.navy }}>S</span>
+                <img src="/logo-gold.svg" alt="SpeakSure" width={32} height={32} style={{ borderRadius: 8, flexShrink: 0, display: "block" }} />
                 <strong style={{ fontSize: 15, color: C.white }}>SpeakSure</strong>
               </div>
               <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.7, margin: 0 }}>{t.footer.tagline}</p>

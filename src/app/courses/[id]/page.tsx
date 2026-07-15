@@ -192,7 +192,7 @@ export default function CourseDetail({ params }: { params: Promise<{ id: string 
       <nav style={{ background: C.navyMid, borderBottom: `1px solid ${C.border}`, position: "sticky", top: 0, zIndex: 100 }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px", height: 60, display: "flex", alignItems: "center", gap: 16 }}>
           <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
-            <span style={{ width: 32, height: 32, borderRadius: 8, background: C.gold, display: "grid", placeItems: "center", fontSize: 15, fontWeight: 900, color: C.navy }}>S</span>
+            <img src="/logo-gold.svg" alt="SpeakSure" width={32} height={32} style={{ borderRadius: 8, flexShrink: 0, display: "block" }} />
             <strong style={{ fontSize: 15, color: C.white }}>SpeakSure</strong>
           </Link>
           <span style={{ color: C.muted, fontSize: 13 }}>·</span>
