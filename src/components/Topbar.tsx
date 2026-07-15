@@ -5,6 +5,14 @@ import { usePathname } from "next/navigation"
 import { useState, useEffect } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { getProfile } from "@/lib/supabase/profile"
+import { BrandMark } from "@/lib/m3"
+
+const AVATAR_COLORS = ["#6750a4", "#1a6b5a", "#8b3a3a", "#1565c0", "#5d4037", "#2e7d32", "#7d5260", "#4a4458"]
+function avatarColor(seed: string) {
+  let hash = 0
+  for (let i = 0; i < seed.length; i++) hash = seed.charCodeAt(i) + ((hash << 5) - hash)
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length]
+}
 
 function MenuIcon() {
   return (
@@ -72,13 +80,7 @@ export default function Topbar() {
 
         {/* Brand */}
         <Link href="/classes" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: "inherit", marginRight: 8, minWidth: 0 }}>
-          <span style={{
-            display: "grid", placeItems: "center",
-            width: 46, height: 46, borderRadius: 12,
-            background: "#6750a4", color: "#fff",
-            fontSize: 20, fontWeight: 900, flexShrink: 0,
-            letterSpacing: "-0.5px",
-          }}>S</span>
+          <BrandMark size={46} />
           <span style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
             <strong style={{ fontSize: 18, fontWeight: 700, color: "#1d1b20", letterSpacing: "-0.2px" }}>SpeakSure</strong>
             <small className="t-tagline" style={{ fontSize: 12, color: "#625b71", marginTop: 3, fontWeight: 400 }}>English classes for Chinese learners</small>
@@ -117,7 +119,7 @@ export default function Topbar() {
           onMouseLeave={e => (e.currentTarget.style.background = "#fff")}
         >
           {/* Avatar circle */}
-          <div style={{ display: "grid", placeItems: "center", width: 28, height: 28, borderRadius: "50%", background: "#6750a4", color: "#fff", fontWeight: 700, fontSize: 13, flexShrink: 0 }}>
+          <div style={{ display: "grid", placeItems: "center", width: 28, height: 28, borderRadius: "50%", background: avatarColor(userName || "?"), color: "#fff", fontWeight: 700, fontSize: 13, flexShrink: 0 }}>
             {(userName || "?").charAt(0).toUpperCase()}
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>

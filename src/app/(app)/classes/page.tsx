@@ -5,6 +5,7 @@ import { useState, useEffect } from "react"
 import { courses as staticCourses } from "@/lib/courses"
 import { getProfile } from "@/lib/supabase/profile"
 import { createClient } from "@/lib/supabase/client"
+import { BrandMark } from "@/lib/m3"
 
 const s: Record<string, React.CSSProperties> = {
   surface: { background: "#fff", border: "1px solid #e8e0ef", borderRadius: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.05)" },
@@ -270,7 +271,7 @@ export default function DashboardPage() {
 
       {/* ── Welcome post ── */}
       <div style={{ ...s.surface, display: "flex", gap: 14, padding: "16px 20px", marginBottom: 28 }}>
-        <div style={{ display: "grid", placeItems: "center", flexShrink: 0, width: 40, height: 40, borderRadius: "50%", background: "#6750a4", color: "#fff", fontWeight: 700, fontSize: 16 }}>S</div>
+        <BrandMark size={40} />
         <div>
           <strong style={{ fontSize: 14, fontWeight: 600 }}>Welcome to SpeakSure</strong>
           <p style={{ margin: "4px 0 0", fontSize: 14, ...s.muted, lineHeight: 1.6 }}>
