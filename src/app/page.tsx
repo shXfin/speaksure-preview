@@ -102,6 +102,17 @@ const content = {
         { n: "15+",    l: "Yrs exp." },
       ],
     },
+    how: {
+      eyebrow: "How SpeakSure works",
+      title:   "One journey, from anywhere to fluent",
+      sub:     "Every student starts in a different country, speaking a different language. SpeakSure gets you to the same place: speaking English with confidence.",
+      steps: [
+        { icon: "🌍", label: "Join from anywhere",     desc: "Wherever you're starting from, you're in the right place." },
+        { icon: "👩‍🏫", label: "Meet your teacher",      desc: "Matched with a real, expert teacher — not a recording." },
+        { icon: "💬", label: "Practice live",           desc: "Real conversations and real feedback, every class." },
+        { icon: "🏆", label: "Speak with confidence",   desc: "Walk away actually using English, not just knowing it." },
+      ],
+    },
     offerBadge:   "🔥 Limited time — 50% OFF all courses",
     coursesTitle: "Most Requested Courses",
     coursesSub:   "Choose the course that fits your level and schedule",
@@ -134,6 +145,17 @@ const content = {
         { n: "15+",    l: "年经验" },
       ],
     },
+    how: {
+      eyebrow: "SpeakSure 的学习之旅",
+      title:   "无论从哪里开始，都能自信说英语",
+      sub:     "每位学生来自不同国家，讲着不同的语言。SpeakSure 帮你到达同一个目标：自信地说英语。",
+      steps: [
+        { icon: "🌍", label: "随时随地加入",   desc: "无论你从哪里开始，这里都是合适的起点。" },
+        { icon: "👩‍🏫", label: "遇见你的老师",   desc: "系统为你匹配真正的专业教师，而不是录播课程。" },
+        { icon: "💬", label: "实时练习对话",   desc: "每一节课都是真实对话与即时反馈。" },
+        { icon: "🏆", label: "自信开口说英语", desc: "不只是懂英语，而是真正能用英语交流。" },
+      ],
+    },
     offerBadge:   "🔥 限时优惠 — 全课程5折",
     coursesTitle: "最受欢迎的课程",
     coursesSub:   "选择适合您水平和时间表的课程",
@@ -164,6 +186,17 @@ const content = {
         { n: "4.9★",   l: "التقييم" },
         { n: "6",      l: "دورات"   },
         { n: "15+",    l: "سنة خبرة"},
+      ],
+    },
+    how: {
+      eyebrow: "كيف تعمل SpeakSure",
+      title:   "رحلة واحدة، من أي مكان إلى الطلاقة",
+      sub:     "كل طالب يبدأ من بلد مختلف بلغة مختلفة. تقودك SpeakSure إلى نفس الهدف: التحدث بالإنجليزية بثقة.",
+      steps: [
+        { icon: "🌍", label: "انضم من أي مكان",  desc: "أينما كنت تبدأ، فأنت في المكان الصحيح." },
+        { icon: "👩‍🏫", label: "قابل معلمك",       desc: "يتم ربطك بمعلم حقيقي وخبير، وليس درساً مسجلاً." },
+        { icon: "💬", label: "تدرّب مباشرة",     desc: "محادثات حقيقية وملاحظات فورية في كل حصة." },
+        { icon: "🏆", label: "تحدث بثقة",        desc: "لا تكتفِ بمعرفة الإنجليزية، بل استخدمها فعلاً." },
       ],
     },
     offerBadge:   "🔥 عرض محدود — خصم 50% على جميع الدورات",
@@ -246,7 +279,8 @@ function VideoHero({ className, style }: { className?: string; style?: React.CSS
         s.src = "https://www.youtube.com/iframe_api"
         document.head.appendChild(s)
       }
-      win.onYouTubeIframeAPIReady = init
+      const prevReady = win.onYouTubeIframeAPIReady
+      win.onYouTubeIframeAPIReady = () => { prevReady?.(); init() }
     }
     return () => { playerRef.current?.destroy?.() }
   }, [])
@@ -342,6 +376,63 @@ function VideoHero({ className, style }: { className?: string; style?: React.CSS
             : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>}
         </button>
       </div>
+    </div>
+  )
+}
+
+const EXPLAINER_YT_ID = "PmWfCrM3uZ0"
+
+function ExplainerVideo({ style }: { style?: React.CSSProperties }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const playerRef = useRef<any>(null)
+
+  useEffect(() => {
+    function init() {
+      if (!containerRef.current || containerRef.current.querySelector("#yt-explainer-player")) return
+      // Same pattern as the hero video: create the target node imperatively so
+      // YouTube's DOM replacement doesn't fight React's reconciliation.
+      const target = document.createElement("div")
+      target.id = "yt-explainer-player"
+      target.style.cssText = "position:absolute; inset:0; width:100%; height:100%;"
+      containerRef.current.appendChild(target)
+
+      const p = new (window as any).YT.Player(target, {
+        videoId: EXPLAINER_YT_ID,
+        width: "100%",
+        height: "100%",
+        playerVars: {
+          autoplay: 1, mute: 1, controls: 0,
+          loop: 1, playlist: EXPLAINER_YT_ID,
+          rel: 0, modestbranding: 1, playsinline: 1,
+          iv_load_policy: 3, fs: 0, disablekb: 1,
+        },
+        events: {
+          onReady: (e: any) => { e.target.playVideo() },
+        },
+      })
+      playerRef.current = p
+    }
+
+    const win = window as any
+    if (win.YT?.Player) {
+      init()
+    } else {
+      if (!document.getElementById("yt-api-script")) {
+        const s = document.createElement("script")
+        s.id  = "yt-api-script"
+        s.src = "https://www.youtube.com/iframe_api"
+        document.head.appendChild(s)
+      }
+      const prevReady = win.onYouTubeIframeAPIReady
+      win.onYouTubeIframeAPIReady = () => { prevReady?.(); init() }
+    }
+    return () => { playerRef.current?.destroy?.() }
+  }, [])
+
+  return (
+    <div style={{ position: "relative", overflow: "hidden", background: "#000", borderRadius: 16, ...style }}>
+      <div style={{ paddingTop: "57.2%" }} />
+      <div ref={containerRef} style={{ position: "absolute", inset: 0, pointerEvents: "none" }} />
     </div>
   )
 }
@@ -491,6 +582,7 @@ export default function LandingPage() {
           .yt-side-mask { display: block !important; }
           .l-courses-grid { grid-template-columns: 1fr !important; }
           .l-reviews-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+          .l-how-grid { grid-template-columns: 1fr 1fr !important; }
 
           /* Show bottom nav on mobile */
           .m-bottom-nav {
@@ -629,6 +721,29 @@ export default function LandingPage() {
           {/* Video column */}
           <div className="l-hero-video">
             <VideoHero style={{ width: "100%", maxWidth: 300, borderRadius: 20, boxShadow: "0 24px 64px rgba(0,0,0,0.5)" }} />
+          </div>
+        </div>
+      </section>
+
+      {/* ── How it works ────────────────────────────────────── */}
+      <section style={{ padding: "72px 20px", background: "#0a1830" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
+          <span style={{ display: "inline-block", padding: "5px 14px", borderRadius: 20, background: "rgba(255,92,86,0.12)", color: C.gold, fontSize: 12, fontWeight: 700, marginBottom: 16, border: `1px solid ${C.borderGold}` }}>
+            {t.how.eyebrow}
+          </span>
+          <h2 style={{ fontSize: 32, fontWeight: 800, margin: "0 0 12px" }}>{t.how.title}</h2>
+          <p style={{ fontSize: 15, color: C.muted, margin: "0 0 40px", lineHeight: 1.7, maxWidth: 640, marginLeft: "auto", marginRight: "auto" }}>{t.how.sub}</p>
+
+          <ExplainerVideo style={{ maxWidth: 720, margin: "0 auto 48px", boxShadow: "0 24px 64px rgba(0,0,0,0.5)" }} />
+
+          <div className="l-how-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 16, textAlign: "left" }}>
+            {t.how.steps.map((s, i) => (
+              <div key={i} style={{ background: C.navyCard, border: `1px solid ${C.border}`, borderRadius: 14, padding: "20px 18px" }}>
+                <span style={{ fontSize: 26, display: "block", marginBottom: 12 }}>{s.icon}</span>
+                <div style={{ fontSize: 14, fontWeight: 700, color: C.white, marginBottom: 6 }}>{s.label}</div>
+                <div style={{ fontSize: 12.5, color: C.muted, lineHeight: 1.6 }}>{s.desc}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
