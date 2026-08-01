@@ -443,7 +443,10 @@ function ExplainerVideo({ style }: { style?: React.CSSProperties }) {
     <div style={{ position: "relative", overflow: "hidden", background: `linear-gradient(135deg, ${C.navyMid}, ${C.navy})`, borderRadius: 16, ...style }}>
       <div style={{ paddingTop: "57.2%" }} />
       <div ref={containerRef} style={{ position: "absolute", inset: 0, pointerEvents: "none" }} />
-      <div style={{ position: "absolute", inset: 0, background: `linear-gradient(135deg, ${C.navyMid}, ${C.navy})`, opacity: playing ? 0 : 1, transition: "opacity 200ms", pointerEvents: "none" }} />
+      {/* Always blocks pointer events — this is a decorative loop, not an
+          interactive player, so the cursor should never reach the iframe
+          and trigger YouTube's own hover/click UI. */}
+      <div style={{ position: "absolute", inset: 0, background: `linear-gradient(135deg, ${C.navyMid}, ${C.navy})`, opacity: playing ? 0 : 1, transition: "opacity 200ms" }} />
     </div>
   )
 }
