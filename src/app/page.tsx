@@ -385,6 +385,7 @@ const EXPLAINER_YT_ID = "PmWfCrM3uZ0"
 function ExplainerVideo({ style }: { style?: React.CSSProperties }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const playerRef = useRef<any>(null)
+  const [playing, setPlaying] = useState(false)
 
   useEffect(() => {
     function init() {
@@ -402,12 +403,21 @@ function ExplainerVideo({ style }: { style?: React.CSSProperties }) {
         height: "100%",
         playerVars: {
           autoplay: 1, mute: 1, controls: 0,
-          loop: 1, playlist: EXPLAINER_YT_ID,
           rel: 0, modestbranding: 1, playsinline: 1,
           iv_load_policy: 3, fs: 0, disablekb: 1,
         },
         events: {
           onReady: (e: any) => { e.target.playVideo() },
+          onStateChange: (e: any) => {
+            // Restart instantly ourselves on end instead of relying on
+            // YouTube's own loop/playlist timing, which leaves a visible gap
+            // showing its native UI. Our cover stays up until state 1 fires.
+            if (e.data === 1) setPlaying(true)
+            else {
+              setPlaying(false)
+              if (e.data === 0) { e.target.seekTo(0); e.target.playVideo() }
+            }
+          },
         },
       })
       playerRef.current = p
@@ -433,6 +443,7 @@ function ExplainerVideo({ style }: { style?: React.CSSProperties }) {
     <div style={{ position: "relative", overflow: "hidden", background: `linear-gradient(135deg, ${C.navyMid}, ${C.navy})`, borderRadius: 16, ...style }}>
       <div style={{ paddingTop: "57.2%" }} />
       <div ref={containerRef} style={{ position: "absolute", inset: 0, pointerEvents: "none" }} />
+      <div style={{ position: "absolute", inset: 0, background: `linear-gradient(135deg, ${C.navyMid}, ${C.navy})`, opacity: playing ? 0 : 1, transition: "opacity 200ms", pointerEvents: "none" }} />
     </div>
   )
 }
