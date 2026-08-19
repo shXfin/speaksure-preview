@@ -33,6 +33,7 @@ export async function GET(request: Request) {
       await supabase.from("profiles").upsert({
         id: data.user.id,
         full_name: data.user.user_metadata?.full_name ?? data.user.email?.split("@")[0] ?? "Student",
+        email: data.user.email,
         role: "student",
       }, { onConflict: "id", ignoreDuplicates: true })
 

@@ -12,7 +12,7 @@ export type Enrollment = {
 }
 
 export type EnrollmentWithProfile = Enrollment & {
-  profiles: { full_name: string | null } | null
+  profiles: { full_name: string | null; email: string | null } | null
 }
 
 export async function createEnrollment(planLabel: string, planPrice: string) {
@@ -55,7 +55,7 @@ export async function getAllEnrollments(): Promise<EnrollmentWithProfile[]> {
   const supabase = createClient()
   const { data } = await supabase
     .from("enrollments")
-    .select("*, profiles(full_name)")
+    .select("*, profiles(full_name, email)")
     .order("created_at", { ascending: false })
 
   return (data as EnrollmentWithProfile[]) ?? []

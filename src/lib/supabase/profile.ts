@@ -3,6 +3,7 @@ import { createClient } from "./client"
 export type Profile = {
   id: string
   full_name: string | null
+  email: string | null
   role: "student" | "teacher"
   created_at: string
 }

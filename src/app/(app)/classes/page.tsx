@@ -346,6 +346,9 @@ export default function DashboardPage() {
                     <div style={{ minWidth: 0 }}>
                       <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: "#1d1b20" }}>
                         {e.profiles?.full_name || "Student"}
+                        {e.profiles?.email && (
+                          <span style={{ fontWeight: 400, color: "#625b71" }}> · {e.profiles.email}</span>
+                        )}
                       </p>
                       <p style={{ margin: "2px 0 0", fontSize: 13, ...s.muted }}>
                         {e.plan_label} · {e.plan_price}

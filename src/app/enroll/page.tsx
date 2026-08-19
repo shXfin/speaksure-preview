@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { BrandMark } from "@/lib/m3"
 import { createEnrollment, markWhatsappSent } from "@/lib/supabase/enrollments"
 import { getProfile } from "@/lib/supabase/profile"
+import { createClient } from "@/lib/supabase/client"
 
 const C = {
   navy:     "#0d1e3d",
@@ -28,12 +29,18 @@ function EnrollmentContent() {
   const [loading, setLoading] = useState(true)
   const [enrollmentId, setEnrollmentId] = useState<string | null>(null)
   const [studentName, setStudentName] = useState("")
+  const [studentEmail, setStudentEmail] = useState("")
   const [sent, setSent] = useState(false)
 
   useEffect(() => {
     async function init() {
-      const profile = await getProfile()
+      const supabase = createClient()
+      const [profile, { data: { user } }] = await Promise.all([
+        getProfile(),
+        supabase.auth.getUser(),
+      ])
       setStudentName(profile?.full_name || "")
+      setStudentEmail(user?.email || "")
 
       const { data } = await createEnrollment(planLabel, planPrice)
       if (data) setEnrollmentId(data.id)
@@ -42,7 +49,7 @@ function EnrollmentContent() {
     init()
   }, [planLabel, planPrice])
 
-  const whatsappMessage = `Hi! I'd like to enroll in the ${planLabel} plan (${planPrice}).${studentName ? ` My name is ${studentName}.` : ""} Please let me know how to complete payment.`
+  const whatsappMessage = `Hi! I'd like to enroll in the ${planLabel} plan (${planPrice}).${studentName ? ` My name is ${studentName}.` : ""}${studentEmail ? ` My account email is ${studentEmail}.` : ""} Please let me know how to complete payment.`
   const whatsappLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`
 
   async function handleWhatsappClick() {
