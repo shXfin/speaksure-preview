@@ -329,9 +329,14 @@ function VideoHero({ className, style }: { className?: string; style?: React.CSS
             setMuted(true)
           },
           onStateChange: (e: any) => {
-            // 1=playing 2=paused — sync state
+            // 1=playing, 2=paused, 0=ended
             if (e.data === 1) setPlaying(true)
             if (e.data === 2) setPlaying(false)
+            // Restart instantly on end rather than waiting on YouTube's own
+            // loop timing, which briefly exposes its replay/branding UI.
+            // Deliberately does NOT flip `playing` off, so the tap-to-play
+            // overlay doesn't flash on every loop.
+            if (e.data === 0) { e.target.seekTo(0); e.target.playVideo() }
           },
         },
       })
@@ -407,7 +412,7 @@ function VideoHero({ className, style }: { className?: string; style?: React.CSS
     <div className={className} style={{ position: "relative", overflow: "hidden", background: "#000", ...style }}>
       {/* 9:16 aspect-ratio box */}
       <div className="yt-ratio" style={{ paddingTop: "177.78%", position: "relative" }}>
-        <div ref={containerRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} />
+        <div ref={containerRef} className="yt-clip" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} />
       </div>
 
       {/* Side gradient masks — mobile only, hides YouTube ◀ ▶ nav arrows */}
@@ -608,16 +613,21 @@ export default function LandingPage() {
 
         /* Desktop layout helpers */
         .l-nav-links { display: flex; }
-        .l-hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        /* Text gets the room it needs; the video column is sized to the phone-
+           shaped clip so the composition doesn't leave dead space around it. */
+        .l-hero-grid { display: grid; grid-template-columns: 1fr 400px; gap: 72px; align-items: center; }
         .l-hero-grid > * { min-width: 0; }
         .l-hero-video { display: flex; justify-content: center; align-items: center; }
 
         /* Hide side gradient masks on desktop */
         .yt-side-mask { display: none; }
 
-        /* Clip YouTube Shorts channel bar (top) and watermark (bottom) */
-        #yt-hero-player { overflow: hidden !important; }
-        #yt-hero-player iframe {
+        /* Clip YouTube Shorts channel bar (top) and watermark (bottom).
+           NOTE: the YouTube API *replaces* its target node with the iframe, so
+           #yt-hero-player is the iframe itself — not a parent of one. The clip
+           has to live on the wrapper, and the offsets on the iframe by id. */
+        .yt-clip { overflow: hidden !important; }
+        iframe#yt-hero-player {
           position: absolute !important;
           top: -68px !important;
           left: -8px !important;
@@ -648,6 +658,7 @@ export default function LandingPage() {
             max-width: none !important;
             width: 100% !important; height: 100% !important;
             border-radius: 0 !important; box-shadow: none !important;
+            border: none !important;
             position: absolute !important; inset: 0 !important;
           }
           /* Override aspect-ratio wrapper so video fills height */
@@ -678,6 +689,17 @@ export default function LandingPage() {
 
         /* Language button always visible */
         .l-nav-lang { display: flex; }
+
+        /* Hover affordances — static, hover-less UI is a big part of what
+           reads as unfinished. */
+        .l-nav-links a:hover { color: #fff !important; background: rgba(255,255,255,0.07); }
+        .l-nav-login a:first-child:hover { background: rgba(255,255,255,0.07); }
+        .l-nav-lang button:hover { border-color: rgba(255,255,255,0.22) !important; }
+        .l-hero-ctas a { transition: filter 160ms, background 160ms, border-color 160ms; }
+        .l-hero-ctas a:first-child:hover { filter: brightness(1.08); }
+        .l-hero-ctas a:last-child:hover { background: rgba(255,255,255,0.08) !important; border-color: rgba(255,255,255,0.3) !important; }
+        .l-plan-card { transition: border-color 180ms, transform 180ms; }
+        .l-plan-card:hover { border-color: rgba(255,92,86,0.5) !important; transform: translateY(-3px); }
 
         /* Mobile bottom tab bar — hidden on desktop */
         .m-bottom-nav { display: none; }
@@ -752,27 +774,38 @@ export default function LandingPage() {
       `}</style>
 
       {/* ── Nav ─────────────────────────────────────────────── */}
-      <nav style={{ background: C.navyMid, borderBottom: `1px solid ${C.border}`, position: "sticky", top: 0, zIndex: 100 }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-            <img src="/logo.svg" alt="SpeakSure" width={36} height={36} style={{ borderRadius: 8, flexShrink: 0, display: "block" }} />
+      <nav style={{ background: "rgba(20,32,64,0.82)", backdropFilter: "blur(20px) saturate(1.6)", WebkitBackdropFilter: "blur(20px) saturate(1.6)", borderBottom: `1px solid ${C.border}`, position: "sticky", top: 0, zIndex: 100 }}>
+        {/* 1fr auto 1fr keeps the centre column optically centred regardless of
+            how wide the brand or the action cluster happen to be. */}
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", height: 68, display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center", gap: 16 }}>
+          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 11, textDecoration: "none", justifySelf: "start" }}>
+            <img src="/logo.svg" alt="SpeakSure" width={38} height={38} style={{ borderRadius: 9, flexShrink: 0, display: "block" }} />
             <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-              <div style={{ fontSize: 16, fontWeight: 800, color: C.white, lineHeight: 1.2 }}>SpeakSure</div>
-              <div style={{ fontSize: 10, color: C.muted, lineHeight: 1.2 }}>English · 英语</div>
+              <div style={{ fontSize: 16.5, fontWeight: 800, color: C.white, lineHeight: 1.25, letterSpacing: "-0.01em" }}>SpeakSure</div>
+              <div style={{ fontSize: 10.5, color: "rgba(255,255,255,0.45)", lineHeight: 1.25, letterSpacing: "0.02em" }}>English · 英语</div>
             </div>
           </Link>
 
-          <div className="l-nav-links" style={{ gap: 24, alignItems: "center" }}>
+          <div className="l-nav-links" style={{ gap: 4, alignItems: "center", justifyContent: "center" }}>
             {[{ l: t.nav.home, h: "/" }, { l: t.nav.courses, h: "#courses" }].map(x => (
-              <a key={x.l} href={x.h} style={{ fontSize: 13, color: C.muted, textDecoration: "none", fontWeight: 500, whiteSpace: "nowrap" }}>{x.l}</a>
+              <a key={x.l} href={x.h} style={{ fontSize: 13.5, color: "rgba(255,255,255,0.72)", textDecoration: "none", fontWeight: 500, whiteSpace: "nowrap", padding: "8px 14px", borderRadius: 8, transition: "color 150ms, background 150ms" }}>{x.l}</a>
             ))}
           </div>
+
+          {/* Right cluster — language + auth actions grouped together */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10, justifySelf: "end" }}>
 
           {/* Language toggle — always visible on mobile + desktop */}
           <div className="l-nav-lang" style={{ position: "relative", flexShrink: 0 }}>
             <button onClick={() => setShowLangMenu(v => !v)}
-              style={{ background: showLangMenu ? "rgba(255,92,86,0.12)" : "rgba(255,255,255,0.07)", border: `1px solid ${showLangMenu ? C.borderGold : C.border}`, color: C.white, borderRadius: 20, padding: "6px 14px", fontSize: 13, cursor: "pointer", fontWeight: 700, display: "flex", alignItems: "center", gap: 6 }}>
-              🌐 {LANG_LABEL[lang]} <span style={{ fontSize: 10, opacity: 0.6 }}>▾</span>
+              style={{ background: showLangMenu ? "rgba(255,92,86,0.12)" : "rgba(255,255,255,0.05)", border: `1px solid ${showLangMenu ? C.borderGold : C.border}`, color: C.white, borderRadius: 10, padding: "8px 12px", fontSize: 13, cursor: "pointer", fontWeight: 600, display: "flex", alignItems: "center", gap: 7, lineHeight: 1 }}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" style={{ opacity: 0.8 }}>
+                <circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3.5 9h17M3.5 15h17"/>
+              </svg>
+              {LANG_LABEL[lang]}
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.5, transform: showLangMenu ? "rotate(180deg)" : "none", transition: "transform 180ms" }}>
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
             </button>
             {showLangMenu && (
               <>
@@ -793,37 +826,40 @@ export default function LandingPage() {
           </div>
 
           <div className="l-nav-login" style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-            <Link href="/login" style={{ padding: "7px 16px", borderRadius: 20, border: `1.5px solid ${C.border}`, color: C.white, fontWeight: 600, fontSize: 13, textDecoration: "none" }}>{t.nav.login}</Link>
-            <Link href="/register" style={{ padding: "7px 16px", borderRadius: 20, background: C.gold, color: C.navy, fontWeight: 700, fontSize: 13, textDecoration: "none" }}>{t.nav.signup}</Link>
+            <Link href="/login" style={{ padding: "9px 18px", borderRadius: 10, color: "rgba(255,255,255,0.85)", fontWeight: 600, fontSize: 13.5, textDecoration: "none" }}>{t.nav.login}</Link>
+            <Link href="/register" style={{ padding: "9px 18px", borderRadius: 10, background: C.gold, color: C.navy, fontWeight: 700, fontSize: 13.5, textDecoration: "none" }}>{t.nav.signup}</Link>
+          </div>
+
           </div>
         </div>
       </nav>
 
       {/* ── Hero ────────────────────────────────────────────── */}
-      <section className="l-hero-section" style={{ background: `linear-gradient(135deg, ${C.navyMid} 0%, ${C.navyLight} 60%, ${C.navyMid} 100%)`, padding: "72px 20px 64px", position: "relative", overflow: "hidden" }}>
+      <section className="l-hero-section" style={{ background: `linear-gradient(135deg, ${C.navyMid} 0%, ${C.navyLight} 60%, ${C.navyMid} 100%)`, padding: "92px 24px 84px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: -160, right: -160, width: 520, height: 520, borderRadius: "50%", background: "rgba(255,92,86,0.05)", pointerEvents: "none" }} />
         <div style={{ position: "absolute", bottom: -80, left: -80, width: 360, height: 360, borderRadius: "50%", background: "rgba(255,92,86,0.04)", pointerEvents: "none" }} />
 
         <div className="l-hero-grid" style={{ maxWidth: 1200, margin: "0 auto" }}>
           {/* Text column */}
           <div className="l-hero-text-col">
-            <span className="l-hero-badge" style={{ display: "inline-block", padding: "5px 14px", borderRadius: 20, background: "rgba(255,92,86,0.12)", color: C.gold, fontSize: 12, fontWeight: 700, marginBottom: 20, border: `1px solid ${C.borderGold}` }}>
-              🎓 {t.hero.badge}
+            <span className="l-hero-badge" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "7px 15px 7px 12px", borderRadius: 999, background: "rgba(255,92,86,0.09)", color: C.gold, fontSize: 11.5, fontWeight: 600, marginBottom: 26, border: `1px solid ${C.borderGold}`, letterSpacing: "0.01em" }}>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.gold, flexShrink: 0 }} />
+              {t.hero.badge}
             </span>
-            <h1 className="l-hero-h1" style={{ fontSize: "clamp(36px,4.5vw,60px)", fontWeight: 900, margin: "0 0 14px", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
+            <h1 className="l-hero-h1" style={{ fontSize: "clamp(38px,4.6vw,62px)", fontWeight: 800, margin: "0 0 18px", lineHeight: 1.06, letterSpacing: "-0.035em" }}>
               {t.hero.h1a}<br />
               <span style={{ color: C.gold }}>{t.hero.h1b}</span>
             </h1>
-            <p className="l-hero-sub" style={{ fontSize: 16, color: C.muted, margin: "0 0 36px", lineHeight: 1.75, maxWidth: 460 }}>{t.hero.sub}</p>
-            <div className="l-hero-ctas" style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 44 }}>
-              <Link href="/register" style={{ padding: "13px 26px", borderRadius: 10, background: C.gold, color: C.navy, fontWeight: 700, fontSize: 15, textDecoration: "none", boxShadow: "0 4px 18px rgba(255,92,86,0.35)" }}>{t.hero.cta1}</Link>
-              <a href="#courses" style={{ padding: "13px 26px", borderRadius: 10, border: `1.5px solid ${C.border}`, color: C.white, fontWeight: 600, fontSize: 15, textDecoration: "none" }}>{t.hero.cta2}</a>
+            <p className="l-hero-sub" style={{ fontSize: 16.5, color: "rgba(255,255,255,0.62)", margin: "0 0 34px", lineHeight: 1.7, maxWidth: 430 }}>{t.hero.sub}</p>
+            <div className="l-hero-ctas" style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 48 }}>
+              <Link href="/register" style={{ padding: "14px 26px", borderRadius: 11, background: C.gold, color: C.navy, fontWeight: 700, fontSize: 15, textDecoration: "none", letterSpacing: "-0.01em" }}>{t.hero.cta1}</Link>
+              <a href="#courses" style={{ padding: "14px 26px", borderRadius: 11, border: `1px solid rgba(255,255,255,0.16)`, background: "rgba(255,255,255,0.03)", color: C.white, fontWeight: 600, fontSize: 15, textDecoration: "none", letterSpacing: "-0.01em" }}>{t.hero.cta2}</a>
             </div>
-            <div className="l-hero-stats" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", background: "rgba(255,255,255,0.04)", borderRadius: 14, border: `1px solid ${C.border}`, overflow: "hidden" }}>
+            <div className="l-hero-stats" style={{ display: "flex", gap: 36, paddingTop: 26, borderTop: `1px solid rgba(255,255,255,0.09)` }}>
               {t.hero.stats.map((s, i) => (
-                <div key={i} style={{ padding: "16px 8px", textAlign: "center", borderRight: i < 3 ? `1px solid ${C.border}` : "none" }}>
-                  <div style={{ fontSize: 20, fontWeight: 900, color: C.gold }}>{s.n}</div>
-                  <div style={{ fontSize: 10, color: C.muted, marginTop: 4 }}>{s.l}</div>
+                <div key={i}>
+                  <div style={{ fontSize: 23, fontWeight: 700, color: C.white, letterSpacing: "-0.02em", lineHeight: 1.1 }}>{s.n}</div>
+                  <div style={{ fontSize: 10.5, color: "rgba(255,255,255,0.42)", marginTop: 5, textTransform: "uppercase", letterSpacing: "0.09em", fontWeight: 600 }}>{s.l}</div>
                 </div>
               ))}
             </div>
@@ -831,7 +867,7 @@ export default function LandingPage() {
 
           {/* Video column */}
           <div className="l-hero-video">
-            <VideoHero style={{ width: "100%", maxWidth: 380, borderRadius: 20, boxShadow: "0 24px 64px rgba(0,0,0,0.5)" }} />
+            <VideoHero style={{ width: "100%", maxWidth: 380, borderRadius: 22, border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 32px 80px -12px rgba(0,0,0,0.7)" }} />
           </div>
         </div>
       </section>
@@ -911,7 +947,7 @@ export default function LandingPage() {
                   {tier.label}{tier.best ? ` (${t.plans.best})` : ""}
                 </div>
                 <div style={{ fontSize: 28, fontWeight: 800, color: C.white, marginBottom: 20 }}>{tier.price}</div>
-                <Link href="/register" style={{ display: "inline-block", padding: "10px 24px", borderRadius: 8, background: C.gold, color: C.navy, fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
+                <Link href={`/enroll?plan=${encodeURIComponent(tier.label)}&price=${encodeURIComponent(tier.price)}`} style={{ display: "inline-block", padding: "10px 24px", borderRadius: 8, background: C.gold, color: C.navy, fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
                   {t.plans.enroll}
                 </Link>
               </div>

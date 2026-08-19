@@ -6,6 +6,18 @@ import { courses as staticCourses } from "@/lib/courses"
 import { getProfile } from "@/lib/supabase/profile"
 import { createClient } from "@/lib/supabase/client"
 import { BrandMark } from "@/lib/m3"
+import {
+  getMyEnrollments, getAllEnrollments, updateEnrollmentStatus,
+  type Enrollment, type EnrollmentWithProfile,
+} from "@/lib/supabase/enrollments"
+
+const PLAN_TIERS = [
+  { label: "1 Month",  price: "¥899"   },
+  { label: "3 Months", price: "¥2,599" },
+  { label: "6 Months", price: "¥4,999" },
+  { label: "9 Months", price: "¥7,199" },
+  { label: "1 Year",   price: "¥8,999", best: true },
+]
 
 const s: Record<string, React.CSSProperties> = {
   surface: { background: "#fff", border: "1px solid #e8e0ef", borderRadius: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.05)" },
@@ -102,20 +114,43 @@ export default function DashboardPage() {
   const [newCourse, setNewCourse] = useState({ title: "", zh: "", level: "Intermediate", schedule: "", description: "", banner_color: "#6750a4", next_topic: "", code: "" })
   const [saving, setSaving] = useState(false)
 
+  // Enrollment state
+  const [myEnrollments, setMyEnrollments] = useState<Enrollment[]>([])
+  const [allEnrollments, setAllEnrollments] = useState<EnrollmentWithProfile[]>([])
+  const [enrollmentBusy, setEnrollmentBusy] = useState<string | null>(null)
+
   useEffect(() => {
     async function init() {
-      const [profile, hidden, custom] = await Promise.all([
-        getProfile(),
+      const profile = await getProfile()
+      const teacher = profile?.role === "teacher"
+      setIsTeacher(teacher)
+
+      const [hidden, custom, enrollments] = await Promise.all([
         fetchHiddenCourses(),   // load for ALL users so filtering works
         fetchCustomCourses(),
+        teacher ? getAllEnrollments() : getMyEnrollments(),
       ])
-      if (profile?.role === "teacher") setIsTeacher(true)
       setHiddenIds(hidden)
       setCustomCourses(custom)
+      if (teacher) {
+        setAllEnrollments(enrollments as EnrollmentWithProfile[])
+      } else {
+        setMyEnrollments(enrollments as Enrollment[])
+      }
       setPageLoading(false)
     }
     init()
   }, [])
+
+  const hasApprovedAccess = myEnrollments.some(e => e.status === "approved")
+  const pendingEnrollment = myEnrollments.find(e => e.status === "pending")
+
+  async function handleEnrollmentStatus(id: string, status: "approved" | "blocked" | "pending") {
+    setEnrollmentBusy(id)
+    await updateEnrollmentStatus(id, status)
+    setAllEnrollments(prev => prev.map(e => e.id === id ? { ...e, status, approved_at: status === "approved" ? new Date().toISOString() : null } : e))
+    setEnrollmentBusy(null)
+  }
 
   // Combine static + custom courses, all keyed by id
   const allCourses = [
@@ -280,59 +315,186 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* ── Section head ── */}
-      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 16 }}>
-        <div>
-          <p style={s.eyebrow}>Classes / 课程</p>
-          <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700 }}>Pick a course to preview</h2>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ ...s.muted, fontSize: 13 }}>{visibleCourses.length} live course{visibleCourses.length !== 1 ? "s" : ""}</span>
-          {isTeacher && hiddenCourses.length > 0 && (
-            <button onClick={() => setShowHidden(v => !v)} style={{ fontSize: 12, fontWeight: 600, padding: "4px 12px", borderRadius: 99, border: "1px solid #cac4d0", background: showHidden ? "#eaddff" : "#fff", color: showHidden ? "#6750a4" : "#625b71", cursor: "pointer" }}>
-              {showHidden ? "Hide archived" : `Archived (${hiddenCourses.length})`}
-            </button>
-          )}
-          {isTeacher && (
-            <button onClick={() => setShowAddModal(true)} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 600, padding: "6px 14px", borderRadius: 99, border: "none", background: "#6750a4", color: "#fff", cursor: "pointer" }}>
-              <PlusIcon /> Add course
-            </button>
-          )}
-        </div>
-      </div>
+      {/* ── Teacher: enrollments panel ── */}
+      {isTeacher && !pageLoading && (
+        <div style={{ marginBottom: 32 }}>
+          <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 16 }}>
+            <div>
+              <p style={s.eyebrow}>Enrollments</p>
+              <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700 }}>Student enrollments</h2>
+            </div>
+            <span style={{ ...s.muted, fontSize: 13 }}>
+              {allEnrollments.filter(e => e.status === "pending").length} pending
+            </span>
+          </div>
 
-      {/* ── Course grid ── */}
-      <div className="db-courses">
-        {pageLoading ? [1, 2, 3].map(i => (
-          <div key={i} style={{ height: 220, borderRadius: 12, background: "#f3edf7", opacity: 0.7 }} />
-        )) : visibleCourses.map((course) => (
-          <div key={course.id} style={{ position: "relative" }}>
-            <Link href={`/classroom?course=${course.id}`} style={{ textDecoration: "none", color: "inherit", display: "block" }}>
-              <div style={{ borderRadius: 12, overflow: "hidden", border: "1px solid #e8e0ef", boxShadow: "0 1px 3px rgba(0,0,0,0.07)", background: "#fff" }}>
-                <div style={{ position: "relative", height: 96, background: course.banner_color, padding: "16px 16px 14px", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
-                  <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#fff", lineHeight: 1.25 }}>{course.title}</h3>
-                  <span style={{ display: "block", fontSize: 13, color: "rgba(255,255,255,0.85)", marginTop: 4 }}>{course.zh}</span>
-                  <small style={{ display: "block", fontSize: 12, color: "rgba(255,255,255,0.75)", marginTop: 2 }}>{course.teacher}</small>
-                </div>
-                <div style={{ padding: "14px 16px 16px" }}>
-                  <p style={{ margin: "0 0 6px", fontSize: 13, fontWeight: 600, color: "#1d1b20" }}>Next: {course.next_topic}</p>
-                  <p style={{ margin: "0 0 14px", fontSize: 13, ...s.muted, lineHeight: 1.5, minHeight: 40 }}>{course.description}</p>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ fontSize: 11, fontWeight: 600, color: "#6750a4", background: "#eaddff", padding: "3px 10px", borderRadius: 99 }}>{course.level}</span>
-                    <span style={{ fontSize: 12, ...s.muted }}>{course.schedule.split(",")[0]}</span>
+          {allEnrollments.length === 0 ? (
+            <div style={{ ...s.surface, padding: "24px", textAlign: "center" }}>
+              <p style={{ margin: 0, ...s.muted, fontSize: 14 }}>No enrollments yet.</p>
+            </div>
+          ) : (
+            <div style={{ ...s.surface, overflow: "hidden" }}>
+              {allEnrollments.map((e, i) => (
+                <div key={e.id} style={{
+                  display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16,
+                  padding: "16px 20px", borderBottom: i < allEnrollments.length - 1 ? "1px solid #e8e0ef" : "none",
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 0 }}>
+                    <div style={{ width: 40, height: 40, borderRadius: "50%", background: "#eaddff", color: "#6750a4", display: "grid", placeItems: "center", fontWeight: 700, fontSize: 15, flexShrink: 0 }}>
+                      {(e.profiles?.full_name || "S")[0].toUpperCase()}
+                    </div>
+                    <div style={{ minWidth: 0 }}>
+                      <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: "#1d1b20" }}>
+                        {e.profiles?.full_name || "Student"}
+                      </p>
+                      <p style={{ margin: "2px 0 0", fontSize: 13, ...s.muted }}>
+                        {e.plan_label} · {e.plan_price}
+                        {e.whatsapp_sent_at ? " · messaged us" : " · hasn't messaged yet"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+                    <span style={{
+                      fontSize: 11, fontWeight: 700, padding: "4px 10px", borderRadius: 99,
+                      background: e.status === "approved" ? "#dcf5e6" : e.status === "blocked" ? "#fbe4e2" : "#fff4d6",
+                      color: e.status === "approved" ? "#1a6b3f" : e.status === "blocked" ? "#b3261e" : "#8a6d00",
+                    }}>
+                      {e.status === "approved" ? "Approved" : e.status === "blocked" ? "Blocked" : "Pending"}
+                    </span>
+
+                    {e.status !== "approved" && (
+                      <button
+                        onClick={() => handleEnrollmentStatus(e.id, "approved")}
+                        disabled={enrollmentBusy === e.id}
+                        style={{ padding: "7px 14px", borderRadius: 8, border: "none", background: "#1a6b3f", color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+                      >
+                        Approve
+                      </button>
+                    )}
+                    {e.status !== "blocked" && (
+                      <button
+                        onClick={() => handleEnrollmentStatus(e.id, "blocked")}
+                        disabled={enrollmentBusy === e.id}
+                        style={{ padding: "7px 14px", borderRadius: 8, border: "1px solid #cac4d0", background: "#fff", color: "#b3261e", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+                      >
+                        Block
+                      </button>
+                    )}
                   </div>
                 </div>
-              </div>
-            </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
-            {isTeacher && (
-              <button onClick={e => { e.preventDefault(); setConfirmDelete(course.id) }} title="Remove course" style={{ position: "absolute", top: 8, right: 8, display: "grid", placeItems: "center", width: 30, height: 30, borderRadius: "50%", border: "none", background: "rgba(0,0,0,0.45)", color: "#fff", cursor: "pointer", zIndex: 2 }}>
-                <TrashIcon />
-              </button>
-            )}
+      {/* ── Student without approved access: show plans only ── */}
+      {!isTeacher && !pageLoading && !hasApprovedAccess && (
+        <div style={{ marginBottom: 32 }}>
+          {pendingEnrollment ? (
+            <div style={{ ...s.surface, padding: "18px 22px", marginBottom: 24, display: "flex", alignItems: "center", gap: 14, background: "#fff9e6", border: "1px solid #f5deb3" }}>
+              <span style={{ fontSize: 22 }}>⏳</span>
+              <div>
+                <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "#1d1b20" }}>
+                  Enrollment pending — {pendingEnrollment.plan_label} ({pendingEnrollment.plan_price})
+                </p>
+                <p style={{ margin: "2px 0 0", fontSize: 13, ...s.muted }}>
+                  We're confirming your payment. Your teacher will unlock your course shortly.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div style={{ ...s.surface, padding: "18px 22px", marginBottom: 24 }}>
+              <p style={{ margin: 0, fontSize: 14, ...s.muted, lineHeight: 1.6 }}>
+                You don't have an active course yet. Pick a plan below to get started.
+              </p>
+            </div>
+          )}
+
+          <div style={{ marginBottom: 16 }}>
+            <p style={s.eyebrow}>Premium Subscription Plans</p>
+            <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700 }}>Choose a plan to enroll</h2>
           </div>
-        ))}
-      </div>
+
+          <div className="db-plans">
+            {PLAN_TIERS.map((tier, i) => (
+              <div key={i} style={{
+                ...s.surface, padding: "20px 16px", textAlign: "center",
+                border: tier.best ? "2px solid #6750a4" : "1px solid #e8e0ef",
+              }}>
+                <div style={{ fontSize: 13, color: tier.best ? "#6750a4" : "#625b71", marginBottom: 8, fontWeight: tier.best ? 700 : 400 }}>
+                  {tier.label}{tier.best ? " · Best Value" : ""}
+                </div>
+                <div style={{ fontSize: 22, fontWeight: 800, color: "#1d1b20", marginBottom: 16 }}>{tier.price}</div>
+                <Link
+                  href={`/enroll?plan=${encodeURIComponent(tier.label)}&price=${encodeURIComponent(tier.price)}`}
+                  style={{ display: "inline-block", padding: "9px 18px", borderRadius: 8, background: "#6750a4", color: "#fff", fontWeight: 700, fontSize: 13, textDecoration: "none" }}
+                >
+                  Enroll now
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Course grid (teacher, or approved student) ── */}
+      {(isTeacher || hasApprovedAccess) && (
+        <>
+          <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 16 }}>
+            <div>
+              <p style={s.eyebrow}>Classes / 课程</p>
+              <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700 }}>Pick a course to preview</h2>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <span style={{ ...s.muted, fontSize: 13 }}>{visibleCourses.length} live course{visibleCourses.length !== 1 ? "s" : ""}</span>
+              {isTeacher && hiddenCourses.length > 0 && (
+                <button onClick={() => setShowHidden(v => !v)} style={{ fontSize: 12, fontWeight: 600, padding: "4px 12px", borderRadius: 99, border: "1px solid #cac4d0", background: showHidden ? "#eaddff" : "#fff", color: showHidden ? "#6750a4" : "#625b71", cursor: "pointer" }}>
+                  {showHidden ? "Hide archived" : `Archived (${hiddenCourses.length})`}
+                </button>
+              )}
+              {isTeacher && (
+                <button onClick={() => setShowAddModal(true)} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 600, padding: "6px 14px", borderRadius: 99, border: "none", background: "#6750a4", color: "#fff", cursor: "pointer" }}>
+                  <PlusIcon /> Add course
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div className="db-courses">
+            {pageLoading ? [1, 2, 3].map(i => (
+              <div key={i} style={{ height: 220, borderRadius: 12, background: "#f3edf7", opacity: 0.7 }} />
+            )) : visibleCourses.map((course) => (
+              <div key={course.id} style={{ position: "relative" }}>
+                <Link href={`/classroom?course=${course.id}`} style={{ textDecoration: "none", color: "inherit", display: "block" }}>
+                  <div style={{ borderRadius: 12, overflow: "hidden", border: "1px solid #e8e0ef", boxShadow: "0 1px 3px rgba(0,0,0,0.07)", background: "#fff" }}>
+                    <div style={{ position: "relative", height: 96, background: course.banner_color, padding: "16px 16px 14px", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
+                      <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#fff", lineHeight: 1.25 }}>{course.title}</h3>
+                      <span style={{ display: "block", fontSize: 13, color: "rgba(255,255,255,0.85)", marginTop: 4 }}>{course.zh}</span>
+                      <small style={{ display: "block", fontSize: 12, color: "rgba(255,255,255,0.75)", marginTop: 2 }}>{course.teacher}</small>
+                    </div>
+                    <div style={{ padding: "14px 16px 16px" }}>
+                      <p style={{ margin: "0 0 6px", fontSize: 13, fontWeight: 600, color: "#1d1b20" }}>Next: {course.next_topic}</p>
+                      <p style={{ margin: "0 0 14px", fontSize: 13, ...s.muted, lineHeight: 1.5, minHeight: 40 }}>{course.description}</p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontSize: 11, fontWeight: 600, color: "#6750a4", background: "#eaddff", padding: "3px 10px", borderRadius: 99 }}>{course.level}</span>
+                        <span style={{ fontSize: 12, ...s.muted }}>{course.schedule.split(",")[0]}</span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+
+                {isTeacher && (
+                  <button onClick={e => { e.preventDefault(); setConfirmDelete(course.id) }} title="Remove course" style={{ position: "absolute", top: 8, right: 8, display: "grid", placeItems: "center", width: 30, height: 30, borderRadius: "50%", border: "none", background: "rgba(0,0,0,0.45)", color: "#fff", cursor: "pointer", zIndex: 2 }}>
+                    <TrashIcon />
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
 
       {/* ── Archived courses (teacher only) ── */}
       {isTeacher && showHidden && hiddenCourses.length > 0 && (

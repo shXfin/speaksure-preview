@@ -220,7 +220,7 @@ export default function CourseDetail({ params }: { params: Promise<{ id: string 
                 <span style={{ color: C.gold, cursor: "pointer" }}>Learn more</span>
               </div>
 
-              <Link href="/register" style={{ display: "block", textAlign: "center", padding: "14px", borderRadius: 10, background: C.gold, color: C.navy, fontWeight: 800, fontSize: 14, textDecoration: "none", marginBottom: 12 }}>
+              <Link href="/#pricing" style={{ display: "block", textAlign: "center", padding: "14px", borderRadius: 10, background: C.gold, color: C.navy, fontWeight: 800, fontSize: 14, textDecoration: "none", marginBottom: 12 }}>
                 SUBSCRIBE NOW
               </Link>
             </div>

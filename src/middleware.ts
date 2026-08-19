@@ -48,19 +48,25 @@ export async function middleware(request: NextRequest) {
   }
 
   // Protected routes — redirect to login if not signed in
-  const protectedRoutes = ["/classes", "/classroom"]
+  const protectedRoutes = ["/classes", "/classroom", "/enroll"]
   const isProtected = protectedRoutes.some(r => pathname.startsWith(r))
 
   if (isProtected && !user) {
     const url = request.nextUrl.clone()
     url.pathname = "/login"
+    url.searchParams.set("redirect", pathname + request.nextUrl.search)
     return NextResponse.redirect(url)
   }
 
   // If already logged in, redirect away from login/register
   if ((pathname === "/login" || pathname === "/register") && user) {
+    const redirectTo = request.nextUrl.searchParams.get("redirect")
+    if (redirectTo && redirectTo.startsWith("/")) {
+      return NextResponse.redirect(new URL(redirectTo, request.url))
+    }
     const url = request.nextUrl.clone()
     url.pathname = "/classes"
+    url.search = ""
     return NextResponse.redirect(url)
   }
 

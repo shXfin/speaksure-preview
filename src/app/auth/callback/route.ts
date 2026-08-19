@@ -6,6 +6,8 @@ import { SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase/config"
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get("code")
+  const redirect = searchParams.get("redirect")
+  const destination = redirect && redirect.startsWith("/") ? redirect : "/classes"
 
   if (code) {
     const cookieStore = await cookies()
@@ -34,7 +36,7 @@ export async function GET(request: Request) {
         role: "student",
       }, { onConflict: "id", ignoreDuplicates: true })
 
-      return NextResponse.redirect(`${origin}/classes`)
+      return NextResponse.redirect(`${origin}${destination}`)
     }
   }
 

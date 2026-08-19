@@ -1,12 +1,17 @@
 "use client"
 
 import Link from "next/link"
-import { useState } from "react"
+import { Suspense, useState } from "react"
+import { useSearchParams } from "next/navigation"
 import { BrandMark, GoogleSVG, EyeSVG, EyeOffSVG } from "@/lib/m3"
 import { A, authInput, authLabel, authBtnPrimary, authBtnOutline, authCard } from "@/lib/authTheme"
 import { createClient } from "@/lib/supabase/client"
 
-export default function LoginPage() {
+function LoginForm() {
+  const searchParams = useSearchParams()
+  const redirect = searchParams.get("redirect")
+  const destination = redirect && redirect.startsWith("/") ? redirect : "/classes"
+
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -20,7 +25,7 @@ export default function LoginPage() {
       const supabase = createClient()
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
-        options: { redirectTo: `${window.location.origin}/auth/callback` },
+        options: { redirectTo: `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(destination)}` },
       })
       if (error) {
         setError(error.message)
@@ -43,7 +48,7 @@ export default function LoginPage() {
         setError(error.message)
         setLoading(false)
       } else {
-        window.location.assign("/classes")
+        window.location.assign(destination)
       }
     } catch {
       setError("Could not reach the sign in service. Please check the Supabase environment variables and try again.")
@@ -135,11 +140,19 @@ export default function LoginPage() {
 
         <p style={{ textAlign: "center", fontSize: 14, color: A.muted, margin: 0 }}>
           Don&apos;t have an account?{" "}
-          <Link href="/register" style={{ color: A.red, fontWeight: 700, textDecoration: "none" }}>
+          <Link href={redirect ? `/register?redirect=${encodeURIComponent(redirect)}` : "/register"} style={{ color: A.red, fontWeight: 700, textDecoration: "none" }}>
             Register
           </Link>
         </p>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
   )
 }

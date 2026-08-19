@@ -1,14 +1,18 @@
 "use client"
 
 import Link from "next/link"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { Suspense, useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { BrandMark, GoogleSVG, EyeSVG, EyeOffSVG } from "@/lib/m3"
 import { A, authInput, authLabel, authBtnPrimary, authBtnOutline, authCard } from "@/lib/authTheme"
 import { createClient } from "@/lib/supabase/client"
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirect = searchParams.get("redirect")
+  const destination = redirect && redirect.startsWith("/") ? redirect : "/classes"
+
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -21,7 +25,7 @@ export default function RegisterPage() {
     const supabase = createClient()
     await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo: `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(destination)}` },
     })
   }
 
@@ -64,7 +68,7 @@ export default function RegisterPage() {
             <p style={{ margin: "0 0 20px", fontSize: 14, color: A.muted, lineHeight: 1.6 }}>
               We sent a confirmation link to <strong>{email}</strong>. Click it to activate your account.
             </p>
-            <Link href="/login" style={{ ...authBtnPrimary, display: "block", textAlign: "center", textDecoration: "none" }}>
+            <Link href={redirect ? `/login?redirect=${encodeURIComponent(redirect)}` : "/login"} style={{ ...authBtnPrimary, display: "block", textAlign: "center", textDecoration: "none" }}>
               Back to sign in
             </Link>
           </div>
@@ -160,11 +164,19 @@ export default function RegisterPage() {
 
         <p style={{ textAlign: "center", fontSize: 14, color: A.muted, margin: 0 }}>
           Already have an account?{" "}
-          <Link href="/login" style={{ color: A.red, fontWeight: 700, textDecoration: "none" }}>
+          <Link href={redirect ? `/login?redirect=${encodeURIComponent(redirect)}` : "/login"} style={{ color: A.red, fontWeight: 700, textDecoration: "none" }}>
             Sign in
           </Link>
         </p>
       </div>
     </div>
+  )
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={null}>
+      <RegisterForm />
+    </Suspense>
   )
 }
