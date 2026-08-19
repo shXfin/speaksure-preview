@@ -132,23 +132,35 @@ export default function DashboardPage() {
 
   useEffect(() => {
     async function init() {
-      const profile = await getProfile()
-      const teacher = profile?.role === "teacher"
-      setIsTeacher(teacher)
+      try {
+        const profile = await getProfile()
+        if (!profile) {
+          // Account no longer exists (e.g. removed by a teacher) — sign out cleanly
+          // instead of leaving the page stuck on a loading skeleton forever.
+          const supabase = createClient()
+          await supabase.auth.signOut()
+          window.location.href = "/login"
+          return
+        }
 
-      const [hidden, custom, enrollments] = await Promise.all([
-        fetchHiddenCourses(),   // load for ALL users so filtering works
-        fetchCustomCourses(),
-        teacher ? getAllEnrollments() : getMyEnrollments(),
-      ])
-      setHiddenIds(hidden)
-      setCustomCourses(custom)
-      if (teacher) {
-        setAllEnrollments(enrollments as EnrollmentWithProfile[])
-      } else {
-        setMyEnrollments(enrollments as Enrollment[])
+        const teacher = profile.role === "teacher"
+        setIsTeacher(teacher)
+
+        const [hidden, custom, enrollments] = await Promise.all([
+          fetchHiddenCourses(),   // load for ALL users so filtering works
+          fetchCustomCourses(),
+          teacher ? getAllEnrollments() : getMyEnrollments(),
+        ])
+        setHiddenIds(hidden)
+        setCustomCourses(custom)
+        if (teacher) {
+          setAllEnrollments(enrollments as EnrollmentWithProfile[])
+        } else {
+          setMyEnrollments(enrollments as Enrollment[])
+        }
+      } finally {
+        setPageLoading(false)
       }
-      setPageLoading(false)
     }
     init()
   }, [])
@@ -383,7 +395,6 @@ export default function DashboardPage() {
                     />
                     <div style={{ minWidth: 0 }}>
                       <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: "#1d1b20" }}>{course.title}</p>
-                      <p style={{ margin: "1px 0 0", fontSize: 12, color: "#625b71" }}>{course.zh}</p>
                     </div>
                   </label>
                 ))
@@ -411,7 +422,7 @@ export default function DashboardPage() {
       {/* ── Banner card ── */}
       <div className="db-banner" style={{ ...s.surface, padding: "20px 24px", marginBottom: 20 }}>
         <div>
-          <p style={s.eyebrow}>SpeakSure / 口语课堂</p>
+          <p style={s.eyebrow}>SpeakSure</p>
           <h1 style={{ margin: "0 0 8px", fontSize: 28, fontWeight: 700, letterSpacing: "-0.3px", lineHeight: 1.2 }}>English classrooms</h1>
           <p style={{ margin: 0, ...s.muted, fontSize: 14, lineHeight: 1.6, maxWidth: 520 }}>
             Live English courses for adult students worldwide. Pick a class, check the stream, and continue your practice.
@@ -425,7 +436,7 @@ export default function DashboardPage() {
           </div>
         </div>
         <Link href="/classroom" style={{ color: "#6750a4", fontWeight: 700, fontSize: 14, textDecoration: "none", whiteSpace: "nowrap" }}>
-          Continue learning / 继续学习
+          Continue learning
         </Link>
       </div>
 
@@ -613,7 +624,7 @@ export default function DashboardPage() {
         <>
           <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 16 }}>
             <div>
-              <p style={s.eyebrow}>Classes / 课程</p>
+              <p style={s.eyebrow}>Classes</p>
               <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700 }}>Pick a course to preview</h2>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -640,8 +651,7 @@ export default function DashboardPage() {
                   <div style={{ borderRadius: 12, overflow: "hidden", border: "1px solid #e8e0ef", boxShadow: "0 1px 3px rgba(0,0,0,0.07)", background: "#fff" }}>
                     <div style={{ position: "relative", height: 96, background: course.banner_color, padding: "16px 16px 14px", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
                       <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#fff", lineHeight: 1.25 }}>{course.title}</h3>
-                      <span style={{ display: "block", fontSize: 13, color: "rgba(255,255,255,0.85)", marginTop: 4 }}>{course.zh}</span>
-                      <small style={{ display: "block", fontSize: 12, color: "rgba(255,255,255,0.75)", marginTop: 2 }}>{course.teacher}</small>
+                      <small style={{ display: "block", fontSize: 12, color: "rgba(255,255,255,0.75)", marginTop: 4 }}>{course.teacher}</small>
                     </div>
                     <div style={{ padding: "14px 16px 16px" }}>
                       <p style={{ margin: "0 0 6px", fontSize: 13, fontWeight: 600, color: "#1d1b20" }}>Next: {course.next_topic}</p>
@@ -677,7 +687,6 @@ export default function DashboardPage() {
               <div key={course.id} style={{ borderRadius: 12, overflow: "hidden", border: "1px dashed #cac4d0", background: "#fafafa", opacity: 0.85 }}>
                 <div style={{ height: 96, background: course.banner_color, padding: "16px 16px 14px", display: "flex", flexDirection: "column", justifyContent: "flex-end", filter: "grayscale(60%)" }}>
                   <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#fff" }}>{course.title}</h3>
-                  <span style={{ fontSize: 13, color: "rgba(255,255,255,0.8)" }}>{course.zh}</span>
                 </div>
                 <div style={{ padding: "12px 16px 14px" }}>
                   <p style={{ margin: "0 0 10px", fontSize: 13, color: "#625b71" }}>{course.description}</p>

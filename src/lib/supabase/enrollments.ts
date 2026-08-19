@@ -21,6 +21,31 @@ export async function createEnrollment(planLabel: string, planPrice: string) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { data: null, error: "Not authenticated" }
 
+  // Reuse an existing pending/approved enrollment instead of creating a
+  // duplicate row every time the student revisits the enroll flow — the
+  // teacher dashboard would otherwise list the same student more than once.
+  const { data: existing } = await supabase
+    .from("enrollments")
+    .select("*")
+    .eq("user_id", user.id)
+    .in("status", ["pending", "approved"])
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  if (existing) {
+    if (existing.plan_label !== planLabel || existing.plan_price !== planPrice) {
+      const { data, error } = await supabase
+        .from("enrollments")
+        .update({ plan_label: planLabel, plan_price: planPrice })
+        .eq("id", existing.id)
+        .select()
+        .single()
+      return { data, error: error?.message ?? null }
+    }
+    return { data: existing, error: null }
+  }
+
   const { data, error } = await supabase
     .from("enrollments")
     .insert({ user_id: user.id, plan_label: planLabel, plan_price: planPrice })

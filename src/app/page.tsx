@@ -360,28 +360,6 @@ function VideoHero({ className, style }: { className?: string; style?: React.CSS
     return () => { playerRef.current?.destroy?.() }
   }, [])
 
-  // Browsers only allow unmuted playback after a real user gesture, so we
-  // unmute automatically on the visitor's first click/tap/keypress anywhere
-  // on the page — not just on the video — so sound kicks in almost instantly
-  // for most visitors without requiring them to interact with the video itself.
-  useEffect(() => {
-    function unlockSound() {
-      if (playerRef.current) {
-        playerRef.current.unMute()
-        playerRef.current.setVolume(80)
-        playerRef.current.playVideo()
-        setMuted(false)
-      }
-    }
-    const opts = { once: true, passive: true } as const
-    window.addEventListener("pointerdown", unlockSound, opts)
-    window.addEventListener("keydown", unlockSound, opts)
-    return () => {
-      window.removeEventListener("pointerdown", unlockSound)
-      window.removeEventListener("keydown", unlockSound)
-    }
-  }, [])
-
   function togglePlay() {
     if (!playerRef.current) return
     if (playing) {
@@ -684,8 +662,11 @@ export default function LandingPage() {
         .l-hero-ctas a { transition: filter 160ms, background 160ms, border-color 160ms; }
         .l-hero-ctas a:first-child:hover { filter: brightness(1.08); }
         .l-hero-ctas a:last-child:hover { background: rgba(255,255,255,0.08) !important; border-color: rgba(255,255,255,0.3) !important; }
-        .l-plan-card { transition: border-color 180ms, transform 180ms; }
-        .l-plan-card:hover { border-color: rgba(255,92,86,0.5) !important; transform: translateY(-3px); }
+        .l-plans-grid { display: flex; flex-direction: column; }
+        .l-plan-row { transition: padding-left 160ms; }
+        .l-plan-row:hover { padding-left: 10px; }
+        .l-plan-row .l-plan-cta { opacity: 0; transition: opacity 160ms; }
+        .l-plan-row:hover .l-plan-cta { opacity: 1; }
 
         /* Mobile bottom tab bar — hidden on desktop */
         .m-bottom-nav { display: none; }
@@ -703,7 +684,8 @@ export default function LandingPage() {
           .l-inside-row > div { order: unset !important; }
           .l-course-grid { grid-template-columns: 1fr !important; gap: 28px !important; }
           .l-course-grid > div:last-child { order: -1; aspect-ratio: 16/9 !important; }
-          .l-plans-grid { grid-template-columns: 1fr 1fr !important; }
+          .l-plan-row { flex-wrap: wrap !important; }
+          .l-plan-row .l-plan-cta { opacity: 1 !important; }
 
           /* Show bottom nav on mobile */
           .m-bottom-nav {
@@ -945,72 +927,68 @@ export default function LandingPage() {
       </section>
 
       {/* ── Pricing plans ────────────────────────────────────── */}
-      <section id="pricing" style={{ padding: "72px 20px", background: C.navy }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <h2 style={{ fontSize: 32, fontWeight: 800, margin: "0 0 40px", textAlign: "center", color: C.gold }}>{t.plans.title}</h2>
-          <div className="l-plans-grid" style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 16 }}>
+      <section id="pricing" style={{ padding: "88px 20px", background: C.navy }}>
+        <div style={{ maxWidth: 980, margin: "0 auto" }}>
+          <h2 style={{ fontSize: "clamp(28px,3.2vw,38px)", fontWeight: 800, margin: "0 0 48px", letterSpacing: "-0.02em" }}>{t.plans.title}</h2>
+          <div className="l-plans-grid">
             {t.plans.tiers.map((tier, i) => (
-              <div key={i} className="l-plan-card" style={{
-                background: C.navyCard, borderRadius: 14, padding: "24px 16px", textAlign: "center",
-                border: tier.best ? `2px solid ${C.gold}` : `1px solid ${C.border}`,
-              }}>
-                <div style={{ fontSize: 14, color: tier.best ? C.gold : C.muted, marginBottom: 10 }}>
-                  {tier.label}{tier.best ? ` (${t.plans.best})` : ""}
+              <Link
+                key={i}
+                href={`/enroll?plan=${encodeURIComponent(tier.label)}&price=${encodeURIComponent(tier.price)}`}
+                className="l-plan-row"
+                style={{
+                  display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 20,
+                  padding: "26px 4px", borderTop: i === 0 ? `1px solid ${C.border}` : "none",
+                  borderBottom: `1px solid ${C.border}`, textDecoration: "none", color: "inherit",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "baseline", gap: 14, minWidth: 0 }}>
+                  <span style={{ fontSize: tier.best ? 22 : 18, fontWeight: tier.best ? 800 : 600, color: C.white }}>{tier.label}</span>
+                  {tier.best && <span style={{ fontSize: 12, fontWeight: 700, color: C.gold, letterSpacing: "0.04em" }}>{t.plans.best.toUpperCase()}</span>}
                 </div>
-                <div style={{ fontSize: 28, fontWeight: 800, color: C.white, marginBottom: 20 }}>{tier.price}</div>
-                <Link href={`/enroll?plan=${encodeURIComponent(tier.label)}&price=${encodeURIComponent(tier.price)}`} style={{ display: "inline-block", padding: "10px 24px", borderRadius: 8, background: C.gold, color: C.navy, fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
-                  {t.plans.enroll}
-                </Link>
-              </div>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 20, flexShrink: 0 }}>
+                  <span style={{ fontSize: tier.best ? 30 : 22, fontWeight: 800, color: tier.best ? C.gold : C.white }}>{tier.price}</span>
+                  <span className="l-plan-cta" style={{ fontSize: 14, fontWeight: 700, color: C.gold }}>{t.plans.enroll} →</span>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
       {/* ── Reviews ─────────────────────────────────────────── */}
-      <section style={{ padding: "72px 20px", background: "#0a1830" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <h2 style={{ fontSize: 32, fontWeight: 800, margin: "0 0 40px", textAlign: "center" }}>{t.reviewsTitle}</h2>
-
-          <div className="l-reviews-grid">
-            <div style={{ background: C.navyCard, borderRadius: 16, padding: "28px", border: `1px solid ${C.border}` }}>
-              <div style={{ textAlign: "center", marginBottom: 24 }}>
-                <div style={{ fontSize: 52, fontWeight: 900, color: C.gold, lineHeight: 1 }}>4.9</div>
-                <Stars count={5} size={18} />
-                <div style={{ fontSize: 12, color: C.muted, marginTop: 6 }}>{t.courseRate}</div>
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                {t.ratingBars.map(r => (
-                  <div key={r.stars} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <div style={{ display: "flex", gap: 2, flexShrink: 0 }}>
-                      {[1,2,3,4,5].map(i => <span key={i} style={{ fontSize: 11, color: i <= r.stars ? C.gold : "rgba(255,255,255,0.15)" }}>★</span>)}
-                    </div>
-                    <div style={{ flex: 1, height: 6, borderRadius: 4, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
-                      <div style={{ height: "100%", width: `${r.pct}%`, background: C.gold, borderRadius: 4 }} />
-                    </div>
-                    <span style={{ fontSize: 11, color: C.muted, width: 36, textAlign: "right" }}>{r.pct}%</span>
+      <section style={{ padding: "88px 20px", background: "#0a1830" }}>
+        <div className="l-reviews-grid" style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "0.65fr 1.35fr", gap: 64, alignItems: "start" }}>
+          <div>
+            <h2 style={{ fontSize: "clamp(28px,3.2vw,38px)", fontWeight: 800, margin: "0 0 28px", lineHeight: 1.15, letterSpacing: "-0.02em" }}>{t.reviewsTitle}</h2>
+            <div style={{ fontSize: 56, fontWeight: 900, color: C.gold, lineHeight: 1 }}>4.9</div>
+            <Stars count={5} size={16} />
+            <p style={{ fontSize: 13.5, color: C.muted, margin: "8px 0 28px" }}>{t.courseRate} · 574 reviews</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 9, maxWidth: 220 }}>
+              {t.ratingBars.map(r => (
+                <div key={r.stars} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ fontSize: 12, color: C.muted, width: 12 }}>{r.stars}</span>
+                  <div style={{ flex: 1, height: 4, borderRadius: 4, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
+                    <div style={{ height: "100%", width: `${r.pct}%`, background: C.gold, borderRadius: 4 }} />
                   </div>
-                ))}
-              </div>
-            </div>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              {reviews.map((r, i) => (
-                <div key={i} style={{ background: C.navyCard, borderRadius: 14, padding: "18px 20px", border: `1px solid ${C.border}`, display: "flex", gap: 14, alignItems: "flex-start" }}>
-                  <div style={{ width: 42, height: 42, borderRadius: "50%", background: C.navyLight, border: `2px solid ${C.borderGold}`, display: "grid", placeItems: "center", fontSize: 16, flexShrink: 0, fontWeight: 700 }}>
-                    {r.name[0]}
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-                      <span style={{ fontWeight: 700, fontSize: 14 }}>{r.name}</span>
-                      <span style={{ fontSize: 11, color: C.muted }}>{r.date}</span>
-                    </div>
-                    <Stars count={r.stars} size={13} />
-                    <p style={{ fontSize: 13, color: C.muted, margin: "6px 0 0", lineHeight: 1.6 }}>{r.comment[lang]}</p>
-                  </div>
+                  <span style={{ fontSize: 11, color: C.muted, width: 30, textAlign: "right" }}>{r.pct}%</span>
                 </div>
               ))}
             </div>
+          </div>
+
+          <div>
+            {reviews.map((r, i) => (
+              <div key={i} style={{ padding: i === 0 ? "0 0 28px" : "28px 0", borderTop: i === 0 ? "none" : `1px solid ${C.border}` }}>
+                <Stars count={r.stars} size={14} />
+                <p style={{ fontSize: 17, color: C.white, margin: "12px 0 14px", lineHeight: 1.6, fontWeight: 500, maxWidth: 560 }}>
+                  “{r.comment[lang]}”
+                </p>
+                <div style={{ fontSize: 13, color: C.muted }}>
+                  <span style={{ fontWeight: 700, color: C.white }}>{r.name}</span> · {r.date}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

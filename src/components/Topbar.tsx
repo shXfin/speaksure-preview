@@ -36,6 +36,13 @@ function StreamIcon() {
     </svg>
   )
 }
+function ExitIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+    </svg>
+  )
+}
 
 const pill: React.CSSProperties = {
   display: "inline-flex", alignItems: "center", gap: 8,
@@ -103,6 +110,9 @@ export default function Topbar() {
           }}>
             <StreamIcon /> Classroom
           </Link>
+          <Link href="/" style={{ ...pill, color: "#625b71" }}>
+            <ExitIcon /> Main site
+          </Link>
         </nav>
 
         {/* Profile pill */}
@@ -143,6 +153,9 @@ export default function Topbar() {
             </Link>
             <Link href="/classroom" onClick={() => setOpen(false)} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 6, color: "#1d1b20", fontWeight: 500, textDecoration: "none", fontSize: 14 }}>
               <StreamIcon /> Classroom
+            </Link>
+            <Link href="/" onClick={() => setOpen(false)} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 6, color: "#1d1b20", fontWeight: 500, textDecoration: "none", fontSize: 14 }}>
+              <ExitIcon /> Main site
             </Link>
             <div style={{ margin: "4px 8px", borderTop: "1px solid #e0e0e0" }} />
             <button

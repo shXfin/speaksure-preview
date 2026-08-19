@@ -30,6 +30,7 @@ import { CSS } from "@dnd-kit/utilities"
 
 // ── Design tokens ──────────────────────────────────────────
 const primary = "#6750a4"
+const FREE_COURSE_ID = "6d1a4ea1-8fc3-4fdc-86a9-9228e52b977b" // Foundation English — free for every signed-up student
 const primarySoft = "#eaddff"
 const surface: React.CSSProperties = {
   background: "#fff",
@@ -224,7 +225,32 @@ export default function ClassroomView() {
   const searchParams = useSearchParams()
   const courseId = searchParams.get("course") ?? "general-english"
   const urlTab = searchParams.get("tab")
-  const course = courses.find(c => c.id === courseId) ?? courses[0]
+  const staticCourse = courses.find(c => c.id === courseId)
+
+  // Courses added via the teacher dashboard's "Add course" modal live in
+  // custom_courses, not in the static list above — fetch those separately.
+  const [customCourse, setCustomCourse] = useState<typeof courses[number] | null>(null)
+  const [customCourseLoading, setCustomCourseLoading] = useState(!staticCourse)
+
+  useEffect(() => {
+    if (staticCourse) { setCustomCourse(null); setCustomCourseLoading(false); return }
+    setCustomCourseLoading(true)
+    const supabase = createClient()
+    supabase.from("custom_courses").select("*").eq("id", courseId).single().then(({ data }) => {
+      if (data) {
+        setCustomCourse({
+          id: data.id, title: data.title, zh: data.zh ?? "", teacher: data.teacher ?? "SpeakSure",
+          initial: (data.teacher ?? "S").charAt(0).toUpperCase(), level: data.level ?? "",
+          schedule: data.schedule ?? "", description: data.description ?? "",
+          bannerColor: data.banner_color ?? "#6750a4", nextTopic: data.next_topic ?? "",
+          code: data.code ?? "", bio: "", streamTitle: "", streamText: "", topics: [], outcomes: [],
+        })
+      }
+      setCustomCourseLoading(false)
+    })
+  }, [courseId, staticCourse])
+
+  const course = staticCourse ?? customCourse ?? courses[0]
 
   const [tab, setTab] = useState(urlTab ? TABS.find(t => t.toLowerCase() === urlTab) ?? "Classwork" : "Classwork")
   const [topics, setTopics] = useState<Topic[]>([])
@@ -497,6 +523,14 @@ export default function ClassroomView() {
     reorderAssignments(updated)
   }
 
+  if (!staticCourse && customCourseLoading) {
+    return (
+      <div className="app-main" style={{ margin: "0 auto", padding: "28px 0 64px" }}>
+        <div style={{ height: 160, borderRadius: 16, background: "#f3edf7" }} />
+      </div>
+    )
+  }
+
   return (
     <div className="app-main" style={{ margin: "0 auto", padding: "28px 0 64px" }}>
 
@@ -516,7 +550,7 @@ export default function ClassroomView() {
       }}>
         <p style={{ margin: "0 0 6px", fontSize: 13, color: "rgba(255,255,255,0.8)" }}>SpeakSure classroom</p>
         <h1 style={{ margin: "0 0 6px", fontSize: 32, fontWeight: 700, lineHeight: 1.15, color: "#fff", letterSpacing: "-0.5px" }}>{course.title}</h1>
-        <span style={{ fontSize: 14, color: "rgba(255,255,255,0.85)" }}>{course.zh} · {course.teacher} · {course.level}</span>
+        <span style={{ fontSize: 14, color: "rgba(255,255,255,0.85)" }}>{course.teacher} · {course.level}</span>
 
         {/* Role badge + sign out */}
         <div style={{ position: "absolute", top: 16, right: 16, display: "flex", alignItems: "center", gap: 8 }}>
@@ -531,6 +565,17 @@ export default function ClassroomView() {
           </button>
         </div>
       </div>
+
+      {!isTeacher && course.id === FREE_COURSE_ID && (
+        <div style={{ ...surface, padding: "14px 18px", marginBottom: 20, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14, flexWrap: "wrap" }}>
+          <p style={{ margin: 0, fontSize: 13.5, color: "#625b71" }}>
+            You're in the free Foundation English course. Want live classes and more courses?
+          </p>
+          <Link href="/classes" style={{ padding: "8px 16px", borderRadius: 8, background: primary, color: "#fff", fontWeight: 600, fontSize: 13, textDecoration: "none", whiteSpace: "nowrap" }}>
+            See plans
+          </Link>
+        </div>
+      )}
 
       {/* ── Tabs ── */}
       <div style={{ display: "flex", borderBottom: "1px solid #e0d9ea", marginBottom: 24, gap: 0 }}>
