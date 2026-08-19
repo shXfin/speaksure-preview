@@ -89,6 +89,16 @@ export async function updateEnrollmentStatus(enrollmentId: string, status: "appr
   return { error: error?.message ?? null }
 }
 
+export async function deleteEnrollment(enrollmentId: string) {
+  const supabase = createClient()
+  const { error } = await supabase
+    .from("enrollments")
+    .delete()
+    .eq("id", enrollmentId)
+
+  return { error: error?.message ?? null }
+}
+
 export async function approveEnrollmentWithCourses(enrollmentId: string, courseIds: string[]) {
   const supabase = createClient()
   const { error } = await supabase

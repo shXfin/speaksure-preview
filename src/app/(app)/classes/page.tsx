@@ -7,7 +7,7 @@ import { getProfile } from "@/lib/supabase/profile"
 import { createClient } from "@/lib/supabase/client"
 import { BrandMark } from "@/lib/m3"
 import {
-  getMyEnrollments, getAllEnrollments, updateEnrollmentStatus, approveEnrollmentWithCourses,
+  getMyEnrollments, getAllEnrollments, updateEnrollmentStatus, approveEnrollmentWithCourses, deleteEnrollment,
   type Enrollment, type EnrollmentWithProfile,
 } from "@/lib/supabase/enrollments"
 
@@ -124,6 +124,10 @@ export default function DashboardPage() {
   const [selectedCourseIds, setSelectedCourseIds] = useState<string[]>([])
   const [savingAccess, setSavingAccess] = useState(false)
 
+  // Delete-enrollment confirmation
+  const [confirmDeleteEnrollment, setConfirmDeleteEnrollment] = useState<EnrollmentWithProfile | null>(null)
+  const [deletingEnrollment, setDeletingEnrollment] = useState(false)
+
   useEffect(() => {
     async function init() {
       const profile = await getProfile()
@@ -178,6 +182,15 @@ export default function DashboardPage() {
       : e))
     setSavingAccess(false)
     setAccessModalFor(null)
+  }
+
+  async function confirmDeleteEnrollmentRow() {
+    if (!confirmDeleteEnrollment) return
+    setDeletingEnrollment(true)
+    await deleteEnrollment(confirmDeleteEnrollment.id)
+    setAllEnrollments(prev => prev.filter(e => e.id !== confirmDeleteEnrollment.id))
+    setDeletingEnrollment(false)
+    setConfirmDeleteEnrollment(null)
   }
 
   // Combine static + custom courses, all keyed by id
@@ -249,6 +262,24 @@ export default function DashboardPage() {
               <button onClick={() => setConfirmDelete(null)} style={{ padding: "9px 18px", borderRadius: 99, border: "1px solid #cac4d0", background: "#fff", fontSize: 14, fontWeight: 500, cursor: "pointer", color: "#625b71" }}>Cancel</button>
               <button onClick={() => handleHide(confirmDelete)} disabled={busy} style={{ padding: "9px 18px", borderRadius: 99, border: "none", background: "#b3261e", color: "#fff", fontSize: 14, fontWeight: 600, cursor: busy ? "not-allowed" : "pointer", opacity: busy ? 0.7 : 1 }}>
                 {busy ? "Removing…" : "Remove"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Confirm delete enrollment modal ── */}
+      {confirmDeleteEnrollment && (
+        <div onClick={() => setConfirmDeleteEnrollment(null)} style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,0.35)", display: "grid", placeItems: "center", padding: 16 }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 16, padding: "28px 28px 24px", width: "100%", maxWidth: 360, boxShadow: "0 8px 32px rgba(0,0,0,0.18)" }}>
+            <h3 style={{ margin: "0 0 10px", fontSize: 18, fontWeight: 700 }}>Delete enrollment?</h3>
+            <p style={{ margin: "0 0 24px", fontSize: 14, color: "#625b71", lineHeight: 1.5 }}>
+              This permanently removes <strong>{confirmDeleteEnrollment.profiles?.full_name || "this student"}</strong>'s enrollment record ({confirmDeleteEnrollment.plan_label}). This can't be undone — if they're already approved, they'll lose access to their assigned courses.
+            </p>
+            <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
+              <button onClick={() => setConfirmDeleteEnrollment(null)} style={{ padding: "9px 18px", borderRadius: 99, border: "1px solid #cac4d0", background: "#fff", fontSize: 14, fontWeight: 500, cursor: "pointer", color: "#625b71" }}>Cancel</button>
+              <button onClick={confirmDeleteEnrollmentRow} disabled={deletingEnrollment} style={{ padding: "9px 18px", borderRadius: 99, border: "none", background: "#b3261e", color: "#fff", fontSize: 14, fontWeight: 600, cursor: deletingEnrollment ? "not-allowed" : "pointer", opacity: deletingEnrollment ? 0.7 : 1 }}>
+                {deletingEnrollment ? "Deleting…" : "Delete"}
               </button>
             </div>
           </div>
@@ -489,6 +520,13 @@ export default function DashboardPage() {
                         Block
                       </button>
                     )}
+                    <button
+                      onClick={() => setConfirmDeleteEnrollment(e)}
+                      title="Delete enrollment"
+                      style={{ display: "grid", placeItems: "center", width: 32, height: 32, borderRadius: 8, border: "1px solid #cac4d0", background: "#fff", color: "#625b71", cursor: "pointer", flexShrink: 0 }}
+                    >
+                      <TrashIcon />
+                    </button>
                   </div>
                 </div>
               ))}
