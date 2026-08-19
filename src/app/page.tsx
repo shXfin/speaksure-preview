@@ -98,7 +98,7 @@ const content = {
       stats: [
         { n: "12,847", l: "Students" },
         { n: "4.9★",   l: "Rating"   },
-        { n: "6",      l: "Courses"  },
+        { n: "3x",     l: "Classes/wk" },
         { n: "15+",    l: "Yrs exp." },
       ],
     },
@@ -116,6 +116,17 @@ const content = {
     offerBadge:   "🔥 Limited time — 50% OFF all courses",
     coursesTitle: "Most Requested Courses",
     coursesSub:   "Choose the course that fits your level and schedule",
+    course: {
+      eyebrow: "Our flagship program",
+      title: "English Foundation for Beginners",
+      tagline: "Speak & learn fast!",
+      sub: "Start from zero and learn English the easy way. Combine live online classes with fun, smart exercises so you can listen, speak, and build real confidence right away.",
+      features: [
+        { label: "Live online classes", desc: "3 times a week (75 mins each) with real teachers." },
+        { label: "Interactive listening & speaking", desc: "Practice speaking and listening with custom digital exercises, powered by Formative." },
+        { label: "All-in-one platform", desc: "Join live lessons, then practice on our website anytime to lock in what you learned." },
+      ],
+    },
     enroll:       "Enroll now",
     lessons:      "lessons",
     reviewsTitle: "What students say",
@@ -153,7 +164,7 @@ const content = {
       stats: [
         { n: "12,847", l: "学生"   },
         { n: "4.9★",   l: "评分"   },
-        { n: "6",      l: "课程"   },
+        { n: "3次",    l: "每周课程" },
         { n: "15+",    l: "年经验" },
       ],
     },
@@ -171,6 +182,17 @@ const content = {
     offerBadge:   "🔥 限时优惠 — 全课程5折",
     coursesTitle: "最受欢迎的课程",
     coursesSub:   "选择适合您水平和时间表的课程",
+    course: {
+      eyebrow: "旗舰课程",
+      title: "零基础英语",
+      tagline: "快速开口，快速进步！",
+      sub: "从零开始，用最轻松的方式学英语。结合直播课程与趣味智能练习，边听边说，快速建立真正的自信。",
+      features: [
+        { label: "直播在线课程", desc: "每周3次，每次75分钟，由真人教师授课。" },
+        { label: "互动听说练习", desc: "通过定制数字练习（由 Formative 提供支持）练习听力与口语。" },
+        { label: "一站式学习平台", desc: "上完直播课后，随时在网站上练习，巩固所学内容。" },
+      ],
+    },
     enroll:       "立即报名",
     lessons:      "课",
     reviewsTitle: "学生反馈",
@@ -208,7 +230,7 @@ const content = {
       stats: [
         { n: "12,847", l: "طالب"    },
         { n: "4.9★",   l: "التقييم" },
-        { n: "6",      l: "دورات"   },
+        { n: "3x",     l: "حصص/أسبوع" },
         { n: "15+",    l: "سنة خبرة"},
       ],
     },
@@ -226,6 +248,17 @@ const content = {
     offerBadge:   "🔥 عرض محدود — خصم 50% على جميع الدورات",
     coursesTitle: "الدورات الأكثر طلباً",
     coursesSub:   "اختر الدورة التي تناسب مستواك وجدولك",
+    course: {
+      eyebrow: "برنامجنا الرئيسي",
+      title: "أساسيات الإنجليزية للمبتدئين",
+      tagline: "تحدث وتعلم بسرعة!",
+      sub: "ابدأ من الصفر وتعلم الإنجليزية بطريقة سهلة. ادمج بين الحصص المباشرة أونلاين وتمارين ذكية وممتعة لتستمع وتتحدث وتبني ثقة حقيقية من البداية.",
+      features: [
+        { label: "حصص مباشرة أونلاين", desc: "3 مرات أسبوعياً (75 دقيقة لكل حصة) مع معلمين حقيقيين." },
+        { label: "تمارين استماع ومحادثة تفاعلية", desc: "تدرّب على التحدث والاستماع من خلال تمارين رقمية مخصصة، مدعومة من Formative." },
+        { label: "منصة شاملة", desc: "احضر الحصص المباشرة، ثم تدرّب على موقعنا في أي وقت لترسيخ ما تعلمته." },
+      ],
+    },
     enroll:       "سجّل الآن",
     lessons:      "درس",
     reviewsTitle: "آراء الطلاب",
@@ -502,6 +535,18 @@ const HOW_ICONS = [
   </svg>,
 ]
 
+const COURSE_ICONS = [
+  <svg key="video" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10.5l6-3.5v10l-6-3.5"/>
+  </svg>,
+  <svg key="headset" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="2" y="13" width="5" height="7" rx="1.5"/><rect x="17" y="13" width="5" height="7" rx="1.5"/>
+  </svg>,
+  <svg key="laptop" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M1 20h22"/>
+  </svg>,
+]
+
 function Stars({ count, size = 16 }: { count: number; size?: number }) {
   return (
     <span style={{ display: "inline-flex", gap: 2 }}>
@@ -628,8 +673,6 @@ export default function LandingPage() {
           .l-hero-ctas { flex-direction: column !important; gap: 10px !important; margin-bottom: 0 !important; }
           .l-hero-ctas a { text-align: center !important; }
         }
-        .l-courses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 20px; }
-        .l-courses-grid > * { min-width: 0; }
         .l-reviews-grid { display: grid; grid-template-columns: 300px 1fr; gap: 48px; align-items: start; }
         .l-reviews-grid > * { min-width: 0; }
 
@@ -645,9 +688,11 @@ export default function LandingPage() {
           .l-nav-login { display: none !important; }
           .l-nav-lang { display: flex !important; }
           .yt-side-mask { display: block !important; }
-          .l-courses-grid { grid-template-columns: 1fr !important; }
           .l-reviews-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
           .l-how-grid { grid-template-columns: 1fr 1fr !important; row-gap: 32px !important; }
+          .l-course-grid { grid-template-columns: 1fr !important; gap: 28px !important; }
+          .l-course-grid > div:last-child { order: -1; aspect-ratio: 16/9 !important; }
+          .l-plans-grid { grid-template-columns: 1fr 1fr !important; }
           .l-how-line { display: none !important; }
 
           /* Show bottom nav on mobile */
@@ -819,60 +864,48 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Courses ─────────────────────────────────────────── */}
+      {/* ── The Course ──────────────────────────────────────── */}
       <section id="courses" style={{ padding: "72px 20px", background: C.navy }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <h2 style={{ fontSize: 32, fontWeight: 800, margin: "0 0 8px", textAlign: "center" }}>{t.coursesTitle}</h2>
-          <p style={{ fontSize: 15, color: C.muted, textAlign: "center", margin: "0 0 44px" }}>{t.coursesSub}</p>
+        <div className="l-course-grid" style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center" }}>
+          <div>
+            <span style={{ display: "inline-block", padding: "5px 14px", borderRadius: 20, background: "rgba(255,92,86,0.12)", color: C.gold, fontSize: 12, fontWeight: 700, marginBottom: 16, border: `1px solid ${C.borderGold}` }}>
+              {t.course.eyebrow}
+            </span>
+            <h2 style={{ fontSize: 30, fontWeight: 800, margin: "0 0 8px", lineHeight: 1.2 }}>{t.course.title}</h2>
+            <p style={{ fontSize: 17, fontWeight: 700, color: C.gold, margin: "0 0 16px" }}>{t.course.tagline}</p>
+            <p style={{ fontSize: 15, color: C.muted, lineHeight: 1.75, margin: "0 0 32px" }}>{t.course.sub}</p>
 
-          <div className="l-courses-grid">
-            {courses.slice(0, 2).map(c => (
-              <Link key={c.id} href={`/courses/${c.id}`} style={{ textDecoration: "none", display: "flex", flexDirection: "column", background: C.navyCard, borderRadius: 16, overflow: "hidden", border: `1px solid ${C.border}` }}>
-                <div style={{ position: "relative", height: 200 }}>
-                  <Image src={c.photo} alt={c.title.en} fill style={{ objectFit: "cover" }} unoptimized />
-                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 55%, rgba(0,0,0,0.5) 100%)" }} />
-                  <span style={{ position: "absolute", top: 12, right: 12, background: C.gold, color: C.navy, fontSize: 11, fontWeight: 800, padding: "4px 12px", borderRadius: 20 }}>
-                    {c.duration[lang]}
-                  </span>
-                  <span style={{ position: "absolute", bottom: 10, left: 12, fontSize: 22 }}>🇬🇧</span>
-                </div>
-
-                <div style={{ padding: "16px", flex: 1, display: "flex", flexDirection: "column", gap: 10 }}>
-                  <h3 style={{ fontSize: 15, fontWeight: 700, color: C.white, margin: 0, lineHeight: 1.3 }}>{c.title[lang]}</h3>
-                  <p style={{ fontSize: 12, color: C.muted, margin: 0, lineHeight: 1.6 }}>{c.desc[lang]}</p>
-
-                  <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginTop: "auto" }}>
-                    <div>
-                      <div style={{ fontSize: 11, color: C.muted, textDecoration: "line-through" }}>{c.origPrice}</div>
-                      <div style={{ fontSize: 26, fontWeight: 900, color: C.gold, lineHeight: 1.1 }}>{c.price}</div>
-                    </div>
-                    <span style={{ padding: "9px 18px", borderRadius: 10, background: C.gold, color: C.navy, fontWeight: 700, fontSize: 12 }}>
-                      {t.enroll}
-                    </span>
+            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              {t.course.features.map((f, i) => (
+                <div key={i} style={{ display: "flex", gap: 14 }}>
+                  <div style={{ width: 40, height: 40, borderRadius: 10, background: C.navyCard, border: `1px solid ${C.border}`, color: C.gold, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                    {COURSE_ICONS[i]}
                   </div>
-
-                  <div style={{ display: "flex", gap: 14, paddingTop: 12, borderTop: `1px solid ${C.border}` }}>
-                    <span style={{ fontSize: 11, color: C.muted, display: "flex", alignItems: "center", gap: 4 }}>🕐 {c.hours}</span>
-                    <span style={{ fontSize: 11, color: C.muted, display: "flex", alignItems: "center", gap: 4 }}>📖 {c.lessons} {t.lessons}</span>
-                    <span style={{ fontSize: 11, color: C.muted, display: "flex", alignItems: "center", gap: 4 }}>👁 {c.views}</span>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: C.white, marginBottom: 4 }}>{f.label}</div>
+                    <div style={{ fontSize: 13, color: C.muted, lineHeight: 1.6 }}>{f.desc}</div>
                   </div>
                 </div>
-              </Link>
-            ))}
+              ))}
+            </div>
+          </div>
+
+          <div style={{ position: "relative", borderRadius: 16, overflow: "hidden", aspectRatio: "4/3" }}>
+            <Image src={courses[0].photo} alt={t.course.title} fill style={{ objectFit: "cover" }} unoptimized />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(13,30,61,0.6), transparent 40%)" }} />
           </div>
         </div>
       </section>
 
       {/* ── Pricing plans ────────────────────────────────────── */}
       <section id="pricing" style={{ padding: "72px 20px", background: C.navy }}>
-        <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <h2 style={{ fontSize: 32, fontWeight: 800, margin: "0 0 40px", textAlign: "center", color: C.gold }}>{t.plans.title}</h2>
-          <div className="l-plans-grid" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 20 }}>
+          <div className="l-plans-grid" style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 16 }}>
             {t.plans.tiers.map((tier, i) => (
               <div key={i} className="l-plan-card" style={{
-                background: C.navyCard, borderRadius: 14, padding: "28px 20px", textAlign: "center",
+                background: C.navyCard, borderRadius: 14, padding: "24px 16px", textAlign: "center",
                 border: tier.best ? `2px solid ${C.gold}` : `1px solid ${C.border}`,
-                flex: "1 1 260px", maxWidth: 300,
               }}>
                 <div style={{ fontSize: 14, color: tier.best ? C.gold : C.muted, marginBottom: 10 }}>
                   {tier.label}{tier.best ? ` (${t.plans.best})` : ""}
