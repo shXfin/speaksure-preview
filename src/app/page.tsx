@@ -778,7 +778,11 @@ export default function LandingPage() {
         {/* 1fr auto 1fr keeps the centre column optically centred regardless of
             how wide the brand or the action cluster happen to be. */}
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", height: 68, display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center", gap: 16 }}>
-          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 11, textDecoration: "none", justifySelf: "start" }}>
+          <div className="l-nav-links" style={{ gridColumn: "1", gap: 4, alignItems: "center", justifyContent: "start" }}>
+            <a href="#courses" style={{ fontSize: 13.5, color: "rgba(255,255,255,0.72)", textDecoration: "none", fontWeight: 500, whiteSpace: "nowrap", padding: "8px 14px", borderRadius: 8, transition: "color 150ms, background 150ms" }}>{t.nav.courses}</a>
+          </div>
+
+          <Link href="/" style={{ gridColumn: "2", display: "flex", alignItems: "center", gap: 11, textDecoration: "none", justifySelf: "center" }}>
             <img src="/logo.svg" alt="SpeakSure" width={38} height={38} style={{ borderRadius: 9, flexShrink: 0, display: "block" }} />
             <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
               <div style={{ fontSize: 16.5, fontWeight: 800, color: C.white, lineHeight: 1.25, letterSpacing: "-0.01em" }}>SpeakSure</div>
@@ -786,14 +790,8 @@ export default function LandingPage() {
             </div>
           </Link>
 
-          <div className="l-nav-links" style={{ gap: 4, alignItems: "center", justifyContent: "center" }}>
-            {[{ l: t.nav.home, h: "/" }, { l: t.nav.courses, h: "#courses" }].map(x => (
-              <a key={x.l} href={x.h} style={{ fontSize: 13.5, color: "rgba(255,255,255,0.72)", textDecoration: "none", fontWeight: 500, whiteSpace: "nowrap", padding: "8px 14px", borderRadius: 8, transition: "color 150ms, background 150ms" }}>{x.l}</a>
-            ))}
-          </div>
-
           {/* Right cluster — language + auth actions grouped together */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10, justifySelf: "end" }}>
+          <div style={{ gridColumn: "3", display: "flex", alignItems: "center", gap: 10, justifySelf: "end" }}>
 
           {/* Language toggle — always visible on mobile + desktop */}
           <div className="l-nav-lang" style={{ position: "relative", flexShrink: 0 }}>
