@@ -7,7 +7,7 @@ import { getProfile } from "@/lib/supabase/profile"
 import { createClient } from "@/lib/supabase/client"
 import { BrandMark } from "@/lib/m3"
 import {
-  getMyEnrollments, getAllEnrollments, updateEnrollmentStatus,
+  getMyEnrollments, getAllEnrollments, updateEnrollmentStatus, approveEnrollmentWithCourses,
   type Enrollment, type EnrollmentWithProfile,
 } from "@/lib/supabase/enrollments"
 
@@ -119,6 +119,11 @@ export default function DashboardPage() {
   const [allEnrollments, setAllEnrollments] = useState<EnrollmentWithProfile[]>([])
   const [enrollmentBusy, setEnrollmentBusy] = useState<string | null>(null)
 
+  // Course-access modal (opened from Approve / Edit access)
+  const [accessModalFor, setAccessModalFor] = useState<EnrollmentWithProfile | null>(null)
+  const [selectedCourseIds, setSelectedCourseIds] = useState<string[]>([])
+  const [savingAccess, setSavingAccess] = useState(false)
+
   useEffect(() => {
     async function init() {
       const profile = await getProfile()
@@ -142,7 +147,10 @@ export default function DashboardPage() {
     init()
   }, [])
 
-  const hasApprovedAccess = myEnrollments.some(e => e.status === "approved")
+  const approvedEnrollments = myEnrollments.filter(e => e.status === "approved")
+  const hasApprovedAccess = approvedEnrollments.length > 0
+  const myUnlockedCourseIds = new Set(approvedEnrollments.flatMap(e => e.course_ids ?? []))
+  const hasUnlockedCourses = myUnlockedCourseIds.size > 0
   const pendingEnrollment = myEnrollments.find(e => e.status === "pending")
 
   async function handleEnrollmentStatus(id: string, status: "approved" | "blocked" | "pending") {
@@ -152,6 +160,26 @@ export default function DashboardPage() {
     setEnrollmentBusy(null)
   }
 
+  function openAccessModal(enrollment: EnrollmentWithProfile) {
+    setAccessModalFor(enrollment)
+    setSelectedCourseIds(enrollment.course_ids ?? [])
+  }
+
+  function toggleCourseSelection(courseId: string) {
+    setSelectedCourseIds(prev => prev.includes(courseId) ? prev.filter(id => id !== courseId) : [...prev, courseId])
+  }
+
+  async function confirmAccess() {
+    if (!accessModalFor) return
+    setSavingAccess(true)
+    await approveEnrollmentWithCourses(accessModalFor.id, selectedCourseIds)
+    setAllEnrollments(prev => prev.map(e => e.id === accessModalFor.id
+      ? { ...e, status: "approved", approved_at: new Date().toISOString(), course_ids: selectedCourseIds }
+      : e))
+    setSavingAccess(false)
+    setAccessModalFor(null)
+  }
+
   // Combine static + custom courses, all keyed by id
   const allCourses = [
     ...staticCourses.map(c => ({ id: c.id, title: c.title, zh: c.zh, teacher: c.teacher, level: c.level, schedule: c.schedule, description: c.description, banner_color: c.bannerColor, next_topic: c.nextTopic, code: c.code, isCustom: false })),
@@ -159,6 +187,7 @@ export default function DashboardPage() {
   ]
   const visibleCourses = allCourses.filter(c => !hiddenIds.includes(c.id))
   const hiddenCourses = allCourses.filter(c => hiddenIds.includes(c.id))
+  const studentVisibleCourses = isTeacher ? visibleCourses : visibleCourses.filter(c => myUnlockedCourseIds.has(c.id))
 
   async function handleHide(courseId: string) {
     setBusy(true)
@@ -283,6 +312,69 @@ export default function DashboardPage() {
         </div>
       )}
 
+      {/* ── Course access modal (Approve / Edit access) ── */}
+      {accessModalFor && (
+        <div onClick={() => setAccessModalFor(null)} style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,0.4)", display: "grid", placeItems: "center", padding: 16 }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 16, width: "min(440px, 100%)", maxHeight: "85vh", overflow: "auto", boxShadow: "0 20px 60px rgba(0,0,0,0.2)" }}>
+            <div style={{ padding: "20px 24px", borderBottom: "1px solid #e8e0ef" }}>
+              <h2 style={{ margin: "0 0 4px", fontSize: 17, fontWeight: 700 }}>
+                {accessModalFor.status === "approved" ? "Edit course access" : "Approve & choose courses"}
+              </h2>
+              <p style={{ margin: 0, fontSize: 13, color: "#625b71" }}>
+                {accessModalFor.profiles?.full_name || "This student"} will only see the courses you tick below.
+              </p>
+            </div>
+
+            <div style={{ padding: "18px 24px", display: "flex", flexDirection: "column", gap: 10 }}>
+              {visibleCourses.length === 0 ? (
+                <div style={{ padding: "16px", borderRadius: 10, background: "#fff4d6", border: "1px solid #f0d98c", display: "flex", flexDirection: "column", gap: 10 }}>
+                  <p style={{ margin: 0, fontSize: 13, color: "#8a6d00", lineHeight: 1.5 }}>
+                    You haven't created any courses yet, so there's nothing to give this student access to.
+                    Add a course first, then come back and approve them.
+                  </p>
+                  <button
+                    onClick={() => { setAccessModalFor(null); setShowAddModal(true) }}
+                    style={{ alignSelf: "flex-start", padding: "7px 14px", borderRadius: 8, border: "none", background: "#6750a4", color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+                  >
+                    Add a course
+                  </button>
+                </div>
+              ) : (
+                visibleCourses.map(course => (
+                  <label key={course.id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 12px", borderRadius: 10, border: "1px solid #e8e0ef", cursor: "pointer" }}>
+                    <input
+                      type="checkbox"
+                      checked={selectedCourseIds.includes(course.id)}
+                      onChange={() => toggleCourseSelection(course.id)}
+                      style={{ width: 18, height: 18, flexShrink: 0 }}
+                    />
+                    <div style={{ minWidth: 0 }}>
+                      <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: "#1d1b20" }}>{course.title}</p>
+                      <p style={{ margin: "1px 0 0", fontSize: 12, color: "#625b71" }}>{course.zh}</p>
+                    </div>
+                  </label>
+                ))
+              )}
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, padding: "16px 24px", borderTop: "1px solid #e8e0ef" }}>
+              <button onClick={() => setAccessModalFor(null)} style={{ padding: "9px 20px", borderRadius: 8, border: "1px solid #cac4d0", background: "#fff", cursor: "pointer", fontSize: 14, fontFamily: "inherit" }}>
+                Cancel
+              </button>
+              {visibleCourses.length > 0 && (
+                <button
+                  onClick={confirmAccess}
+                  disabled={savingAccess || selectedCourseIds.length === 0}
+                  style={{ padding: "9px 20px", borderRadius: 8, border: "none", background: selectedCourseIds.length ? "#1a6b3f" : "#cac4d0", color: "#fff", cursor: selectedCourseIds.length ? "pointer" : "not-allowed", fontSize: 14, fontWeight: 600, fontFamily: "inherit" }}
+                >
+                  {savingAccess ? "Saving…" : accessModalFor.status === "approved" ? "Save access" : "Approve"}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── Banner card ── */}
       <div className="db-banner" style={{ ...s.surface, padding: "20px 24px", marginBottom: 20 }}>
         <div>
@@ -353,6 +445,11 @@ export default function DashboardPage() {
                       <p style={{ margin: "2px 0 0", fontSize: 13, ...s.muted }}>
                         {e.plan_label} · {e.plan_price}
                         {e.whatsapp_sent_at ? " · messaged us" : " · hasn't messaged yet"}
+                        {e.status === "approved" && (
+                          e.course_ids?.length
+                            ? ` · ${e.course_ids.length} course${e.course_ids.length !== 1 ? "s" : ""} unlocked`
+                            : " · no courses assigned yet"
+                        )}
                       </p>
                     </div>
                   </div>
@@ -368,11 +465,19 @@ export default function DashboardPage() {
 
                     {e.status !== "approved" && (
                       <button
-                        onClick={() => handleEnrollmentStatus(e.id, "approved")}
+                        onClick={() => openAccessModal(e)}
                         disabled={enrollmentBusy === e.id}
                         style={{ padding: "7px 14px", borderRadius: 8, border: "none", background: "#1a6b3f", color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
                       >
                         Approve
+                      </button>
+                    )}
+                    {e.status === "approved" && (
+                      <button
+                        onClick={() => openAccessModal(e)}
+                        style={{ padding: "7px 14px", borderRadius: 8, border: "1px solid #6750a4", background: "#fff", color: "#6750a4", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+                      >
+                        Edit access
                       </button>
                     )}
                     {e.status !== "blocked" && (
@@ -392,8 +497,8 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* ── Student without approved access: show plans only ── */}
-      {!isTeacher && !pageLoading && !hasApprovedAccess && (
+      {/* ── Student without unlocked courses: show plans or waiting message ── */}
+      {!isTeacher && !pageLoading && !hasUnlockedCourses && (
         <div style={{ marginBottom: 32 }}>
           {pendingEnrollment ? (
             <div style={{ ...s.surface, padding: "18px 22px", marginBottom: 24, display: "flex", alignItems: "center", gap: 14, background: "#fff9e6", border: "1px solid #f5deb3" }}>
@@ -407,6 +512,18 @@ export default function DashboardPage() {
                 </p>
               </div>
             </div>
+          ) : hasApprovedAccess ? (
+            <div style={{ ...s.surface, padding: "18px 22px", marginBottom: 24, display: "flex", alignItems: "center", gap: 14, background: "#e8f5ee", border: "1px solid #b8e0c8" }}>
+              <span style={{ fontSize: 22 }}>✅</span>
+              <div>
+                <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "#1d1b20" }}>
+                  You're enrolled!
+                </p>
+                <p style={{ margin: "2px 0 0", fontSize: 13, ...s.muted }}>
+                  Your teacher is finishing setting up your course access — check back shortly.
+                </p>
+              </div>
+            </div>
           ) : (
             <div style={{ ...s.surface, padding: "18px 22px", marginBottom: 24 }}>
               <p style={{ margin: 0, fontSize: 14, ...s.muted, lineHeight: 1.6 }}>
@@ -415,35 +532,39 @@ export default function DashboardPage() {
             </div>
           )}
 
-          <div style={{ marginBottom: 16 }}>
-            <p style={s.eyebrow}>Premium Subscription Plans</p>
-            <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700 }}>Choose a plan to enroll</h2>
-          </div>
-
-          <div className="db-plans">
-            {PLAN_TIERS.map((tier, i) => (
-              <div key={i} style={{
-                ...s.surface, padding: "20px 16px", textAlign: "center",
-                border: tier.best ? "2px solid #6750a4" : "1px solid #e8e0ef",
-              }}>
-                <div style={{ fontSize: 13, color: tier.best ? "#6750a4" : "#625b71", marginBottom: 8, fontWeight: tier.best ? 700 : 400 }}>
-                  {tier.label}{tier.best ? " · Best Value" : ""}
-                </div>
-                <div style={{ fontSize: 22, fontWeight: 800, color: "#1d1b20", marginBottom: 16 }}>{tier.price}</div>
-                <Link
-                  href={`/enroll?plan=${encodeURIComponent(tier.label)}&price=${encodeURIComponent(tier.price)}`}
-                  style={{ display: "inline-block", padding: "9px 18px", borderRadius: 8, background: "#6750a4", color: "#fff", fontWeight: 700, fontSize: 13, textDecoration: "none" }}
-                >
-                  Enroll now
-                </Link>
+          {!hasApprovedAccess && (
+            <>
+              <div style={{ marginBottom: 16 }}>
+                <p style={s.eyebrow}>Premium Subscription Plans</p>
+                <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700 }}>Choose a plan to enroll</h2>
               </div>
-            ))}
-          </div>
+
+              <div className="db-plans">
+                {PLAN_TIERS.map((tier, i) => (
+                  <div key={i} style={{
+                    ...s.surface, padding: "20px 16px", textAlign: "center",
+                    border: tier.best ? "2px solid #6750a4" : "1px solid #e8e0ef",
+                  }}>
+                    <div style={{ fontSize: 13, color: tier.best ? "#6750a4" : "#625b71", marginBottom: 8, fontWeight: tier.best ? 700 : 400 }}>
+                      {tier.label}{tier.best ? " · Best Value" : ""}
+                    </div>
+                    <div style={{ fontSize: 22, fontWeight: 800, color: "#1d1b20", marginBottom: 16 }}>{tier.price}</div>
+                    <Link
+                      href={`/enroll?plan=${encodeURIComponent(tier.label)}&price=${encodeURIComponent(tier.price)}`}
+                      style={{ display: "inline-block", padding: "9px 18px", borderRadius: 8, background: "#6750a4", color: "#fff", fontWeight: 700, fontSize: 13, textDecoration: "none" }}
+                    >
+                      Enroll now
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       )}
 
-      {/* ── Course grid (teacher, or approved student) ── */}
-      {(isTeacher || hasApprovedAccess) && (
+      {/* ── Course grid (teacher sees all, student sees only unlocked courses) ── */}
+      {(isTeacher || hasUnlockedCourses) && (
         <>
           <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 16 }}>
             <div>
@@ -451,7 +572,7 @@ export default function DashboardPage() {
               <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700 }}>Pick a course to preview</h2>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <span style={{ ...s.muted, fontSize: 13 }}>{visibleCourses.length} live course{visibleCourses.length !== 1 ? "s" : ""}</span>
+              <span style={{ ...s.muted, fontSize: 13 }}>{studentVisibleCourses.length} live course{studentVisibleCourses.length !== 1 ? "s" : ""}</span>
               {isTeacher && hiddenCourses.length > 0 && (
                 <button onClick={() => setShowHidden(v => !v)} style={{ fontSize: 12, fontWeight: 600, padding: "4px 12px", borderRadius: 99, border: "1px solid #cac4d0", background: showHidden ? "#eaddff" : "#fff", color: showHidden ? "#6750a4" : "#625b71", cursor: "pointer" }}>
                   {showHidden ? "Hide archived" : `Archived (${hiddenCourses.length})`}
@@ -468,7 +589,7 @@ export default function DashboardPage() {
           <div className="db-courses">
             {pageLoading ? [1, 2, 3].map(i => (
               <div key={i} style={{ height: 220, borderRadius: 12, background: "#f3edf7", opacity: 0.7 }} />
-            )) : visibleCourses.map((course) => (
+            )) : studentVisibleCourses.map((course) => (
               <div key={course.id} style={{ position: "relative" }}>
                 <Link href={`/classroom?course=${course.id}`} style={{ textDecoration: "none", color: "inherit", display: "block" }}>
                   <div style={{ borderRadius: 12, overflow: "hidden", border: "1px solid #e8e0ef", boxShadow: "0 1px 3px rgba(0,0,0,0.07)", background: "#fff" }}>

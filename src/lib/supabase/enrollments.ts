@@ -9,6 +9,7 @@ export type Enrollment = {
   whatsapp_sent_at: string | null
   approved_at: string | null
   created_at: string
+  course_ids: string[]
 }
 
 export type EnrollmentWithProfile = Enrollment & {
@@ -83,6 +84,16 @@ export async function updateEnrollmentStatus(enrollmentId: string, status: "appr
   const { error } = await supabase
     .from("enrollments")
     .update(patch)
+    .eq("id", enrollmentId)
+
+  return { error: error?.message ?? null }
+}
+
+export async function approveEnrollmentWithCourses(enrollmentId: string, courseIds: string[]) {
+  const supabase = createClient()
+  const { error } = await supabase
+    .from("enrollments")
+    .update({ status: "approved", approved_at: new Date().toISOString(), course_ids: courseIds })
     .eq("id", enrollmentId)
 
   return { error: error?.message ?? null }
