@@ -24,7 +24,19 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  // Never let a slow/unresponsive Supabase Auth call hang the whole site —
+  // fall back to "not authenticated" rather than risk a middleware timeout
+  // that blocks every route behind this middleware.
+  let user = null
+  try {
+    const result = await Promise.race([
+      supabase.auth.getUser(),
+      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("auth timeout")), 5000)),
+    ])
+    user = result.data.user
+  } catch {
+    user = null
+  }
 
   const { pathname } = request.nextUrl
 
