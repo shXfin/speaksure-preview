@@ -121,6 +121,18 @@ const content = {
     reviewsTitle: "What students say",
     courseRate:   "Course Rate",
     ratingBars:   [{ stars:5,pct:87},{stars:4,pct:10},{stars:3,pct:3},{stars:2,pct:0},{stars:1,pct:0}],
+    plans: {
+      title: "Premium Subscription Plans",
+      enroll: "Enroll now",
+      best: "Best Value",
+      tiers: [
+        { label: "1 Month",  price: "¥899"   },
+        { label: "3 Months", price: "¥2,599" },
+        { label: "6 Months", price: "¥4,999" },
+        { label: "9 Months", price: "¥7,199" },
+        { label: "1 Year",   price: "¥8,999", best: true },
+      ],
+    },
     footer: {
       tagline: "Building English confidence for Chinese students worldwide.",
       links:   "Quick links",
@@ -164,6 +176,18 @@ const content = {
     reviewsTitle: "学生反馈",
     courseRate:   "课程评分",
     ratingBars:   [{ stars:5,pct:87},{stars:4,pct:10},{stars:3,pct:3},{stars:2,pct:0},{stars:1,pct:0}],
+    plans: {
+      title: "高级订阅套餐",
+      enroll: "立即报名",
+      best: "最超值",
+      tiers: [
+        { label: "1个月", price: "¥899"   },
+        { label: "3个月", price: "¥2,599" },
+        { label: "6个月", price: "¥4,999" },
+        { label: "9个月", price: "¥7,199" },
+        { label: "1年",   price: "¥8,999", best: true },
+      ],
+    },
     footer: {
       tagline: "帮助中国学生在全球舞台上自信表达。",
       links:   "快速链接",
@@ -207,6 +231,18 @@ const content = {
     reviewsTitle: "آراء الطلاب",
     courseRate:   "تقييم الدورة",
     ratingBars:   [{ stars:5,pct:87},{stars:4,pct:10},{stars:3,pct:3},{stars:2,pct:0},{stars:1,pct:0}],
+    plans: {
+      title: "خطط الاشتراك المميزة",
+      enroll: "سجّل الآن",
+      best: "الأفضل قيمة",
+      tiers: [
+        { label: "شهر واحد", price: "¥899"   },
+        { label: "3 أشهر",   price: "¥2,599" },
+        { label: "6 أشهر",   price: "¥4,999" },
+        { label: "9 أشهر",   price: "¥7,199" },
+        { label: "سنة واحدة", price: "¥8,999", best: true },
+      ],
+    },
     footer: {
       tagline: "نبني ثقة الطلاب في اللغة الإنجليزية حول العالم.",
       links:   "روابط سريعة",
@@ -822,6 +858,30 @@ export default function LandingPage() {
                   </div>
                 </div>
               </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Pricing plans ────────────────────────────────────── */}
+      <section id="pricing" style={{ padding: "72px 20px", background: C.navy }}>
+        <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+          <h2 style={{ fontSize: 32, fontWeight: 800, margin: "0 0 40px", textAlign: "center", color: C.gold }}>{t.plans.title}</h2>
+          <div className="l-plans-grid" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 20 }}>
+            {t.plans.tiers.map((tier, i) => (
+              <div key={i} className="l-plan-card" style={{
+                background: C.navyCard, borderRadius: 14, padding: "28px 20px", textAlign: "center",
+                border: tier.best ? `2px solid ${C.gold}` : `1px solid ${C.border}`,
+                flex: "1 1 260px", maxWidth: 300,
+              }}>
+                <div style={{ fontSize: 14, color: tier.best ? C.gold : C.muted, marginBottom: 10 }}>
+                  {tier.label}{tier.best ? ` (${t.plans.best})` : ""}
+                </div>
+                <div style={{ fontSize: 28, fontWeight: 800, color: C.white, marginBottom: 20 }}>{tier.price}</div>
+                <Link href="/register" style={{ display: "inline-block", padding: "10px 24px", borderRadius: 8, background: C.gold, color: C.navy, fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
+                  {t.plans.enroll}
+                </Link>
+              </div>
             ))}
           </div>
         </div>
