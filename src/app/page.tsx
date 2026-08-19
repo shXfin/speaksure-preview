@@ -92,7 +92,7 @@ const content = {
       badge: "TESOL Certified · 15+ Years Experience",
       h1a: "Speak English",
       h1b: "with Confidence",
-      sub:  "Live online classes designed for Chinese students. Expert teacher, structured curriculum, proven results.",
+      sub:  "Live online classes designed for global students. Expert teacher, structured curriculum, proven results.",
       cta1: "Start for free →",
       cta2: "Browse courses",
       stats: [
@@ -134,7 +134,7 @@ const content = {
       ],
     },
     footer: {
-      tagline: "Building English confidence for Chinese students worldwide.",
+      tagline: "Building English confidence for students around the world.",
       links:   "Quick links",
       legal:   "Legal",
       copy:    "© 2025 SpeakSure. All rights reserved.",
@@ -147,7 +147,7 @@ const content = {
       badge: "TESOL认证 · 15年以上经验",
       h1a: "用英语",
       h1b: "自信表达",
-      sub:  "专为中国学生设计的在线直播课。专业教师，结构化课程，真实成果。",
+      sub:  "专为全球学生设计的在线直播课。专业教师，结构化课程，真实成果。",
       cta1: "免费开始 →",
       cta2: "浏览课程",
       stats: [
@@ -189,7 +189,7 @@ const content = {
       ],
     },
     footer: {
-      tagline: "帮助中国学生在全球舞台上自信表达。",
+      tagline: "帮助全球学生自信地说英语。",
       links:   "快速链接",
       legal:   "法律",
       copy:    "© 2025 SpeakSure 版权所有",

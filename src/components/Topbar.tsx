@@ -83,7 +83,7 @@ export default function Topbar() {
           <BrandMark size={46} />
           <span style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
             <strong style={{ fontSize: 18, fontWeight: 700, color: "#1d1b20", letterSpacing: "-0.2px" }}>SpeakSure</strong>
-            <small className="t-tagline" style={{ fontSize: 12, color: "#625b71", marginTop: 3, fontWeight: 400 }}>English classes for Chinese learners</small>
+            <small className="t-tagline" style={{ fontSize: 12, color: "#625b71", marginTop: 3, fontWeight: 400 }}>English classes for global students</small>
           </span>
         </Link>
 

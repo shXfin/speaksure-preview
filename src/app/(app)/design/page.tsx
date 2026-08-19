@@ -54,7 +54,7 @@ export default function DesignPage() {
             { label: "Display / H1", size: m3.font["3xl"], weight: m3.font.bold, sample: "English classrooms" },
             { label: "Headline / H2", size: m3.font["2xl"], weight: m3.font.bold, sample: "Pick a course to preview" },
             { label: "Title / H3", size: m3.font.xl, weight: m3.font.bold, sample: "Business English · 商务英语" },
-            { label: "Body Large", size: m3.font.md, weight: m3.font.regular, sample: "Live English courses for adult Chinese students." },
+            { label: "Body Large", size: m3.font.md, weight: m3.font.regular, sample: "Live English courses for adult students worldwide." },
             { label: "Body Medium", size: m3.font.base, weight: m3.font.regular, sample: "Meetings, email, client updates, and workplace speaking practice." },
             { label: "Label / Caption", size: m3.font.xs, weight: m3.font.bold, sample: "CLASSES / 课程", upper: true },
           ].map(({ label, size, weight, sample, upper }) => (

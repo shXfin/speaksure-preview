@@ -10,8 +10,8 @@ const roboto = Roboto({
 })
 
 export const metadata: Metadata = {
-  title: "SpeakSure · English classes for Chinese learners",
-  description: "Live English courses for adult Chinese students.",
+  title: "SpeakSure · English classes for global students",
+  description: "Live English courses for adult students worldwide.",
   icons: {
     icon: "/logo.svg",
     apple: "/logo.svg",

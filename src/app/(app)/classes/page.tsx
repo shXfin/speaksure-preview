@@ -254,7 +254,7 @@ export default function DashboardPage() {
           <p style={s.eyebrow}>SpeakSure / 口语课堂</p>
           <h1 style={{ margin: "0 0 8px", fontSize: 28, fontWeight: 700, letterSpacing: "-0.3px", lineHeight: 1.2 }}>English classrooms</h1>
           <p style={{ margin: 0, ...s.muted, fontSize: 14, lineHeight: 1.6, maxWidth: 520 }}>
-            Live English courses for adult Chinese students. Pick a class, check the stream, and continue your practice.
+            Live English courses for adult students worldwide. Pick a class, check the stream, and continue your practice.
           </p>
         </div>
         <div style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "14px 16px", borderRadius: 10, border: "1px solid #e8e0ef", background: "#faf7ff", minWidth: 240 }}>

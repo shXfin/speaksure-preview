@@ -70,7 +70,7 @@ export default function LoginPage() {
               Sign in to SpeakSure
             </h1>
             <p style={{ margin: 0, fontSize: m3.font.sm, color: m3.color.muted }}>
-              口语课堂 · English classes for Chinese learners
+              口语课堂 · English classes for global students
             </p>
           </div>
         </div>
