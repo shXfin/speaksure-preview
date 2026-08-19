@@ -11,6 +11,8 @@ import {
   type Enrollment, type EnrollmentWithProfile,
 } from "@/lib/supabase/enrollments"
 
+const FREE_COURSE_ID = "6d1a4ea1-8fc3-4fdc-86a9-9228e52b977b" // Foundation English — free for every signed-up student
+
 const PLAN_TIERS = [
   { label: "1 Month",  price: "¥899"   },
   { label: "3 Months", price: "¥2,599" },
@@ -154,7 +156,7 @@ export default function DashboardPage() {
   const approvedEnrollments = myEnrollments.filter(e => e.status === "approved")
   const hasApprovedAccess = approvedEnrollments.length > 0
   const myUnlockedCourseIds = new Set(approvedEnrollments.flatMap(e => e.course_ids ?? []))
-  const hasUnlockedCourses = myUnlockedCourseIds.size > 0
+  const hasPaidUnlockedCourses = myUnlockedCourseIds.size > 0
   const pendingEnrollment = myEnrollments.find(e => e.status === "pending")
 
   async function handleEnrollmentStatus(id: string, status: "approved" | "blocked" | "pending") {
@@ -200,7 +202,7 @@ export default function DashboardPage() {
   ]
   const visibleCourses = allCourses.filter(c => !hiddenIds.includes(c.id))
   const hiddenCourses = allCourses.filter(c => hiddenIds.includes(c.id))
-  const studentVisibleCourses = isTeacher ? visibleCourses : visibleCourses.filter(c => myUnlockedCourseIds.has(c.id))
+  const studentVisibleCourses = isTeacher ? visibleCourses : visibleCourses.filter(c => myUnlockedCourseIds.has(c.id) || c.id === FREE_COURSE_ID)
 
   async function handleHide(courseId: string) {
     setBusy(true)
@@ -535,8 +537,8 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* ── Student without unlocked courses: show plans or waiting message ── */}
-      {!isTeacher && !pageLoading && !hasUnlockedCourses && (
+      {/* ── Student without a paid plan yet: free-access note + upsell plans ── */}
+      {!isTeacher && !pageLoading && !hasApprovedAccess && (
         <div style={{ marginBottom: 32 }}>
           {pendingEnrollment ? (
             <div style={{ ...s.surface, padding: "18px 22px", marginBottom: 24, display: "flex", alignItems: "center", gap: 14, background: "#fff9e6", border: "1px solid #f5deb3" }}>
@@ -546,63 +548,68 @@ export default function DashboardPage() {
                   Enrollment pending — {pendingEnrollment.plan_label} ({pendingEnrollment.plan_price})
                 </p>
                 <p style={{ margin: "2px 0 0", fontSize: 13, ...s.muted }}>
-                  We're confirming your payment. Your teacher will unlock your course shortly.
-                </p>
-              </div>
-            </div>
-          ) : hasApprovedAccess ? (
-            <div style={{ ...s.surface, padding: "18px 22px", marginBottom: 24, display: "flex", alignItems: "center", gap: 14, background: "#e8f5ee", border: "1px solid #b8e0c8" }}>
-              <span style={{ fontSize: 22 }}>✅</span>
-              <div>
-                <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "#1d1b20" }}>
-                  You're enrolled!
-                </p>
-                <p style={{ margin: "2px 0 0", fontSize: 13, ...s.muted }}>
-                  Your teacher is finishing setting up your course access — check back shortly.
+                  We're confirming your payment. Your teacher will unlock the rest of your courses shortly — Foundation English is already free to try below.
                 </p>
               </div>
             </div>
           ) : (
-            <div style={{ ...s.surface, padding: "18px 22px", marginBottom: 24 }}>
-              <p style={{ margin: 0, fontSize: 14, ...s.muted, lineHeight: 1.6 }}>
-                You don't have an active course yet. Pick a plan below to get started.
-              </p>
+            <div style={{ ...s.surface, padding: "18px 22px", marginBottom: 24, display: "flex", alignItems: "center", gap: 14, background: "#eef4ff", border: "1px solid #cddcfb" }}>
+              <span style={{ fontSize: 22 }}>🎁</span>
+              <div>
+                <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "#1d1b20" }}>
+                  Foundation English is free — no card, no waiting
+                </p>
+                <p style={{ margin: "2px 0 0", fontSize: 13, ...s.muted }}>
+                  Try it below, then pick a plan whenever you're ready for live classes and more courses.
+                </p>
+              </div>
             </div>
           )}
 
-          {!hasApprovedAccess && (
-            <>
-              <div style={{ marginBottom: 16 }}>
-                <p style={s.eyebrow}>Premium Subscription Plans</p>
-                <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700 }}>Choose a plan to enroll</h2>
-              </div>
+          <div style={{ marginBottom: 16 }}>
+            <p style={s.eyebrow}>Premium Subscription Plans</p>
+            <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700 }}>Choose a plan to enroll</h2>
+          </div>
 
-              <div className="db-plans">
-                {PLAN_TIERS.map((tier, i) => (
-                  <div key={i} style={{
-                    ...s.surface, padding: "20px 16px", textAlign: "center",
-                    border: tier.best ? "2px solid #6750a4" : "1px solid #e8e0ef",
-                  }}>
-                    <div style={{ fontSize: 13, color: tier.best ? "#6750a4" : "#625b71", marginBottom: 8, fontWeight: tier.best ? 700 : 400 }}>
-                      {tier.label}{tier.best ? " · Best Value" : ""}
-                    </div>
-                    <div style={{ fontSize: 22, fontWeight: 800, color: "#1d1b20", marginBottom: 16 }}>{tier.price}</div>
-                    <Link
-                      href={`/enroll?plan=${encodeURIComponent(tier.label)}&price=${encodeURIComponent(tier.price)}`}
-                      style={{ display: "inline-block", padding: "9px 18px", borderRadius: 8, background: "#6750a4", color: "#fff", fontWeight: 700, fontSize: 13, textDecoration: "none" }}
-                    >
-                      Enroll now
-                    </Link>
-                  </div>
-                ))}
+          <div className="db-plans">
+            {PLAN_TIERS.map((tier, i) => (
+              <div key={i} style={{
+                ...s.surface, padding: "20px 16px", textAlign: "center",
+                border: tier.best ? "2px solid #6750a4" : "1px solid #e8e0ef",
+              }}>
+                <div style={{ fontSize: 13, color: tier.best ? "#6750a4" : "#625b71", marginBottom: 8, fontWeight: tier.best ? 700 : 400 }}>
+                  {tier.label}{tier.best ? " · Best Value" : ""}
+                </div>
+                <div style={{ fontSize: 22, fontWeight: 800, color: "#1d1b20", marginBottom: 16 }}>{tier.price}</div>
+                <Link
+                  href={`/enroll?plan=${encodeURIComponent(tier.label)}&price=${encodeURIComponent(tier.price)}`}
+                  style={{ display: "inline-block", padding: "9px 18px", borderRadius: 8, background: "#6750a4", color: "#fff", fontWeight: 700, fontSize: 13, textDecoration: "none" }}
+                >
+                  Enroll now
+                </Link>
               </div>
-            </>
-          )}
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Approved but courses not assigned yet ── */}
+      {!isTeacher && !pageLoading && hasApprovedAccess && !hasPaidUnlockedCourses && (
+        <div style={{ ...s.surface, padding: "18px 22px", marginBottom: 32, display: "flex", alignItems: "center", gap: 14, background: "#e8f5ee", border: "1px solid #b8e0c8" }}>
+          <span style={{ fontSize: 22 }}>✅</span>
+          <div>
+            <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "#1d1b20" }}>
+              You're enrolled!
+            </p>
+            <p style={{ margin: "2px 0 0", fontSize: 13, ...s.muted }}>
+              Your teacher is finishing setting up your course access — check back shortly.
+            </p>
+          </div>
         </div>
       )}
 
       {/* ── Course grid (teacher sees all, student sees only unlocked courses) ── */}
-      {(isTeacher || hasUnlockedCourses) && (
+      {(isTeacher || studentVisibleCourses.length > 0) && (
         <>
           <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 16 }}>
             <div>

@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { useState, useRef, useEffect } from "react"
 import { courses, type Topic, type Assignment } from "@/lib/courses"
@@ -498,6 +499,13 @@ export default function ClassroomView() {
 
   return (
     <div className="app-main" style={{ margin: "0 auto", padding: "28px 0 64px" }}>
+
+      <Link href="/classes" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, color: "#6750a4", textDecoration: "none", fontWeight: 600, marginBottom: 14 }}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Back to classes
+      </Link>
 
       {/* ── Banner ── */}
       <div style={{

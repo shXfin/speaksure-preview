@@ -12,6 +12,7 @@ const C = {
   gold:      "#ff5c56",
   goldDark:  "#c9302c",
   white:     "#ffffff",
+  onAccent:  "#0d1e3d",
   muted:     "rgba(255,255,255,0.6)",
   border:    "rgba(255,255,255,0.08)",
   borderGold:"rgba(255,92,86,0.25)",
@@ -525,21 +526,6 @@ function ExplainerVideo({ style }: { style?: React.CSSProperties }) {
   )
 }
 
-const HOW_ICONS = [
-  <svg key="globe" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-    <circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3.5 9h17M3.5 15h17"/>
-  </svg>,
-  <svg key="teacher" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c0-4.14 3.36-7 7.5-7s7.5 2.86 7.5 7"/>
-  </svg>,
-  <svg key="chat" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M4 5h16v11H8l-4 4V5z"/>
-  </svg>,
-  <svg key="trophy" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M8 5H5a3 3 0 0 0 3 4M16 5h3a3 3 0 0 1-3 4"/><path d="M12 13v4M9 20h6"/>
-  </svg>,
-]
-
 const COURSE_ICONS = [
   <svg key="video" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10.5l6-3.5v10l-6-3.5"/>
@@ -711,11 +697,13 @@ export default function LandingPage() {
           .l-nav-lang { display: flex !important; }
           .yt-side-mask { display: block !important; }
           .l-reviews-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
-          .l-how-grid { grid-template-columns: 1fr 1fr !important; row-gap: 32px !important; }
+          .l-how-layout { grid-template-columns: 1fr !important; gap: 40px !important; }
+          .l-how-sticky { position: static !important; }
+          .l-inside-row { grid-template-columns: 1fr !important; gap: 20px !important; margin-bottom: 40px !important; }
+          .l-inside-row > div { order: unset !important; }
           .l-course-grid { grid-template-columns: 1fr !important; gap: 28px !important; }
           .l-course-grid > div:last-child { order: -1; aspect-ratio: 16/9 !important; }
           .l-plans-grid { grid-template-columns: 1fr 1fr !important; }
-          .l-how-line { display: none !important; }
 
           /* Show bottom nav on mobile */
           .m-bottom-nav {
@@ -840,26 +828,15 @@ export default function LandingPage() {
         <div className="l-hero-grid" style={{ maxWidth: 1200, margin: "0 auto" }}>
           {/* Text column */}
           <div className="l-hero-text-col">
-            <span className="l-hero-badge" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "7px 15px 7px 12px", borderRadius: 999, background: "rgba(255,92,86,0.09)", color: C.gold, fontSize: 11.5, fontWeight: 600, marginBottom: 26, border: `1px solid ${C.borderGold}`, letterSpacing: "0.01em" }}>
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.gold, flexShrink: 0 }} />
-              {t.hero.badge}
-            </span>
+            <p className="l-hero-badge" style={{ color: C.muted, fontSize: 14, fontWeight: 600, margin: "0 0 22px" }}>{t.hero.badge}</p>
             <h1 className="l-hero-h1" style={{ fontSize: "clamp(38px,4.6vw,62px)", fontWeight: 800, margin: "0 0 18px", lineHeight: 1.06, letterSpacing: "-0.035em" }}>
               {t.hero.h1a}<br />
               <span style={{ color: C.gold }}>{t.hero.h1b}</span>
             </h1>
             <p className="l-hero-sub" style={{ fontSize: 16.5, color: "rgba(255,255,255,0.62)", margin: "0 0 34px", lineHeight: 1.7, maxWidth: 430 }}>{t.hero.sub}</p>
             <div className="l-hero-ctas" style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 48 }}>
-              <Link href="/register" style={{ padding: "14px 26px", borderRadius: 11, background: C.gold, color: C.navy, fontWeight: 700, fontSize: 15, textDecoration: "none", letterSpacing: "-0.01em" }}>{t.hero.cta1}</Link>
+              <Link href="/register?redirect=%2Fclassroom%3Fcourse%3D6d1a4ea1-8fc3-4fdc-86a9-9228e52b977b" style={{ padding: "14px 26px", borderRadius: 11, background: C.gold, color: C.navy, fontWeight: 700, fontSize: 15, textDecoration: "none", letterSpacing: "-0.01em" }}>{t.hero.cta1}</Link>
               <a href="#courses" style={{ padding: "14px 26px", borderRadius: 11, border: `1px solid rgba(255,255,255,0.16)`, background: "rgba(255,255,255,0.03)", color: C.white, fontWeight: 600, fontSize: 15, textDecoration: "none", letterSpacing: "-0.01em" }}>{t.hero.cta2}</a>
-            </div>
-            <div className="l-hero-stats" style={{ display: "flex", gap: 36, paddingTop: 26, borderTop: `1px solid rgba(255,255,255,0.09)` }}>
-              {t.hero.stats.map((s, i) => (
-                <div key={i}>
-                  <div style={{ fontSize: 23, fontWeight: 700, color: C.white, letterSpacing: "-0.02em", lineHeight: 1.1 }}>{s.n}</div>
-                  <div style={{ fontSize: 10.5, color: "rgba(255,255,255,0.42)", marginTop: 5, textTransform: "uppercase", letterSpacing: "0.09em", fontWeight: 600 }}>{s.l}</div>
-                </div>
-              ))}
             </div>
           </div>
 
@@ -871,30 +848,68 @@ export default function LandingPage() {
       </section>
 
       {/* ── How it works ────────────────────────────────────── */}
-      <section style={{ padding: "72px 20px", background: "#0a1830" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
-          <span style={{ display: "inline-block", padding: "5px 14px", borderRadius: 20, background: "rgba(255,92,86,0.12)", color: C.gold, fontSize: 12, fontWeight: 700, marginBottom: 16, border: `1px solid ${C.borderGold}` }}>
-            {t.how.eyebrow}
-          </span>
-          <h2 style={{ fontSize: 32, fontWeight: 800, margin: "0 0 12px" }}>{t.how.title}</h2>
-          <p style={{ fontSize: 15, color: C.muted, margin: "0 0 40px", lineHeight: 1.7, maxWidth: 640, marginLeft: "auto", marginRight: "auto" }}>{t.how.sub}</p>
-
-          <ExplainerVideo style={{ maxWidth: 780, margin: "0 auto 56px", boxShadow: "0 24px 64px rgba(0,0,0,0.5)" }} />
-
-          <div className="l-how-track" style={{ position: "relative" }}>
-            <div className="l-how-line" style={{ position: "absolute", top: 27, left: "12.5%", right: "12.5%", height: 2, background: "linear-gradient(90deg, transparent, rgba(255,92,86,0.5), rgba(255,92,86,0.5), transparent)" }} />
-            <div className="l-how-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 16, position: "relative" }}>
-              {t.how.steps.map((s, i) => (
-                <div key={i} style={{ textAlign: "center" }}>
-                  <div style={{ width: 56, height: 56, borderRadius: "50%", background: C.navyCard, border: `2px solid ${C.gold}`, color: C.gold, display: "grid", placeItems: "center", margin: "0 auto 16px", position: "relative", zIndex: 1 }}>
-                    {HOW_ICONS[i]}
-                  </div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: C.white, marginBottom: 6 }}>{s.label}</div>
-                  <div style={{ fontSize: 12.5, color: C.muted, lineHeight: 1.6, maxWidth: 180, margin: "0 auto" }}>{s.desc}</div>
-                </div>
-              ))}
-            </div>
+      <section style={{ padding: "88px 20px", background: "#0a1830" }}>
+        <div className="l-how-layout" style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "0.8fr 1.2fr", gap: 56, alignItems: "start" }}>
+          <div className="l-how-sticky" style={{ position: "sticky", top: 100 }}>
+            <p style={{ fontSize: 13, color: C.muted, margin: "0 0 10px", letterSpacing: "0.02em" }}>{t.how.eyebrow}</p>
+            <h2 style={{ fontSize: "clamp(30px,3.6vw,44px)", fontWeight: 800, margin: "0 0 18px", lineHeight: 1.1, letterSpacing: "-0.025em" }}>{t.how.title}</h2>
+            <p style={{ fontSize: 15.5, color: C.muted, margin: "0 0 32px", lineHeight: 1.7 }}>{t.how.sub}</p>
+            <ExplainerVideo style={{ width: "100%", border: `1px solid ${C.border}` }} />
           </div>
+
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            {t.how.steps.map((s, i) => (
+              <div key={i} style={{
+                padding: i === 0 ? "0 0 28px" : "28px 0",
+                borderTop: i === 0 ? "none" : `1px solid ${C.border}`,
+              }}>
+                <div style={{ fontSize: i === 0 ? 28 : 23, fontWeight: 700, color: C.white, marginBottom: 10, letterSpacing: "-0.02em" }}>{s.label}</div>
+                <div style={{ fontSize: 16.5, color: C.muted, lineHeight: 1.7, maxWidth: 440 }}>{s.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Inside the classroom ─────────────────────────────── */}
+      <section style={{ padding: "88px 20px", background: C.navy }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ maxWidth: 620, marginBottom: 64 }}>
+            <h2 style={{ fontSize: "clamp(30px,3.6vw,44px)", fontWeight: 800, margin: "0 0 18px", lineHeight: 1.1, letterSpacing: "-0.025em" }}>A classroom that feels familiar</h2>
+            <p style={{ fontSize: 16, color: C.muted, margin: 0, lineHeight: 1.7 }}>
+              Simple and easy to navigate, like Google Classroom, built for learning English. Sign up, pick a class, meet your teacher and classmates, then follow along with assignments posted right where your live class links are.
+            </p>
+          </div>
+
+          {[
+            { src: "/explainer/dashboard.png", title: "Pick your class", desc: "After signing in, choose the course that matches your goal and see when your next live class starts." },
+            { src: "/explainer/roster.png", title: "Meet your teacher & classmates", desc: "Every class has a real teacher and a roster of fellow students learning alongside you." },
+            { src: "/explainer/classwork.png", title: "Join class & practice", desc: "Find your Zoom link and exercises organized by topic, so you always know what's next." },
+          ].map((item, i) => (
+            <div key={i} className="l-inside-row" style={{
+              display: "grid",
+              gridTemplateColumns: i % 2 === 0 ? "0.85fr 1.15fr" : "1.15fr 0.85fr",
+              gap: 48, alignItems: "center",
+              marginBottom: i < 2 ? 72 : 0,
+            }}>
+              <div className="l-inside-shot" style={{ order: i % 2 === 0 ? 2 : 1 }}>
+                <div style={{ borderRadius: 10, overflow: "hidden", border: `1px solid ${C.border}` }}>
+                  <div style={{ display: "flex", gap: 6, padding: "10px 14px", background: "#0a1830", borderBottom: `1px solid ${C.border}` }}>
+                    <span style={{ width: 9, height: 9, borderRadius: "50%", background: "#ff5f57" }} />
+                    <span style={{ width: 9, height: 9, borderRadius: "50%", background: "#febc2e" }} />
+                    <span style={{ width: 9, height: 9, borderRadius: "50%", background: "#28c840" }} />
+                  </div>
+                  <div style={{ position: "relative", width: "100%", aspectRatio: "1399/927", background: "#fffbfe" }}>
+                    <Image src={item.src} alt={item.title} fill style={{ objectFit: "contain" }} />
+                  </div>
+                </div>
+              </div>
+              <div style={{ order: i % 2 === 0 ? 1 : 2 }}>
+                <h3 style={{ fontSize: "clamp(26px,2.6vw,34px)", fontWeight: 800, margin: "0 0 14px", lineHeight: 1.15, letterSpacing: "-0.02em" }}>{item.title}</h3>
+                <p style={{ fontSize: 17, color: C.muted, lineHeight: 1.7, margin: 0, maxWidth: 420 }}>{item.desc}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -902,10 +917,8 @@ export default function LandingPage() {
       <section id="courses" style={{ padding: "72px 20px", background: C.navy }}>
         <div className="l-course-grid" style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center" }}>
           <div>
-            <span style={{ display: "inline-block", padding: "5px 14px", borderRadius: 20, background: "rgba(255,92,86,0.12)", color: C.gold, fontSize: 12, fontWeight: 700, marginBottom: 16, border: `1px solid ${C.borderGold}` }}>
-              {t.course.eyebrow}
-            </span>
-            <h2 style={{ fontSize: 30, fontWeight: 800, margin: "0 0 8px", lineHeight: 1.2 }}>{t.course.title}</h2>
+            <p style={{ fontSize: 13, color: C.muted, margin: "0 0 10px" }}>{t.course.eyebrow}</p>
+            <h2 style={{ fontSize: 32, fontWeight: 800, margin: "0 0 8px", lineHeight: 1.15, letterSpacing: "-0.02em" }}>{t.course.title}</h2>
             <p style={{ fontSize: 17, fontWeight: 700, color: C.gold, margin: "0 0 16px" }}>{t.course.tagline}</p>
             <p style={{ fontSize: 15, color: C.muted, lineHeight: 1.75, margin: "0 0 32px" }}>{t.course.sub}</p>
 
