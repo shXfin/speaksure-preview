@@ -53,12 +53,25 @@ export async function getMyEnrollments(): Promise<Enrollment[]> {
 
 export async function getAllEnrollments(): Promise<EnrollmentWithProfile[]> {
   const supabase = createClient()
-  const { data } = await supabase
+  const { data: enrollments } = await supabase
     .from("enrollments")
-    .select("*, profiles(full_name, email)")
+    .select("*")
     .order("created_at", { ascending: false })
 
-  return (data as EnrollmentWithProfile[]) ?? []
+  if (!enrollments || enrollments.length === 0) return []
+
+  const userIds = [...new Set(enrollments.map(e => e.user_id))]
+  const { data: profiles } = await supabase
+    .from("profiles")
+    .select("id, full_name, email")
+    .in("id", userIds)
+
+  const profileById = new Map((profiles ?? []).map(p => [p.id, p]))
+
+  return enrollments.map(e => ({
+    ...e,
+    profiles: profileById.get(e.user_id) ?? null,
+  }))
 }
 
 export async function updateEnrollmentStatus(enrollmentId: string, status: "approved" | "blocked" | "pending") {
