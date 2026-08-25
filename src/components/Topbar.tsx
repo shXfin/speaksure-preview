@@ -69,51 +69,20 @@ export default function Topbar() {
     <>
       <header style={{
         position: "sticky", top: 0, zIndex: 100,
-        display: "flex", alignItems: "center", gap: 8,
-        height: 64, padding: "0 8px 0 4px",
+        display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20,
+        height: 64, padding: "0 20px",
         background: "#fff",
         borderBottom: "1px solid #e0e0e0",
         boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
       }}>
-        {/* Hamburger */}
-        <button onClick={() => setOpen(!open)} style={{
-          display: "grid", placeItems: "center",
-          width: 48, height: 48, border: "none",
-          borderRadius: "50%", background: "transparent",
-          color: "#5f6368", cursor: "pointer", flexShrink: 0,
-        }}>
-          <MenuIcon />
-        </button>
-
         {/* Brand */}
-        <Link href="/classes" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: "inherit", marginRight: 8, minWidth: 0 }}>
+        <Link href="/classes" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: "inherit", minWidth: 0 }}>
           <BrandMark size={46} />
           <span style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
             <strong style={{ fontSize: 18, fontWeight: 700, color: "#1d1b20", letterSpacing: "-0.2px" }}>SpeakSure</strong>
             <small className="t-tagline" style={{ fontSize: 12, color: "#625b71", marginTop: 3, fontWeight: 400 }}>English classes for global students</small>
           </span>
         </Link>
-
-        {/* Nav — centred, hidden on mobile */}
-        <nav className="t-nav">
-          <Link href="/classes" style={{
-            ...pill,
-            background: onClasses ? "#eaddff" : "transparent",
-            color: onClasses ? "#6750a4" : "#625b71",
-          }}>
-            <GridIcon /> Classes
-          </Link>
-          <Link href="/classroom" style={{
-            ...pill,
-            background: onStream ? "#eaddff" : "transparent",
-            color: onStream ? "#6750a4" : "#625b71",
-          }}>
-            <StreamIcon /> Classroom
-          </Link>
-          <Link href="/" style={{ ...pill, color: "#625b71" }}>
-            <ExitIcon /> Main site
-          </Link>
-        </nav>
 
         {/* Profile pill */}
         <div style={{
@@ -139,37 +108,6 @@ export default function Topbar() {
         </div>
       </header>
 
-      {/* Mobile drawer */}
-      {open && (
-        <div onClick={() => setOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 99 }}>
-          <nav onClick={e => e.stopPropagation()} style={{
-            position: "fixed", left: 16, top: 80, zIndex: 100,
-            width: 220, padding: 8, borderRadius: 8,
-            background: "#fff", border: "1px solid #e0e0e0",
-            boxShadow: "0 3px 12px rgba(0,0,0,0.15)",
-          }}>
-            <Link href="/classes" onClick={() => setOpen(false)} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 6, color: "#1d1b20", fontWeight: 500, textDecoration: "none", fontSize: 14 }}>
-              <GridIcon /> Classes
-            </Link>
-            <Link href="/classroom" onClick={() => setOpen(false)} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 6, color: "#1d1b20", fontWeight: 500, textDecoration: "none", fontSize: 14 }}>
-              <StreamIcon /> Classroom
-            </Link>
-            <Link href="/" onClick={() => setOpen(false)} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 6, color: "#1d1b20", fontWeight: 500, textDecoration: "none", fontSize: 14 }}>
-              <ExitIcon /> Main site
-            </Link>
-            <div style={{ margin: "4px 8px", borderTop: "1px solid #e0e0e0" }} />
-            <button
-              onClick={async () => { const s = createClient(); await s.auth.signOut(); window.location.href = "/login" }}
-              style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", padding: "12px 16px", borderRadius: 6, color: "#c62828", fontWeight: 500, fontSize: 14, background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", textAlign: "left" }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
-              </svg>
-              Sign out {userName ? `(${userName})` : ""}
-            </button>
-          </nav>
-        </div>
-      )}
     </>
   )
 }

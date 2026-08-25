@@ -13,13 +13,46 @@ import {
 
 const FREE_COURSE_ID = "6d1a4ea1-8fc3-4fdc-86a9-9228e52b977b" // Foundation English — free for every signed-up student
 
-const PLAN_TIERS = [
-  { label: "1 Month",  price: "¥899"   },
-  { label: "3 Months", price: "¥2,599" },
-  { label: "6 Months", price: "¥4,999" },
-  { label: "9 Months", price: "¥7,199" },
-  { label: "1 Year",   price: "¥8,999", best: true },
-]
+type Currency = "USD" | "MYR" | "SAR" | "CNY"
+
+const PRICING_TIERS: Record<Currency, Array<{ label: string; price: string; best?: boolean }>> = {
+  USD: [
+    { label: "1 Month",  price: "$50" },
+    { label: "3 Months", price: "$145" },
+    { label: "6 Months", price: "$280" },
+    { label: "9 Months", price: "$400" },
+    { label: "1 Year",   price: "$499", best: true },
+  ],
+  MYR: [
+    { label: "1 Month",  price: "RM 540.78" },
+    { label: "3 Months", price: "RM 1,566.73" },
+    { label: "6 Months", price: "RM 3,012.80" },
+    { label: "9 Months", price: "RM 4,338.62" },
+    { label: "1 Year",   price: "RM 5,423.93", best: true },
+  ],
+  SAR: [
+    { label: "1 Month",  price: "SAR 499" },
+    { label: "3 Months", price: "SAR 1,449" },
+    { label: "6 Months", price: "SAR 2,799" },
+    { label: "9 Months", price: "SAR 3,999" },
+    { label: "1 Year",   price: "SAR 4,999", best: true },
+  ],
+  CNY: [
+    { label: "1 Month",  price: "¥899" },
+    { label: "3 Months", price: "¥2,599" },
+    { label: "6 Months", price: "¥4,999" },
+    { label: "9 Months", price: "¥7,199" },
+    { label: "1 Year",   price: "¥8,999", best: true },
+  ],
+}
+
+const COUNTRY_CURRENCY: Record<string, Currency> = {
+  MY: "MYR", SG: "USD", TH: "USD", ID: "USD", PH: "USD",
+  SA: "SAR", AE: "SAR", QA: "SAR", KW: "SAR", BH: "SAR", OM: "SAR",
+  CN: "CNY", TW: "CNY", HK: "CNY",
+  JP: "USD", US: "USD", GB: "USD", CA: "USD", AU: "USD", NZ: "USD",
+  IN: "USD", BR: "USD", MX: "USD",
+}
 
 const s: Record<string, React.CSSProperties> = {
   surface: { background: "#fff", border: "1px solid #e8e0ef", borderRadius: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.05)" },
@@ -110,6 +143,7 @@ export default function DashboardPage() {
   const [showHidden, setShowHidden] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
+  const [currency, setCurrency] = useState<Currency>("USD")
 
   // Add course modal state
   const [showAddModal, setShowAddModal] = useState(false)
@@ -163,6 +197,21 @@ export default function DashboardPage() {
       }
     }
     init()
+  }, [])
+
+  // Detect location and set currency
+  useEffect(() => {
+    async function detectCurrency() {
+      try {
+        const res = await fetch("https://ipapi.co/json/")
+        const data = await res.json()
+        const countryCode = data.country_code
+        setCurrency(COUNTRY_CURRENCY[countryCode] ?? "USD")
+      } catch {
+        setCurrency("USD")
+      }
+    }
+    detectCurrency()
   }, [])
 
   const approvedEnrollments = myEnrollments.filter(e => e.status === "approved")
@@ -420,35 +469,12 @@ export default function DashboardPage() {
       )}
 
       {/* ── Banner card ── */}
-      <div className="db-banner" style={{ ...s.surface, padding: "20px 24px", marginBottom: 20 }}>
-        <div>
-          <p style={s.eyebrow}>SpeakSure</p>
-          <h1 style={{ margin: "0 0 8px", fontSize: 28, fontWeight: 700, letterSpacing: "-0.3px", lineHeight: 1.2 }}>English classrooms</h1>
-          <p style={{ margin: 0, ...s.muted, fontSize: 14, lineHeight: 1.6, maxWidth: 520 }}>
-            Live English courses for adult students worldwide. Pick a class, check the stream, and continue your practice.
-          </p>
-        </div>
-        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "14px 16px", borderRadius: 10, border: "1px solid #e8e0ef", background: "#faf7ff", minWidth: 240 }}>
-          <span style={{ marginTop: 1 }}><CalendarIcon /></span>
-          <div>
-            <strong style={{ display: "block", fontSize: 14, fontWeight: 600 }}>Today</strong>
-            <p style={{ margin: "3px 0 0", fontSize: 13, ...s.muted, lineHeight: 1.4 }}>IELTS speaking class starts at 19:00 China time.</p>
-          </div>
-        </div>
-        <Link href="/classroom" style={{ color: "#6750a4", fontWeight: 700, fontSize: 14, textDecoration: "none", whiteSpace: "nowrap" }}>
-          Continue learning
-        </Link>
-      </div>
-
-      {/* ── Welcome post ── */}
-      <div style={{ ...s.surface, display: "flex", gap: 14, padding: "16px 20px", marginBottom: 28 }}>
-        <BrandMark size={40} />
-        <div>
-          <strong style={{ fontSize: 14, fontWeight: 600 }}>Welcome to SpeakSure</strong>
-          <p style={{ margin: "4px 0 0", fontSize: 14, ...s.muted, lineHeight: 1.6 }}>
-            Choose the English class that matches your goal: work, IELTS speaking, interviews, travel, or presentations.
-          </p>
-        </div>
+      <div className="db-banner" style={{ ...s.surface, padding: "20px 24px", marginBottom: 28 }}>
+        <p style={s.eyebrow}>SpeakSure</p>
+        <h1 style={{ margin: "0 0 8px", fontSize: 28, fontWeight: 700, letterSpacing: "-0.3px", lineHeight: 1.2 }}>English classrooms</h1>
+        <p style={{ margin: 0, ...s.muted, fontSize: 14, lineHeight: 1.6, maxWidth: 520 }}>
+          Live English courses for adult students worldwide. Pick a class, check the stream, and continue your practice.
+        </p>
       </div>
 
       {/* ── Teacher: enrollments panel ── */}
@@ -583,7 +609,7 @@ export default function DashboardPage() {
           </div>
 
           <div className="db-plans">
-            {PLAN_TIERS.map((tier, i) => (
+            {PRICING_TIERS[currency].map((tier, i) => (
               <div key={i} style={{
                 ...s.surface, padding: "20px 16px", textAlign: "center",
                 border: tier.best ? "2px solid #6750a4" : "1px solid #e8e0ef",
