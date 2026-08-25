@@ -19,6 +19,37 @@ const C = {
 }
 
 type Lang = "en" | "zh" | "ar"
+type Currency = "USD" | "MYR" | "JPY"
+
+const PRICING_TIERS: Record<Currency, Array<{ label: string; price: string; best?: boolean }>> = {
+  USD: [
+    { label: "1 Month",  price: "$50" },
+    { label: "3 Months", price: "$145" },
+    { label: "6 Months", price: "$280" },
+    { label: "9 Months", price: "$400" },
+    { label: "1 Year",   price: "$499", best: true },
+  ],
+  MYR: [
+    { label: "1 Month",  price: "RM 540.78" },
+    { label: "3 Months", price: "RM 1,566.73" },
+    { label: "6 Months", price: "RM 3,012.80" },
+    { label: "9 Months", price: "RM 4,338.62" },
+    { label: "1 Year",   price: "RM 5,423.93", best: true },
+  ],
+  JPY: [
+    { label: "1 Month",  price: "¥899" },
+    { label: "3 Months", price: "¥2,599" },
+    { label: "6 Months", price: "¥4,999" },
+    { label: "9 Months", price: "¥7,199" },
+    { label: "1 Year",   price: "¥8,999", best: true },
+  ],
+}
+
+const COUNTRY_CURRENCY: Record<string, Currency> = {
+  MY: "MYR", SG: "USD", TH: "USD", ID: "USD", PH: "USD",
+  JP: "JPY", CN: "USD", US: "USD", GB: "USD", CA: "USD",
+  AU: "USD", NZ: "USD", IN: "USD", BR: "USD", MX: "USD",
+}
 
 const courses = [
   {
@@ -562,10 +593,24 @@ function IconAccount({ active }: { active: boolean }) {
 
 export default function LandingPage() {
   const [lang, setLang] = useState<Lang>("en")
+  const [currency, setCurrency] = useState<Currency>("USD")
   const [activeTab, setActiveTab] = useState<"home" | "courses" | "account">("home")
   const [showLangMenu, setShowLangMenu] = useState(false)
+  const [showCurrencyMenu, setShowCurrencyMenu] = useState(false)
   const t = content[lang]
   const isRTL = lang === "ar"
+
+  // Detect location on mount
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    fetch("https://ipapi.co/json/", { signal: AbortSignal.timeout(2000) })
+      .then(r => r.json())
+      .then(data => {
+        const cc = data.country_code
+        setCurrency(COUNTRY_CURRENCY[cc] || "USD")
+      })
+      .catch(() => setCurrency("USD"))
+  }, [])
 
   return (
     <div
@@ -929,9 +974,44 @@ export default function LandingPage() {
       {/* ── Pricing plans ────────────────────────────────────── */}
       <section id="pricing" style={{ padding: "88px 20px", background: C.navy }}>
         <div style={{ maxWidth: 980, margin: "0 auto" }}>
-          <h2 style={{ fontSize: "clamp(28px,3.2vw,38px)", fontWeight: 800, margin: "0 0 48px", letterSpacing: "-0.02em" }}>{t.plans.title}</h2>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 48 }}>
+            <h2 style={{ fontSize: "clamp(28px,3.2vw,38px)", fontWeight: 800, letterSpacing: "-0.02em", margin: 0 }}>{t.plans.title}</h2>
+            <div style={{ position: "relative" }}>
+              <button
+                onClick={() => setShowCurrencyMenu(!showCurrencyMenu)}
+                style={{
+                  padding: "8px 16px", borderRadius: 8, border: `1px solid ${C.border}`, background: "transparent",
+                  color: C.muted, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+                }}
+              >
+                {currency} ▼
+              </button>
+              {showCurrencyMenu && (
+                <div style={{
+                  position: "absolute", top: "100%", right: 0, marginTop: 8, minWidth: 120,
+                  background: C.navyCard, borderRadius: 8, border: `1px solid ${C.border}`, zIndex: 50,
+                  overflow: "hidden",
+                }}>
+                  {(["USD", "MYR", "JPY"] as Currency[]).map(curr => (
+                    <button
+                      key={curr}
+                      onClick={() => { setCurrency(curr); setShowCurrencyMenu(false) }}
+                      style={{
+                        display: "block", width: "100%", padding: "10px 16px", textAlign: "left",
+                        background: currency === curr ? C.navyLight : "transparent",
+                        color: currency === curr ? C.gold : C.white, border: "none",
+                        fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+                      }}
+                    >
+                      {curr}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
           <div className="l-plans-grid">
-            {t.plans.tiers.map((tier, i) => (
+            {PRICING_TIERS[currency].map((tier, i) => (
               <Link
                 key={i}
                 href={`/enroll?plan=${encodeURIComponent(tier.label)}&price=${encodeURIComponent(tier.price)}`}
