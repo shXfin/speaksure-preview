@@ -19,7 +19,7 @@ const C = {
 }
 
 type Lang = "en" | "zh" | "ar"
-type Currency = "USD" | "MYR"
+type Currency = "USD" | "MYR" | "SAR" | "CNY"
 
 const PRICING_TIERS: Record<Currency, Array<{ label: string; price: string; best?: boolean }>> = {
   USD: [
@@ -36,12 +36,28 @@ const PRICING_TIERS: Record<Currency, Array<{ label: string; price: string; best
     { label: "9 Months", price: "RM 4,338.62" },
     { label: "1 Year",   price: "RM 5,423.93", best: true },
   ],
+  SAR: [
+    { label: "1 Month",  price: "SAR 499" },
+    { label: "3 Months", price: "SAR 1,449" },
+    { label: "6 Months", price: "SAR 2,799" },
+    { label: "9 Months", price: "SAR 3,999" },
+    { label: "1 Year",   price: "SAR 4,999", best: true },
+  ],
+  CNY: [
+    { label: "1 Month",  price: "¥899" },
+    { label: "3 Months", price: "¥2,599" },
+    { label: "6 Months", price: "¥4,999" },
+    { label: "9 Months", price: "¥7,199" },
+    { label: "1 Year",   price: "¥8,999", best: true },
+  ],
 }
 
 const COUNTRY_CURRENCY: Record<string, Currency> = {
   MY: "MYR", SG: "USD", TH: "USD", ID: "USD", PH: "USD",
-  JP: "USD", CN: "USD", US: "USD", GB: "USD", CA: "USD",
-  AU: "USD", NZ: "USD", IN: "USD", BR: "USD", MX: "USD",
+  SA: "SAR", AE: "SAR", QA: "SAR", KW: "SAR", BH: "SAR", OM: "SAR",
+  CN: "CNY", TW: "CNY", HK: "CNY",
+  JP: "USD", US: "USD", GB: "USD", CA: "USD", AU: "USD", NZ: "USD",
+  IN: "USD", BR: "USD", MX: "USD",
 }
 
 const courses = [
@@ -985,7 +1001,7 @@ export default function LandingPage() {
                   background: C.navyCard, borderRadius: 8, border: `1px solid ${C.border}`, zIndex: 50,
                   overflow: "hidden",
                 }}>
-                  {(["USD", "MYR"] as Currency[]).map(curr => (
+                  {(["USD", "MYR", "SAR", "CNY"] as Currency[]).map(curr => (
                     <button
                       key={curr}
                       onClick={() => { setCurrency(curr); setShowCurrencyMenu(false) }}
