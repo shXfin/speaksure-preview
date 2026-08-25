@@ -62,6 +62,8 @@ const s: Record<string, React.CSSProperties> = {
 
 const BANNER_COLORS = ["#6750a4", "#1a6b5a", "#8b3a3a", "#1565c0", "#5d4037", "#2e7d32"]
 
+const WHATSAPP_NUMBER = "601161684359"
+
 type CustomCourse = {
   id: string
   title: string
@@ -144,6 +146,8 @@ export default function DashboardPage() {
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const [currency, setCurrency] = useState<Currency>("USD")
+  const [studentName, setStudentName] = useState("")
+  const [studentEmail, setStudentEmail] = useState("")
 
   // Add course modal state
   const [showAddModal, setShowAddModal] = useState(false)
@@ -179,6 +183,8 @@ export default function DashboardPage() {
 
         const teacher = profile.role === "teacher"
         setIsTeacher(teacher)
+        setStudentName(profile.full_name ?? "")
+        setStudentEmail(profile.email ?? "")
 
         const [hidden, custom, enrollments] = await Promise.all([
           fetchHiddenCourses(),   // load for ALL users so filtering works
@@ -580,7 +586,7 @@ export default function DashboardPage() {
           {pendingEnrollment ? (
             <div style={{ ...s.surface, padding: "18px 22px", marginBottom: 24, display: "flex", alignItems: "center", gap: 14, background: "#fff9e6", border: "1px solid #f5deb3" }}>
               <span style={{ fontSize: 22 }}>⏳</span>
-              <div>
+              <div style={{ flex: 1, minWidth: 0 }}>
                 <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "#1d1b20" }}>
                   Enrollment pending — {pendingEnrollment.plan_label} ({pendingEnrollment.plan_price})
                 </p>
@@ -588,6 +594,23 @@ export default function DashboardPage() {
                   We're confirming your payment. Your teacher will unlock the rest of your courses shortly — Foundation English is already free to try below.
                 </p>
               </div>
+              <a
+                href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+                  `Hi! I'd like to enroll in the ${pendingEnrollment.plan_label} plan (${pendingEnrollment.plan_price}).${studentName ? ` My name is ${studentName}.` : ""}${studentEmail ? ` My account email is ${studentEmail}.` : ""} Please let me know how to complete payment.`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "flex", alignItems: "center", gap: 8, flexShrink: 0,
+                  padding: "10px 16px", borderRadius: 8, background: "#25d366",
+                  color: "#fff", fontWeight: 700, fontSize: 13, textDecoration: "none",
+                }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.272-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-5.031 1.378c-3.055 2.364-3.905 6.75-1.896 10.157 1.54 2.487 4.3 4.043 7.304 4.043.842 0 1.643-.105 2.406-.31l2.248 1.41c.324.203.603.216.889.118.286-.098.461-.274.516-.53l1.34-4.067c.194-.528.271-1.046.271-1.424C21 11.794 18.221 6.979 12.051 6.979z"/>
+                </svg>
+                WhatsApp us
+              </a>
             </div>
           ) : (
             <div style={{ ...s.surface, padding: "18px 22px", marginBottom: 24, display: "flex", alignItems: "center", gap: 14, background: "#eef4ff", border: "1px solid #cddcfb" }}>
