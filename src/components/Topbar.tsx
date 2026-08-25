@@ -14,24 +14,29 @@ function avatarColor(seed: string) {
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length]
 }
 
-function GridIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" />
-      <rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" />
+function GridIcon({ filled }: { filled?: boolean }) {
+  return filled ? (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" />
+      <rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" />
+    </svg>
+  ) : (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" />
+      <rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" />
     </svg>
   )
 }
-function StreamIcon() {
+function StreamIcon({ filled }: { filled?: boolean }) {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={filled ? 2.6 : 2} strokeLinecap="round" strokeLinejoin="round">
       <line x1="4" y1="6" x2="20" y2="6" /><line x1="4" y1="12" x2="14" y2="12" /><line x1="4" y1="18" x2="20" y2="18" />
     </svg>
   )
 }
 function ExitIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
     </svg>
   )
@@ -39,10 +44,9 @@ function ExitIcon() {
 
 const pill: React.CSSProperties = {
   display: "inline-flex", alignItems: "center", gap: 8,
-  height: 40, padding: "0 20px", borderRadius: 8,
-  fontSize: 14, fontWeight: 600, textDecoration: "none",
-  transition: "background 150ms, color 150ms, border-color 150ms", whiteSpace: "nowrap",
-  borderBottom: "3px solid transparent",
+  height: 40, padding: "0 20px", borderRadius: 20,
+  fontSize: 14, fontWeight: 500, textDecoration: "none",
+  transition: "background 150ms, color 150ms", whiteSpace: "nowrap",
 }
 
 export default function Topbar() {
@@ -79,21 +83,23 @@ export default function Topbar() {
 
         {/* Nav tabs */}
         <nav className="t-nav" style={{ minWidth: 0 }}>
-          <Link href="/classes" className="t-pill" style={{
+          <Link href="/classes" className={`t-pill ${onClasses ? "t-pill-active" : ""}`} style={{
             ...pill,
-            color: onClasses ? "#6750a4" : "#5f6368",
-            borderBottomColor: onClasses ? "#6750a4" : "transparent",
+            background: onClasses ? "#eaddff" : "transparent",
+            color: onClasses ? "#4a2f7a" : "#444746",
+            fontWeight: onClasses ? 700 : 500,
           }}>
-            <GridIcon /> <span className="t-pill-label">Classes</span>
+            <GridIcon filled={onClasses} /> <span className="t-pill-label">Classes</span>
           </Link>
-          <Link href="/classroom" className="t-pill" style={{
+          <Link href="/classroom" className={`t-pill ${onStream ? "t-pill-active" : ""}`} style={{
             ...pill,
-            color: onStream ? "#6750a4" : "#5f6368",
-            borderBottomColor: onStream ? "#6750a4" : "transparent",
+            background: onStream ? "#eaddff" : "transparent",
+            color: onStream ? "#4a2f7a" : "#444746",
+            fontWeight: onStream ? 700 : 500,
           }}>
-            <StreamIcon /> <span className="t-pill-label">Classroom</span>
+            <StreamIcon filled={onStream} /> <span className="t-pill-label">Classroom</span>
           </Link>
-          <Link href="/" className="t-pill" style={{ ...pill, color: "#5f6368" }}>
+          <Link href="/" className="t-pill" style={{ ...pill, color: "#444746" }}>
             <ExitIcon /> <span className="t-pill-label">Main site</span>
           </Link>
         </nav>

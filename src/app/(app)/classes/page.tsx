@@ -146,6 +146,7 @@ export default function DashboardPage() {
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const [currency, setCurrency] = useState<Currency>("USD")
+  const [showCurrencyMenu, setShowCurrencyMenu] = useState(false)
   const [studentName, setStudentName] = useState("")
   const [studentEmail, setStudentEmail] = useState("")
 
@@ -475,7 +476,7 @@ export default function DashboardPage() {
       )}
 
       {/* ── Banner card ── */}
-      <div className="db-banner" style={{ ...s.surface, padding: "20px 24px", marginBottom: 28 }}>
+      <div style={{ ...s.surface, padding: "20px 24px", marginBottom: 28 }}>
         <p style={s.eyebrow}>SpeakSure</p>
         <h1 style={{ margin: "0 0 8px", fontSize: 28, fontWeight: 700, letterSpacing: "-0.3px", lineHeight: 1.2 }}>English classrooms</h1>
         <p style={{ margin: 0, ...s.muted, fontSize: 14, lineHeight: 1.6, maxWidth: 520 }}>
@@ -627,9 +628,44 @@ export default function DashboardPage() {
             </div>
           )}
 
-          <div style={{ marginBottom: 16 }}>
-            <p style={s.eyebrow}>Premium Subscription Plans</p>
-            <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700 }}>Choose a plan to enroll</h2>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 16, gap: 16, flexWrap: "wrap" }}>
+            <div>
+              <p style={s.eyebrow}>Premium Subscription Plans</p>
+              <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700 }}>Choose a plan to enroll</h2>
+            </div>
+            <div style={{ position: "relative" }}>
+              <button
+                onClick={() => setShowCurrencyMenu(!showCurrencyMenu)}
+                style={{
+                  padding: "8px 16px", borderRadius: 8, border: "1px solid #cac4d0", background: "#fff",
+                  color: "#49454f", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+                }}
+              >
+                {currency} ▼
+              </button>
+              {showCurrencyMenu && (
+                <div style={{
+                  position: "absolute", top: "100%", right: 0, marginTop: 8, minWidth: 120,
+                  background: "#fff", borderRadius: 8, border: "1px solid #cac4d0", zIndex: 50,
+                  overflow: "hidden", boxShadow: "0 3px 12px rgba(0,0,0,0.15)",
+                }}>
+                  {(["USD", "MYR", "SAR", "CNY"] as Currency[]).map(curr => (
+                    <button
+                      key={curr}
+                      onClick={() => { setCurrency(curr); setShowCurrencyMenu(false) }}
+                      style={{
+                        display: "block", width: "100%", padding: "10px 16px", textAlign: "left",
+                        background: currency === curr ? "#f3edf9" : "transparent",
+                        color: currency === curr ? "#6750a4" : "#1d1b20", border: "none",
+                        fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+                      }}
+                    >
+                      {curr}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="db-plans">
