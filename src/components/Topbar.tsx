@@ -14,13 +14,6 @@ function avatarColor(seed: string) {
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length]
 }
 
-function MenuIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="4" y1="6" x2="20" y2="6" /><line x1="4" y1="12" x2="20" y2="12" /><line x1="4" y1="18" x2="20" y2="18" />
-    </svg>
-  )
-}
 function GridIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -46,14 +39,14 @@ function ExitIcon() {
 
 const pill: React.CSSProperties = {
   display: "inline-flex", alignItems: "center", gap: 8,
-  height: 40, padding: "0 20px", borderRadius: 20,
-  fontSize: 14, fontWeight: 500, textDecoration: "none",
-  transition: "background 150ms, color 150ms", whiteSpace: "nowrap",
+  height: 40, padding: "0 20px", borderRadius: 8,
+  fontSize: 14, fontWeight: 600, textDecoration: "none",
+  transition: "background 150ms, color 150ms, border-color 150ms", whiteSpace: "nowrap",
+  borderBottom: "3px solid transparent",
 }
 
 export default function Topbar() {
   const pathname = usePathname()
-  const [open, setOpen] = useState(false)
   const [userName, setUserName] = useState("")
   const [isTeacher, setIsTeacher] = useState(false)
   const onClasses = pathname === "/classes"
@@ -76,16 +69,37 @@ export default function Topbar() {
         boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
       }}>
         {/* Brand */}
-        <Link href="/classes" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: "inherit", minWidth: 0 }}>
+        <Link href="/classes" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: "inherit", minWidth: 0, flexShrink: 0 }}>
           <BrandMark size={46} />
-          <span style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
+          <span className="t-brand-text" style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
             <strong style={{ fontSize: 18, fontWeight: 700, color: "#1d1b20", letterSpacing: "-0.2px" }}>SpeakSure</strong>
             <small className="t-tagline" style={{ fontSize: 12, color: "#625b71", marginTop: 3, fontWeight: 400 }}>English classes for global students</small>
           </span>
         </Link>
 
+        {/* Nav tabs */}
+        <nav className="t-nav" style={{ minWidth: 0 }}>
+          <Link href="/classes" className="t-pill" style={{
+            ...pill,
+            color: onClasses ? "#6750a4" : "#5f6368",
+            borderBottomColor: onClasses ? "#6750a4" : "transparent",
+          }}>
+            <GridIcon /> <span className="t-pill-label">Classes</span>
+          </Link>
+          <Link href="/classroom" className="t-pill" style={{
+            ...pill,
+            color: onStream ? "#6750a4" : "#5f6368",
+            borderBottomColor: onStream ? "#6750a4" : "transparent",
+          }}>
+            <StreamIcon /> <span className="t-pill-label">Classroom</span>
+          </Link>
+          <Link href="/" className="t-pill" style={{ ...pill, color: "#5f6368" }}>
+            <ExitIcon /> <span className="t-pill-label">Main site</span>
+          </Link>
+        </nav>
+
         {/* Profile pill */}
-        <div style={{
+        <div className="t-profile" style={{
           display: "flex", alignItems: "center", gap: 10,
           padding: "6px 14px 6px 8px", borderRadius: 999,
           border: "1px solid #cac4d0", background: "#fff",
@@ -101,7 +115,7 @@ export default function Topbar() {
           <div style={{ display: "grid", placeItems: "center", width: 28, height: 28, borderRadius: "50%", background: avatarColor(userName || "?"), color: "#fff", fontWeight: 700, fontSize: 13, flexShrink: 0 }}>
             {(userName || "?").charAt(0).toUpperCase()}
           </div>
-          <div style={{ display: "flex", flexDirection: "column" }}>
+          <div className="t-profile-text" style={{ display: "flex", flexDirection: "column" }}>
             <span style={{ color: "#1d1b20", fontWeight: 600, fontSize: 13 }}>{userName || "—"} · {isTeacher ? "Teacher" : "Student"}</span>
             <span style={{ color: "#c62828", fontWeight: 500, fontSize: 11 }}>Sign out</span>
           </div>

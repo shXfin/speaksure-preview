@@ -224,7 +224,7 @@
 .db-plans    { display: grid; grid-template-columns: repeat(5,1fr); gap: 14px; }
 .cl-stream   { display: grid; grid-template-columns: 1fr 260px; gap: 20px; align-items: start; }
 .cl-progress { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
-.t-nav       { display: flex; align-items: center; gap: 4px; flex: 1; justify-content: center; }
+.t-nav       { display: flex; align-items: center; gap: 4px; flex: 1; justify-content: flex-start; overflow-x: auto; }
 
 @media (max-width: 900px) {
   .db-courses  { grid-template-columns: repeat(2,1fr); }
@@ -238,6 +238,10 @@
   .db-courses  { grid-template-columns: 1fr !important; }
   .db-plans    { grid-template-columns: repeat(2,1fr) !important; }
   .cl-progress { grid-template-columns: 1fr 1fr !important; }
-  .t-nav       { display: none !important; }
   .t-tagline   { display: none !important; }
+  .t-pill      { padding: 0 10px !important; height: 36px !important; }
+  .t-pill-label { display: none !important; }
+  .t-profile-text { display: none !important; }
+  .t-profile   { padding: 4px !important; }
+  .db-pending-banner { padding: 14px 16px !important; }
 }
