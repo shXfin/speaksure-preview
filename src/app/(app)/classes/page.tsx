@@ -17,11 +17,11 @@ type Currency = "USD" | "MYR" | "SAR" | "CNY"
 
 const PRICING_TIERS: Record<Currency, Array<{ label: string; price: string; best?: boolean }>> = {
   USD: [
-    { label: "1 Month",  price: "$50" },
-    { label: "3 Months", price: "$145" },
-    { label: "6 Months", price: "$280" },
-    { label: "9 Months", price: "$400" },
-    { label: "1 Year",   price: "$499", best: true },
+    { label: "1 Month",  price: "$134.99" },
+    { label: "3 Months", price: "$389.99" },
+    { label: "6 Months", price: "$749.99" },
+    { label: "9 Months", price: "$1,078.99" },
+    { label: "1 Year",   price: "$1,349.99", best: true },
   ],
   MYR: [
     { label: "1 Month",  price: "RM 540.78" },
